@@ -1,7 +1,7 @@
 """Chasten checks the AST of a Python program."""
 
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import typer
 from rich.console import Console
@@ -49,8 +49,8 @@ def get_default_directory_list() -> List[Path]:
 
 @cli.command()
 def chasten(
-    directories: List[Path] = typer.Option(
-        get_default_directory_list(), "--directories", "-d", help="List of directories"
+    directory: List[Path] = typer.Option(
+        get_default_directory_list(), "--directory", "-d", help="One or more directories with Python code"
     )
 ) -> None:
     """Analyze the AST of all of the Python files found through recursive traversal of directories."""
@@ -60,9 +60,9 @@ def chasten(
     console.print()
     # collect all of the directories that are invalid
     invalid_directories = []
-    for directory in directories:
-        if not confirm_valid_directory(directory):
-            invalid_directories.append(directory)
+    for current_directory in directory:
+        if not confirm_valid_directory(current_directory):
+            invalid_directories.append(current_directory)
     # create the list of valid directories by removing the invalid ones
-    valid_directories = list(set(directories) - set(invalid_directories))
+    valid_directories = list(set(directory) - set(invalid_directories))
     console.print(valid_directories)
