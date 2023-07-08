@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import List
 
 import typer
+from pyastgrep import search
 from rich.console import Console
 
 # create a Typer object to support the command-line interface
@@ -50,7 +51,10 @@ def get_default_directory_list() -> List[Path]:
 @cli.command()
 def chasten(
     directory: List[Path] = typer.Option(
-        get_default_directory_list(), "--directory", "-d", help="One or more directories with Python code"
+        get_default_directory_list(),
+        "--directory",
+        "-d",
+        help="One or more directories with Python code",
     )
 ) -> None:
     """Analyze the AST of all of the Python files found through recursive traversal of directories."""
@@ -66,3 +70,13 @@ def chasten(
     # create the list of valid directories by removing the invalid ones
     valid_directories = list(set(directory) - set(invalid_directories))
     console.print(valid_directories)
+    # search for the XML contents of an AST that match the provided
+    # XPATH query using the search_python_file in search module of pyastgrep
+    match_generator = search.search_python_files(
+        paths=valid_directories,
+        expression='.//FunctionDef[@name="classify"]/body//If[ancestor::If and not(parent::orelse)]',
+    )
+    # display debugging information about the contents of the match generator
+    console.print(match_generator)
+    for search_output in match_generator:
+        console.print(search_output)
