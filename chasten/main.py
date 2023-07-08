@@ -4,8 +4,10 @@ from pathlib import Path
 from typing import List
 
 import typer
-from pyastgrep import search
+from pyastgrep import search as pyastgrepsearch
 from rich.console import Console
+from trogon import Trogon
+from typer.main import get_group
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -49,7 +51,13 @@ def get_default_directory_list() -> List[Path]:
 
 
 @cli.command()
-def chasten(
+def tui(ctx: typer.Context):
+    """Interatively define command-line arguments through a terminal user interface."""
+    Trogon(get_group(cli), click_context=ctx).run()
+
+
+@cli.command()
+def search(
     directory: List[Path] = typer.Option(
         get_default_directory_list(),
         "--directory",
@@ -72,7 +80,7 @@ def chasten(
     console.print(valid_directories)
     # search for the XML contents of an AST that match the provided
     # XPATH query using the search_python_file in search module of pyastgrep
-    match_generator = search.search_python_files(
+    match_generator = pyastgrepsearch.search_python_files(
         paths=valid_directories,
         expression='.//FunctionDef[@name="classify"]/body//If[ancestor::If and not(parent::orelse)]',
     )
