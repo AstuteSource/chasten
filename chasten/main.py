@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import List
 
 import typer
-from pyastgrep import search as pyastgrepsearch
+from pyastgrep import search as pyastgrepsearch  # type: ignore
 from rich.console import Console
-from trogon import Trogon
+from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
 # create a Typer object to support the command-line interface
