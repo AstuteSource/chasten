@@ -18,7 +18,9 @@ def test_cli_search(tmpdir):
     test_one = tmpdir.mkdir("test_one")
     test_two = tmpdir.mkdir("test_two")
     # call the search command
-    result = runner.invoke(main.cli, ["search", "--directory", test_one, "--directory", test_two])
+    result = runner.invoke(
+        main.cli, ["search", "--directory", test_one, "--directory", test_two]
+    )
     assert result.exit_code == 0
 
 
@@ -41,5 +43,14 @@ def test_fuzz_cli_search_single_directory(directory):
 @pytest.mark.hypothesis
 def test_fuzz_cli_search_multiple_directory(directory_one, directory_two):
     """Confirm that the function does not crash when called through the command-line interface."""
-    result = runner.invoke(main.cli, ["search", "--directory", str(directory_one), "--directory", str(directory_two)])
+    result = runner.invoke(
+        main.cli,
+        [
+            "search",
+            "--directory",
+            str(directory_one),
+            "--directory",
+            str(directory_two),
+        ],
+    )
     assert result.exit_code == 0
