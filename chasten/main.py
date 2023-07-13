@@ -9,30 +9,10 @@ from rich.console import Console
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
+from chasten import filesystem
+
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
-
-
-def confirm_valid_file(file: Path) -> bool:
-    """Confirm that the provided file is a valid path that is a file."""
-    # determine if the file is not None and if it is a file
-    if file is not None:
-        # the file is valid
-        if file.is_file():
-            return True
-    # the file was either none or not valid
-    return False
-
-
-def confirm_valid_directory(directory: Path) -> bool:
-    """Confirm that the provided directory is a valid path that is a directory."""
-    # determine if the file is not None and if it is a file
-    if directory is not None:
-        # the file is valid
-        if directory.is_dir():
-            return True
-    # the directory was either none or not valid
-    return False
 
 
 def human_readable_boolean(answer: bool) -> str:
@@ -73,7 +53,7 @@ def search(
     # collect all of the directories that are invalid
     invalid_directories = []
     for current_directory in directory:
-        if not confirm_valid_directory(current_directory):
+        if not filesystem.confirm_valid_directory(current_directory):
             invalid_directories.append(current_directory)
     # create the list of valid directories by removing the invalid ones
     valid_directories = list(set(directory) - set(invalid_directories))
