@@ -25,6 +25,7 @@ isort = "^5.12.0"
 hypothesis = {extras = ["cli"], version = "^6.81.1"}
 hypofuzz = "^23.7.1"
 pytest-cov = "^4.1.0"
+pytest-sugar = "^0.9.7"
 
 [tool.pytest.ini_options]
 filterwarnings = [
@@ -54,6 +55,12 @@ use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 88
 
+[tool.taskipy.variables]
+developer-test-command = "pytest -x -s -m 'not hypothesis'"
+developer-test-silent-command = "pytest -x -m 'not hypothesis' --show-capture=no"
+hypothesis-test-command = "pytest -x -s -m 'hypothesis'"
+hypothesis-test-silent-command = "pytest -x -m 'hypothesis' --show-capture=no"
+
 [tool.taskipy.tasks]
 all = "task black && task mypy && task ruff && task test"
 lint = "task black && task mypy && task ruff"
@@ -62,6 +69,10 @@ fiximports = { cmd = "isort chasten tests", help = "Run isort to fix source code
 fixformat = { cmd = "black chasten tests", help = "Run the black checks for source code format" }
 mypy = { cmd = "poetry run mypy chasten", help = "Run the mypy type checker for potential type errors" }
 ruff = { cmd = "poetry run ruff check chasten tests", help = "Run the ruff checks using configuration in pyproject.toml" }
+developer-test = { cmd = "{developer-test-command}", help = "Run developer-created test cases", use_vars = true }
+developer-test-silent = { cmd = "{developer-test-silent-command}", help = "Run developer-created without output", use_vars = true }
+hypothesis = { cmd = "{hypothesis-test-command}", help = "Run the hypothesis-based test cases", use_vars = true}
+hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the hypothesis-based test cases", use_vars = true }
 test = { cmd = "pytest -x -s", help = "Run the pytest test suite" }
 test-silent = { cmd = "pytest -x --show-capture=no", help = "Run the pytest test suite without showing output" }
 
