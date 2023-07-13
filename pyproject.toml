@@ -62,7 +62,7 @@ hypothesis-test-command = "pytest -x -s -m 'hypothesis'"
 hypothesis-test-silent-command = "pytest -x -m 'hypothesis' --show-capture=no"
 
 [tool.taskipy.tasks]
-all = "task black && task mypy && task ruff && task test"
+all = "task black && task mypy && task ruff && task test-silent"
 lint = "task black && task mypy && task ruff"
 black = { cmd = "black chasten tests --check", help = "Run the black checks for source code format" }
 fiximports = { cmd = "isort chasten tests", help = "Run isort to fix source code imports" }
