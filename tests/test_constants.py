@@ -26,7 +26,10 @@ def test_fuzz_init(directory, yes, no):
     assert hr.No == no
 
 
-@given(fs=strategies.builds(constants.Filesystem), hr=strategies.builds(constants.Humanreadable))
+@given(
+    fs=strategies.builds(constants.Filesystem),
+    hr=strategies.builds(constants.Humanreadable),
+)
 @pytest.mark.hypothesis
 def test_fuzz_immutable(fs, hr):
     """Use Hypothesis to confirm that attribute's value cannot be re-assigned."""
