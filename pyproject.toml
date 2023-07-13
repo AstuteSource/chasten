@@ -22,6 +22,8 @@ ruff = "^0.0.277"
 taskipy = "^1.11.0"
 mypy = "^1.4.1"
 isort = "^5.12.0"
+hypothesis = {extras = ["cli"], version = "^6.81.1"}
+hypofuzz = "^23.7.1"
 
 [tool.ruff]
 ignore = [
