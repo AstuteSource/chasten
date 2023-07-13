@@ -15,21 +15,6 @@ from chasten import filesystem
 cli = typer.Typer()
 
 
-def human_readable_boolean(answer: bool) -> str:
-    """Produce a human-readable Yes or No for a boolean value of True or False."""
-    # the provided answer is true
-    if answer:
-        return "Yes"
-    # the provided answer is false
-    return "No"
-
-
-def get_default_directory_list() -> List[Path]:
-    """Return the default directory list that is the current working directory by itself."""
-    default_directory_list = [Path(".")]
-    return default_directory_list
-
-
 @cli.command()
 def tui(ctx: typer.Context):
     """Interatively define command-line arguments through a terminal user interface."""
@@ -39,7 +24,7 @@ def tui(ctx: typer.Context):
 @cli.command()
 def search(
     directory: List[Path] = typer.Option(
-        get_default_directory_list(),
+        filesystem.get_default_directory_list(),
         "--directory",
         "-d",
         help="One or more directories with Python code",
