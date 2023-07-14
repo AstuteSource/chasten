@@ -67,7 +67,7 @@ jobs:
         - name: Run Test Coverage
           if: always()
           run: |
-            poetry run task test-coverage-silent > pytest-coverage.txt
+            poetry run task test-coverage-silent > coverage.txt
         # Display the Coverage Report
         - name: Display Coverage
           if: always()
