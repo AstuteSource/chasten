@@ -56,10 +56,10 @@ ensure_newline_before_comments = true
 line_length = 88
 
 [tool.taskipy.variables]
-developer-test-command = "pytest -x -s -m 'not hypothesis'"
-developer-test-silent-command = "pytest -x -m 'not hypothesis' --show-capture=no"
-hypothesis-test-command = "pytest -x -s -m 'hypothesis'"
-hypothesis-test-silent-command = "pytest -x -m 'hypothesis' --show-capture=no"
+developer-test-command = "pytest -x -s -m 'not fuzz'"
+developer-test-silent-command = "pytest -x -m 'not fuzz' --show-capture=no"
+hypothesis-test-command = "pytest -x -s -m 'fuzz'"
+hypothesis-test-silent-command = "pytest -x -m 'fuzz' --show-capture=no"
 
 [tool.taskipy.tasks]
 all = "task black && task mypy && task ruff && task test-silent"
