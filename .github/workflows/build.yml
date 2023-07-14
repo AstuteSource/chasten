@@ -1,0 +1,65 @@
+# Basic workflow
+name: build
+
+# Controls when the action will run
+# Workflow begins with push or PR events
+# Focuses on the master branch only
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# Create one single job
+# This job performs all necessary checks
+jobs:
+  build:
+    # Use the latest version of Ubuntu on Microsoft Azure
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Performs all actions on different versions of Python
+        python-version: ['3.11']
+    # Define the workflow steps
+    steps:
+    # Checkout the code of the repository
+        - name: Check out Repository Code
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        # Run the mdl linting tool
+        # Refers to .mdlrc file in repository
+        - name: Run Markdown Linting
+          uses: actionshub/markdownlint@main
+        # Setup Python for the current language version
+        - name: Setup Python ${{ matrix.python-version }}
+          if: always()
+          uses: actions/setup-python@v4
+          with:
+            python-version: ${{ matrix.python-version }}
+        # Install pip
+        - name: Install Pip
+          if: always()
+          run: |
+            pip install -U pip
+        # Install poetry
+        - name: Install Poetry
+          if: always()
+          uses: abatilo/actions-poetry@v2.0.0
+          with:
+            poetry-version: 1.4.0
+        # Run the linters
+        - name: Run Linters
+          if: always()
+          run: |
+            poetry run task lint
+        # Run the tests
+        - name: Run Tests
+          if: always()
+          run: |
+            poetry run task test
+        # Run the test coverage monitoring
+        - name: Run Test Coverage
+          if: always()
+          run: |
+            poetry run task test-coverage-silent
