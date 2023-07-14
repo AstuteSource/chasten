@@ -72,7 +72,8 @@ jobs:
         - name: Display Coverage
           if: always()
           run: |
-            export GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
+            CURRENT_GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
+            echo "$CURRENT_GITHUB_STEP_SUMMARY" >> $GITHUB_STEP_SUMMARY
         - name: Coverage Badge
           uses: tj-actions/coverage-badge-py@v2
         - name: Verify Changed files
