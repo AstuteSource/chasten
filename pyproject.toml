@@ -56,8 +56,8 @@ ensure_newline_before_comments = true
 line_length = 88
 
 [tool.taskipy.variables]
-coverage-test-command = "pytest -s --cov-config .coveragerc --cov-report term-missing --cov-report xml --cov --cov-branch"
-coverage-test-command-silent = "pytest -x --show-capture=no --cov-config .coveragerc --cov-report term-missing --cov-report xml --cov --cov-branch"
+coverage-test-command = "pytest -s --cov-config .coveragerc --cov-report term-missing --cov-report json --cov --cov-branch"
+coverage-test-command-silent = "pytest -x --show-capture=no --cov-config .coveragerc --cov-report term-missing --cov-report json --cov --cov-branch"
 developer-test-command = "pytest -x -s -m 'not fuzz'"
 developer-test-silent-command = "pytest -x -m 'not fuzz' --show-capture=no"
 hypothesis-test-command = "pytest -x -s -m 'fuzz'"
