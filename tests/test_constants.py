@@ -16,7 +16,7 @@ def test_filesystem_constants():
 
 
 @given(directory=strategies.text(), yes=strategies.text(), no=strategies.text())
-@pytest.mark.hypothesis
+@pytest.mark.fuzz
 def test_fuzz_init(directory, yes, no):
     """Use Hypothesis to confirm that initial value is set correctly."""
     fs = constants.Filesystem(directory)
@@ -30,7 +30,7 @@ def test_fuzz_init(directory, yes, no):
     fs=strategies.builds(constants.Filesystem),
     hr=strategies.builds(constants.Humanreadable),
 )
-@pytest.mark.hypothesis
+@pytest.mark.fuzz
 def test_fuzz_immutable(fs, hr):
     """Use Hypothesis to confirm that attribute's value cannot be re-assigned."""
     with pytest.raises(FrozenInstanceError):
@@ -42,7 +42,7 @@ def test_fuzz_immutable(fs, hr):
 
 
 @given(dir1=strategies.text(), dir2=strategies.text())
-@pytest.mark.hypothesis
+@pytest.mark.fuzz
 def test_fuzz_distinct(dir1, dir2):
     """Use Hypothesis to confirm equality when the inputs names are the same."""
     fs1 = constants.Filesystem(dir1)
@@ -54,7 +54,7 @@ def test_fuzz_distinct(dir1, dir2):
 
 
 @given(directory=strategies.text())
-@pytest.mark.hypothesis
+@pytest.mark.fuzz
 def test_fuzz_dataclass_equality(directory):
     """Use Hypothesis to confirm that the same directory makes the same constant."""
     dir1 = directory

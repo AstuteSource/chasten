@@ -25,14 +25,14 @@ def test_cli_search(tmpdir):
 
 
 @given(directory=strategies.lists(strategies.builds(Path), min_size=1, max_size=5))
-@pytest.mark.hypothesis
+@pytest.mark.fuzz
 def test_fuzz_search(directory: typing.List[Path]) -> None:
     """Confirm that the function does not crash when called directly."""
     main.search(directory=directory)
 
 
 @given(directory=strategies.builds(Path))
-@pytest.mark.hypothesis
+@pytest.mark.fuzz
 def test_fuzz_cli_search_single_directory(directory):
     """Confirm that the function does not crash when called through the command-line interface."""
     result = runner.invoke(main.cli, ["search", "--directory", str(directory)])
@@ -40,7 +40,7 @@ def test_fuzz_cli_search_single_directory(directory):
 
 
 @given(directory_one=strategies.builds(Path), directory_two=strategies.builds(Path))
-@pytest.mark.hypothesis
+@pytest.mark.fuzz
 def test_fuzz_cli_search_multiple_directory(directory_one, directory_two):
     """Confirm that the function does not crash when called through the command-line interface."""
     result = runner.invoke(
