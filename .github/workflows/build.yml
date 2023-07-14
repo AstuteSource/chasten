@@ -67,10 +67,7 @@ jobs:
         - name: Run Test Coverage
           if: always()
           run: |
-            poetry run task test-coverage-silent
+            poetry run task test-coverage-silent > pytest-coverage.txt
         # Display the Coverage Report
         - name: Display Coverage
-          uses: orgoro/coverage@v3.1
-          with:
-              coverageFile: ./coverage.xml
-              token: ${{ secrets.GITHUB_TOKEN }}
+          uses: coroo/pytest-coverage-commentator@v1.0.2
