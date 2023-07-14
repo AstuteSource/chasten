@@ -72,4 +72,4 @@ jobs:
         - name: Display Coverage
           if: always()
           run: |
-            export GITHUB_JOB_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
+            export GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
