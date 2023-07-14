@@ -70,4 +70,6 @@ jobs:
             poetry run task test-coverage-silent > pytest-coverage.txt
         # Display the Coverage Report
         - name: Display Coverage
-          uses: coroo/pytest-coverage-commentator@v1.0.2
+          if: always()
+          run: |
+            export GITHUB_JOB_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
