@@ -68,3 +68,9 @@ jobs:
           if: always()
           run: |
             poetry run task test-coverage-silent
+        # Display the Coverage Report
+        - name: Display Coverage
+          uses: orgoro/coverage@v3.1
+          with:
+              coverageFile: ./coverage.xml
+              token: ${{ secrets.GITHUB_TOKEN }}
