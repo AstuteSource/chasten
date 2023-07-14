@@ -56,6 +56,8 @@ ensure_newline_before_comments = true
 line_length = 88
 
 [tool.taskipy.variables]
+coverage-test-command = "pytest -s --cov-config .coveragerc --cov-report term-missing --cov-report xml --cov --cov-branch"
+coverage-test-command-silent = "pytest -x --show-capture=no --cov-config .coveragerc --cov-report term-missing --cov-report xml --cov --cov-branch"
 developer-test-command = "pytest -x -s -m 'not fuzz'"
 developer-test-silent-command = "pytest -x -m 'not fuzz' --show-capture=no"
 hypothesis-test-command = "pytest -x -s -m 'fuzz'"
@@ -75,6 +77,8 @@ hypothesis = { cmd = "{hypothesis-test-command}", help = "Run the hypothesis-bas
 hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the hypothesis-based test cases", use_vars = true }
 test = { cmd = "pytest -x -s", help = "Run the pytest test suite" }
 test-silent = { cmd = "pytest -x --show-capture=no", help = "Run the pytest test suite without showing output" }
+test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
+test-coverage-silent = { cmd = "{coverage-test-command-silent}", help = "Run coverage monitoring for tests without output", use_vars = true }
 
 [build-system]
 requires = ["poetry-core"]
