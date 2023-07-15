@@ -38,6 +38,15 @@ def configure(
     output.setup(debug_level, debug_destination)
     output.logger.debug(f"Create a configuration? {create}")
     output.logger.debug(f"Display verbose output? {verbose}")
+    # display the header
+    output.print_header()
+    # display details about configuration as
+    # long as verbose output was requested
+    output.print_diagnostics(
+        verbose,
+        debug_level=debug_level,
+        debug_destination=debug_destination,
+    )
     # create the configuration directory
     if create:
         chasten_user_config_dir_str = user_config_dir(
