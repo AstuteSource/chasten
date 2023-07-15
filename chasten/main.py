@@ -10,7 +10,7 @@ from rich.console import Console
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import constants, debug, filesystem, output
+from chasten import constants, debug, filesystem, output, server
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -18,7 +18,7 @@ cli = typer.Typer()
 
 @cli.command()
 def tui(ctx: typer.Context) -> None:
-    """Interatively define command-line arguments through a terminal user interface."""
+    """Configure and run from a TUI."""
     Trogon(get_group(cli), click_context=ctx).run()
 
 
@@ -58,7 +58,7 @@ def search(
         help="One or more directories with Python code",
     ),
 ) -> None:
-    """Analyze the AST of all of the Python files found through recursive traversal of directories."""
+    """Check the AST of Python source code."""
     # create a console for rich text output
     console = Console()
     # add extra space after the command to run the program
@@ -81,3 +81,19 @@ def search(
     console.print(match_generator)
     for search_output in match_generator:
         console.print(search_output)
+
+
+@cli.command()
+def logger():
+    """Start the logging server."""
+    # display the header
+    output.print_header()
+    # display details about the server
+    output.print_server()
+    # run the server; note that this
+    # syslog server receives debugging
+    # information from chasten.
+    # It must be started in a separate process
+    # before running any sub-command
+    # of the chasten tool
+    server.start_syslog_server()
