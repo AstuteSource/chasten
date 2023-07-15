@@ -32,7 +32,6 @@ def configure(
     debug_destination: debug.DebugDestination = typer.Option(
         debug.DebugDestination.CONSOLE.value, "--debug-dest"
     ),
-
 ) -> None:
     """Create a configuration."""
     # setup the console and the logger through output module
