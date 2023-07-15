@@ -34,7 +34,7 @@ def configure(
     ),
 
 ) -> None:
-    """Create a configuration"""
+    """Create a configuration."""
     # setup the console and the logger through output module
     output.setup(debug_level, debug_destination)
     output.logger.debug(f"Create a configuration? {create}")
