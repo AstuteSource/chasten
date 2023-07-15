@@ -17,8 +17,8 @@ cli = typer.Typer()
 
 
 @cli.command()
-def tui(ctx: typer.Context) -> None:
-    """Configure and run from a TUI."""
+def interact(ctx: typer.Context) -> None:
+    """Interactively configure and run."""
     Trogon(get_group(cli), click_context=ctx).run()
 
 
@@ -84,7 +84,7 @@ def search(
 
 
 @cli.command()
-def logger():
+def log():
     """Start the logging server."""
     # display the header
     output.print_header()
