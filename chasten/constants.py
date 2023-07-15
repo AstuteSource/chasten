@@ -55,6 +55,55 @@ class Humanreadable:
 humanreadable = Humanreadable(Yes="Yes", No="No")
 
 
+# logger constant
+@dataclass(frozen=True)
+class Logger:
+    """Define the Logger dataclass for constant(s)."""
+
+    Function_Prefix: str
+    Richlog: str
+    Syslog: str
+
+
+logger = Logger(
+    Function_Prefix="configure_logging_",
+    Richlog="chasten-richlog",
+    Syslog="chasten-syslog",
+)
+
+# logging constant
+@dataclass(frozen=True)
+class Logging:
+    """Define the Logging dataclass for constant(s)."""
+
+    Debug: str
+    Info: str
+    Warning: str
+    Error: str
+    Critical: str
+    Console_Logging_Destination: str
+    Syslog_Logging_Destination: str
+    Default_Logging_Destination: str
+    Default_Logging_Level: str
+    Format: str
+    Rich: str
+
+
+logging = Logging(
+    Debug="DEBUG",
+    Info="INFO",
+    Warning="WARNING",
+    Error="ERROR",
+    Critical="CRITICAL",
+    Console_Logging_Destination="CONSOLE",
+    Syslog_Logging_Destination="syslog",
+    Default_Logging_Destination="console",
+    Default_Logging_Level="ERROR",
+    Format="%(message)s",
+    Rich="Rich",
+)
+
+
 # markers constant
 @dataclass(frozen=True)
 class Markers:
