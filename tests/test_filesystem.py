@@ -4,6 +4,7 @@ import pathlib
 
 import pytest
 from hypothesis import given, strategies
+from rich.tree import Tree
 
 from chasten import filesystem
 
@@ -52,3 +53,25 @@ def test_fuzz_confirm_valid_directory_using_builds(directory: pathlib.Path) -> N
 def test_fuzz_confirm_valid_file_using_builds(file: pathlib.Path) -> None:
     """Confirm that the function does not crash."""
     filesystem.confirm_valid_file(file=file)
+
+
+@given(directory=strategies.builds(pathlib.Path))
+@pytest.mark.fuzz
+def test_create_directory_tree(directory):
+    """Confirm that the file system directory tree creation works."""
+    tree = filesystem.create_directory_tree(directory)
+    # confirm that it is a tree object
+    assert isinstance(tree, Tree)
+    # confirm that it has the fully-qualified name as the main label
+    assert tree.label == f":open_file_folder: {directory.as_posix()}"
+    dirs = []
+    files = []
+    # build up a list of all of the directories and files
+    for node in tree.children:
+        if ":open_file_folder:" in node.label:  # type: ignore
+            dirs.append(node.label[19:])  # type: ignore
+        else:
+            files.append(node.label[17:])  # type: ignore
+    # confirm that it contains all of the directory and file names
+    assert set(dirs) == set(p.name for p in directory.iterdir() if p.is_dir())
+    assert set(files) == set(p.name for p in directory.iterdir() if p.is_file())
