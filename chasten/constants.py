@@ -22,13 +22,13 @@ class Chasten:
 chasten = Chasten(
     Application_Name="Chasten",
     Application_Author="ChastenedTeam",
-    Emoji=":shield: ",
+    Emoji=":dizzy:",
     Https="https://",
     Name="chasten",
     Separator="/",
     Server_Shutdown=":person_shrugging: Shut down chasten's sylog server",
     Tagline="chasten: Check the AST of Python Source Code",
-    Website="https://github.com/gkapfham/chasten",
+    Website=":link: https://github.com/gkapfham/chasten",
 )
 
 
