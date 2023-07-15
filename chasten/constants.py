@@ -10,9 +10,26 @@ class Chasten:
 
     Application_Name: str
     Application_Author: str
+    Emoji: str
+    Https: str
+    Name: str
+    Separator: str
+    Server_Shutdown: str
+    Tagline: str
+    Website: str
 
 
-chasten = Chasten("Chasten", "ChastenedTeam")
+chasten = Chasten(
+    Application_Name="Chasten",
+    Application_Author="ChastenedTeam",
+    Emoji=":shield: ",
+    Https="https://",
+    Name="chasten",
+    Separator="/",
+    Server_Shutdown=":person_shrugging: Shut down chasten's sylog server",
+    Tagline="chasten: Check the AST of Python Source Code",
+    Website="https://github.com/gkapfham/chasten",
+)
 
 
 # filesystem constant
@@ -23,7 +40,7 @@ class Filesystem:
     Current_Directory: str
 
 
-filesystem = Filesystem(".")
+filesystem = Filesystem(Current_Directory=".")
 
 
 # humanreadable constant
@@ -35,7 +52,7 @@ class Humanreadable:
     No: str
 
 
-humanreadable = Humanreadable("Yes", "No")
+humanreadable = Humanreadable(Yes="Yes", No="No")
 
 
 # markers constant
