@@ -71,6 +71,7 @@ logger = Logger(
     Syslog="chasten-syslog",
 )
 
+
 # logging constant
 @dataclass(frozen=True)
 class Logging:
