@@ -1081,7 +1081,7 @@ files = [
 name = "platformdirs"
 version = "3.8.1"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1805,4 +1805,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "560543ba37a54b3c389d06c6d9bad43b3a8fd9f34e0dd06d6265d3667461d236"
+content-hash = "9ca48155955eda006a210874265b1a9cb0e1028103b16684ca5aeff84142e94d"
