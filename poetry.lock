@@ -1411,7 +1411,7 @@ files = [
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -1696,28 +1696,6 @@ doc = ["cairosvg (>=2.5.2,<3.0.0)", "mdx-include (>=1.4.1,<2.0.0)", "mkdocs (>=1
 test = ["black (>=22.3.0,<23.0.0)", "coverage (>=6.2,<7.0)", "isort (>=5.0.6,<6.0.0)", "mypy (==0.910)", "pytest (>=4.4.0,<8.0.0)", "pytest-cov (>=2.10.0,<5.0.0)", "pytest-sugar (>=0.9.4,<0.10.0)", "pytest-xdist (>=1.32.0,<4.0.0)", "rich (>=10.11.0,<14.0.0)", "shellingham (>=1.3.0,<2.0.0)"]
 
 [[package]]
-name = "typer-config"
-version = "0.5.0"
-description = "Utilities for working with configuration files in typer CLIs. "
-category = "main"
-optional = false
-python-versions = ">=3.8,<4.0"
-files = [
-    {file = "typer_config-0.5.0-py3-none-any.whl", hash = "sha256:fef3301c1915115ee3d256220ba6496b93106778939dc2f20e1200fbc1dd8327"},
-    {file = "typer_config-0.5.0.tar.gz", hash = "sha256:57553f777c9d93f63a34939c7611ff2fa9711b6a9f05edf958332b2bc98acb4a"},
-]
-
-[package.dependencies]
-pyyaml = {version = ">=6.0,<7.0", optional = true, markers = "extra == \"yaml\" or extra == \"all\""}
-typer = ">=0,<1"
-
-[package.extras]
-all = ["python-dotenv", "pyyaml (>=6.0,<7.0)", "toml (>=0.10.2,<0.11.0)"]
-python-dotenv = ["python-dotenv"]
-toml = ["toml (>=0.10.2,<0.11.0)"]
-yaml = ["pyyaml (>=6.0,<7.0)"]
-
-[[package]]
 name = "typing-extensions"
 version = "4.7.1"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -1827,4 +1805,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "bead0084773f7ee2a23ad21e8155789e7b0cf4a16eccb912b488dbe138dfaec3"
+content-hash = "560543ba37a54b3c389d06c6d9bad43b3a8fd9f34e0dd06d6265d3667461d236"
