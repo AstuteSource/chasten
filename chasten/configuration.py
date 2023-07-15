@@ -77,7 +77,6 @@ def configure_logging_syslog(
     return logger
 
 
-
 class ChastenConfiguration(BaseModel):
     """Configuration of Chasten."""
 
