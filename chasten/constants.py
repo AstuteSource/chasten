@@ -96,7 +96,7 @@ markers = Markers(
 )
 
 
-# humanreadable constant
+# output constant
 @dataclass(frozen=True)
 class Output:
     """Define the Output dataclass for constant(s)."""
@@ -108,4 +108,29 @@ class Output:
 output = Output(
     Syslog=":sparkles: Syslog server for receiving debugging information",
     Test_Start=":sparkles: Start to run test suite for the specified program",
+)
+
+
+# server constant
+@dataclass(frozen=True)
+class Server:
+    """Define the Server dataclass for constant(s)."""
+
+    Backup_Count: int
+    Localhost: str
+    Log_File: str
+    Max_Log_Size: int
+    Poll_Interval: float
+    Port: int
+    Utf8_Encoding: str
+
+
+server = Server(
+    Backup_Count=1,
+    Localhost="127.0.0.1",
+    Log_File=".discover.log",
+    Max_Log_Size=1048576,
+    Poll_Interval=0.5,
+    Port=2525,
+    Utf8_Encoding="utf-8",
 )
