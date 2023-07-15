@@ -43,7 +43,7 @@ def print_diagnostics(verbose, **configurations) -> None:
 
 def print_header() -> None:
     """Display tool details in the header."""
-    global console 
+    global console  # noqa: disable=PLW0603
     console.print()
     console.print(
         constants.chasten.Emoji + constants.markers.Space + constants.chasten.Tagline
@@ -54,21 +54,21 @@ def print_header() -> None:
 
 def print_server() -> None:
     """Display server details in the header."""
-    global console
+    global console  # noqa: disable=PLW0603
     console.print(constants.output.Syslog)
     console.print()
 
 
 def print_test_start() -> None:
     """Display details about the test run."""
-    global console
+    global console  # noqa: disable=PLW0603
     console.print(constants.output.Test_Start)
     console.print()
 
 
 def print_test_finish() -> None:
     """Display details about the test run."""
-    global console
+    global console  # noqa: disable=PLW0603
     console.print()
     console.print(":sparkles: Finish running test suite for the specified program")
     console.print()
@@ -76,5 +76,5 @@ def print_test_finish() -> None:
 
 def print_footer() -> None:
     """Display concluding details in the footer."""
-    global console
+    global console  # noqa: disable=PLW0603
     console.print()
