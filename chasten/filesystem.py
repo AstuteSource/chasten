@@ -3,7 +3,28 @@
 from pathlib import Path
 from typing import List
 
+from rich.tree import Tree
+
 from chasten import constants
+
+
+def create_directory_tree(directory: Path) -> Tree:
+    """Create a directory tree visualization using the Rich tree."""
+    # display the fully-qualified name of provided directory
+    tree = Tree(f":open_file_folder: {directory.as_posix()}")
+    # iterate through all directories and file in specified directory
+    for p in directory.iterdir():
+        # display a folder icon when dealing with a directory
+        if p.is_dir():
+            style = ":open_file_folder:"
+        # display a file icon when dealing with a file
+        else:
+            style = ":page_facing_up:"
+        # create the current object and add it to tree
+        label = f"{style} {p.name}"
+        tree.add(label)
+    # return the completely created tree
+    return tree
 
 
 def confirm_valid_file(file: Path) -> bool:
