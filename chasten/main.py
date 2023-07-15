@@ -16,7 +16,7 @@ cli = typer.Typer()
 
 
 @cli.command()
-def tui(ctx: typer.Context):
+def tui(ctx: typer.Context) -> None:
     """Interatively define command-line arguments through a terminal user interface."""
     Trogon(get_group(cli), click_context=ctx).run()
 
@@ -28,7 +28,7 @@ def search(
         "--directory",
         "-d",
         help="One or more directories with Python code",
-    )
+    ),
 ) -> None:
     """Analyze the AST of all of the Python files found through recursive traversal of directories."""
     # create a console for rich text output
