@@ -94,3 +94,18 @@ markers = Markers(
     Tab="\t",
     Underscore="_",
 )
+
+
+# humanreadable constant
+@dataclass(frozen=True)
+class Output:
+    """Define the Output dataclass for constant(s)."""
+
+    Syslog: str
+    Test_Start: str
+
+
+output = Output(
+    Syslog=":sparkles: Syslog server for receiving debugging information",
+    Test_Start=":sparkles: Start to run test suite for the specified program",
+)
