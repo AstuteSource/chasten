@@ -20,7 +20,7 @@ class Chasten:
 
 
 chasten = Chasten(
-    Application_Name="Chasten",
+    Application_Name="chasten",
     Application_Author="ChastenedTeam",
     Emoji=":dizzy:",
     Https="https://",
@@ -28,7 +28,7 @@ chasten = Chasten(
     Separator="/",
     Server_Shutdown=":person_shrugging: Shut down chasten's sylog server",
     Tagline="chasten: Check the AST of Python Source Code",
-    Website=":link: https://github.com/gkapfham/chasten",
+    Website=":link: GitHub: https://github.com/gkapfham/chasten",
 )
 
 
