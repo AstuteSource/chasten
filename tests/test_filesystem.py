@@ -3,12 +3,10 @@
 import pathlib
 from unittest.mock import patch
 
-import platformdirs
 import pytest
 from hypothesis import given, strategies
 from rich.tree import Tree
 
-from chasten import configuration
 from chasten import filesystem
 
 
