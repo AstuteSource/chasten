@@ -9,6 +9,7 @@ from enum import Enum
 from pathlib import Path
 from typing import List
 
+import platformdirs
 from pydantic import BaseModel
 from rich.logging import RichHandler
 from rich.traceback import install
@@ -26,6 +27,17 @@ class Configuration(str, Enum):
 def configure_tracebacks() -> None:
     """Configure stack tracebacks arising from a crash to use rich."""
     install()
+
+
+def user_config_dir(application_name: str, application_author: str) -> str:
+    """Return the user's configuration directory using platformdirs."""
+    # access the directory and then return it based on the
+    # provided name of the application and the application's author
+    chasten_user_config_dir_str = platformdirs.user_config_dir(
+        appname=application_name,
+        appauthor=application_author,
+    )
+    return chasten_user_config_dir_str
 
 
 def configure_logging(
