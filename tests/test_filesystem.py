@@ -107,57 +107,60 @@ def test_fuzz_create_directory_tree(directory):
 
 
 @patch("chasten.configuration.user_config_dir")
-def test_create_config_dir(mock_user_config_dir, tmp_path):
+def test_create_config_dir_does_not_exist(mock_user_config_dir, tmp_path):
+    """Confirm possible to create the user configuration directory when it does not exist."""
     # monkeypath the platformdirs user_config_dir to always return
-    # the tmpdir test fixture that it controlled by Pytest
-    # monkeypatch.setattr("platformdirs.user_config_dir", lambda *_: tmpdir)
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
     mock_user_config_dir.return_value = str(tmp_path / ".chasten")
-    print(platformdirs.user_config_dir())
     dir_path = tmp_path / ".chasten"
-    # Call without force first
     result = filesystem.create_configuration_directory()
     assert result == dir_path
     assert dir_path.exists()
 
-    # # Call with force=True
-    # result = filesystem.create_configuration_directory(force=True)
-    # assert result == dir_path
-    # assert not dir_path.exists()
-    # # Confirm fails if called again without force
-    # with pytest.raises(FileExistsError):
-    #     filesystem.create_configuration_directory(dir_path)
 
-# @given(force=strategies.booleans())
-# @pytest.mark.fuzz
-# def test_create_config_dir(force):
-#     with tempfile.TemporaryDirectory() as tmp_dir:
-#         path = filesystem.create_configuration_directory(force)
-#         assert path == pathlib.Path(tmp_dir)
-#         if force:
-#             assert not pathlib.Path(tmp_dir).exists()
-#         else:
-#             assert pathlib.Path(tmp_dir).exists()
-#             with pytest.raises(FileExistsError):
-#                 filesystem.create_configuration_directory(tmp_dir)
+@patch("chasten.configuration.user_config_dir")
+def test_create_config_dir_already_exist_throw_exception(mock_user_config_dir, tmp_path):
+    """Confirm not possible to create the user configuration directory when it does exist."""
+    # monkeypath the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    dir_path = tmp_path / ".chasten"
+    result = filesystem.create_configuration_directory()
+    assert result == dir_path
+    assert dir_path.exists()
+    # confirm fails if called again without force
+    with pytest.raises(FileExistsError):
+        filesystem.create_configuration_directory(force=False)
 
 
-# @pytest.mark.fuzz
-# def test_fuzz_create_config_dir(tmpdir, monkeypatch):
-#     """Using Hypothesis to confirm that the configuration directory creation works."""
-#     # monkeypath the platformdirs user_config_dir to always return
-#     # the tmpdir test fixture that it controlled by Pytest
-#     monkeypatch.setattr("platformdirs.user_config_dir", lambda *_: tmpdir)
-#     print("test")
-#     # define an "internal" test case now that monkeypatching is finished
-#     @given(force=strategies.booleans())
-#     def test(force):
-#         path = filesystem.create_configuration_directory(force=force)
-#         print(force)
-#         print(path)
-#         assert path == pathlib.Path(tmpdir)
-#         if force:
-#             assert not tmpdir.exists()
-#         else:
-#             assert tmpdir.exists()
-#             with pytest.raises(FileExistsError):
-#                 filesystem.create_configuration_directory()
+@patch("chasten.configuration.user_config_dir")
+def test_create_config_dir_already_exist_no_exception_when_no_force(mock_user_config_dir, tmp_path):
+    """Confirm possible to create the user configuration directory when it does not exist."""
+    # monkeypath the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    dir_path = tmp_path / ".chasten"
+    result = filesystem.create_configuration_directory()
+    assert result == dir_path
+    assert dir_path.exists()
+    # confirm fails if called again without force
+    with pytest.raises(FileExistsError):
+        filesystem.create_configuration_directory(force=False)
+
+
+@patch("chasten.configuration.user_config_dir")
+def test_create_config_dir_already_exist_no_exception_when_force(mock_user_config_dir, tmp_path):
+    """Confirm possible to create the user configuration directory when it does not exist."""
+    # monkeypath the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    dir_path = tmp_path / ".chasten"
+    result = filesystem.create_configuration_directory()
+    assert result == dir_path
+    assert dir_path.exists()
+    # confirm fails if called again with force
+    filesystem.create_configuration_directory(force=True)
