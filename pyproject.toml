@@ -30,6 +30,8 @@ hypothesis = {extras = ["cli"], version = "^6.81.1"}
 hypofuzz = "^23.7.1"
 pytest-cov = "^4.1.0"
 pytest-sugar = "^0.9.7"
+types-pyyaml = "^6.0.12.10"
+types-jsonschema = "^4.17.0.9"
 
 [tool.pytest.ini_options]
 filterwarnings = [
