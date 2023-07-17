@@ -4,7 +4,6 @@ import shutil
 from pathlib import Path
 from typing import List, NoReturn, Union
 
-from platformdirs import user_config_dir
 from rich.tree import Tree
 
 from chasten import configuration, constants
