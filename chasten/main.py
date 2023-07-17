@@ -1,17 +1,19 @@
 """Chasten checks the AST of a Python program."""
 
+import json
 from enum import Enum
 from pathlib import Path
 from typing import List
 
 import typer
+import yaml
 from platformdirs import user_config_dir
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from rich.console import Console
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import constants, debug, filesystem, output, server
+from chasten import configuration, constants, debug, filesystem, output, server
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -77,6 +79,13 @@ def configure(
         )
         output.console.print(rich_path_tree)
         output.console.print()
+        with open(f"{chasten_user_config_dir_str}/config.yml") as f:
+            data = yaml.safe_load(f)
+            json_data = json.dumps(data)
+        # Validate
+        output.console.print(json_data)
+        settings = configuration.validate_configuration(data)
+        # print(settings.chasten.verbose)
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
