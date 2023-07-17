@@ -33,9 +33,12 @@ def interact(ctx: typer.Context) -> None:
 @cli.command()
 def configure(
     task: ConfigureTask = typer.Argument(ConfigureTask.DISPLAY.value),
-    # create: bool = typer.Option(
-    #     False, "--create", "-c", help="Create platform-specific configuration directory"
-    # ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        "-f",
+        help="Create configuration directory and files even if they exist",
+    ),
     verbose: bool = typer.Option(False),
     debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
     debug_destination: debug.DebugDestination = typer.Option(
@@ -43,7 +46,7 @@ def configure(
     ),
 ) -> None:
     """Create a configuration."""
-    # setup the console and the logger through output module
+    # setup the console and the logger through the output module
     output.setup(debug_level, debug_destination)
     output.logger.debug(f"Task? {task}")
     output.logger.debug(f"Display verbose output? {verbose}")
@@ -55,9 +58,9 @@ def configure(
     # long as verbose output was requested
     output.print_diagnostics(
         verbose,
-        task=task,
-        debug_level=debug_level,
-        debug_destination=debug_destination,
+        task=task.value,
+        debug_level=debug_level.value,
+        debug_destination=debug_destination.value,
     )
     # display the configuration directory and its contents
     if task == ConfigureTask.DISPLAY:
@@ -118,7 +121,7 @@ def search(
 
 
 @cli.command()
-def log():
+def log() -> None:
     """Start the logging server."""
     # display the header
     output.print_header()
