@@ -118,7 +118,9 @@ def test_create_config_dir_does_not_exist(mock_user_config_dir, tmp_path):
 
 
 @patch("chasten.configuration.user_config_dir")
-def test_create_config_dir_already_exist_throw_exception(mock_user_config_dir, tmp_path):
+def test_create_config_dir_already_exist_throw_exception(
+    mock_user_config_dir, tmp_path
+):
     """Confirm not possible to create the user configuration directory when it does exist."""
     # monkeypath the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
@@ -134,7 +136,9 @@ def test_create_config_dir_already_exist_throw_exception(mock_user_config_dir, t
 
 
 @patch("chasten.configuration.user_config_dir")
-def test_create_config_dir_already_exist_no_exception_when_no_force(mock_user_config_dir, tmp_path):
+def test_create_config_dir_already_exist_no_exception_when_no_force(
+    mock_user_config_dir, tmp_path
+):
     """Confirm possible to create the user configuration directory when it does not exist."""
     # monkeypath the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
@@ -150,7 +154,9 @@ def test_create_config_dir_already_exist_no_exception_when_no_force(mock_user_co
 
 
 @patch("chasten.configuration.user_config_dir")
-def test_create_config_dir_already_exist_no_exception_when_force(mock_user_config_dir, tmp_path):
+def test_create_config_dir_already_exist_no_exception_when_force(
+    mock_user_config_dir, tmp_path
+):
     """Confirm possible to create the user configuration directory when it does not exist."""
     # monkeypath the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
