@@ -8,7 +8,7 @@ from rich.tree import Tree
 from chasten import constants
 
 
-def create_directory_tree(directory: Path) -> Tree:
+def create_directory_tree_visualization(directory: Path) -> Tree:
     """Create a directory tree visualization using the Rich tree."""
     # display the fully-qualified name of provided directory
     tree = Tree(f":open_file_folder: {directory.as_posix()}")

@@ -65,7 +65,7 @@ def test_create_directory_tree(tmpdir):
     (tmp_dir / "subdir2").mkdir()
     (tmp_dir / "subdir2" / "file2.txt").touch()
     # call the function under test
-    tree = filesystem.create_directory_tree(tmp_dir)
+    tree = filesystem.create_directory_tree_visualization(tmp_dir)
     # confirm that the output is a rich tree object
     assert isinstance(tree, Tree)
     # confirm the directory name in root node
@@ -85,7 +85,7 @@ def test_create_directory_tree(tmpdir):
 @pytest.mark.fuzz
 def test_fuzz_create_directory_tree(directory):
     """Confirm that the file system directory tree creation works."""
-    tree = filesystem.create_directory_tree(directory)
+    tree = filesystem.create_directory_tree_visualization(directory)
     # confirm that it is a rich tree object
     assert isinstance(tree, Tree)
     # confirm that it has the fully-qualified name as the main label
