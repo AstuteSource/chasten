@@ -8,15 +8,10 @@ import typer
 from platformdirs import user_config_dir
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from rich.console import Console
-from rich.tree import Tree
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import constants
-from chasten import debug
-from chasten import filesystem
-from chasten import output
-from chasten import server
+from chasten import constants, debug, filesystem, output, server
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -72,10 +67,6 @@ def configure(
             appauthor=constants.chasten.Application_Author,
         )
         chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
-        tree = Tree(
-            f":open_file_folder: [link file://{chasten_user_config_dir_str}]{chasten_user_config_dir_str}",
-            guide_style="bold bright_blue",
-        )
         rich_path_tree = filesystem.create_directory_tree(chasten_user_config_dir_path)
         output.console.print(rich_path_tree)
         output.console.print()
