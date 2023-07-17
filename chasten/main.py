@@ -72,21 +72,22 @@ def configure(
             appauthor=constants.chasten.Application_Author,
         )
         chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
-        rich_path_tree = filesystem.create_directory_tree(chasten_user_config_dir_path)
+        rich_path_tree = filesystem.create_directory_tree_visualization(
+            chasten_user_config_dir_path
+        )
         output.console.print(rich_path_tree)
         output.console.print()
-    # create the configuration directory
+    # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
+        # attempt to create the configuration directory
         try:
-            chasten_user_config_dir_str = user_config_dir(
-                appname=constants.chasten.Application_Name,
-                appauthor=constants.chasten.Application_Author,
+            created_directory_path = filesystem.create_configuration_directory(force)
+            output.console.print(
+                f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
             )
-            chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
-            chasten_user_config_dir_path.mkdir(parents=True)
+        # cannot re-create the configuration directory, so display
+        # a message and suggest the use of --force the next time
         except FileExistsError:
-            # cannot re-create the configuration directory, so display
-            # a message and suggest the use of --force
             if not force:
                 output.console.print(
                     ":person_shrugging: Configuration directory already exists."
