@@ -1,11 +1,14 @@
 """Pytest test suite for the filesystem module."""
 
 import pathlib
+from unittest.mock import patch
 
+import platformdirs
 import pytest
 from hypothesis import given, strategies
 from rich.tree import Tree
 
+from chasten import configuration
 from chasten import filesystem
 
 
@@ -84,7 +87,7 @@ def test_create_directory_tree(tmpdir):
 @given(directory=strategies.builds(pathlib.Path))
 @pytest.mark.fuzz
 def test_fuzz_create_directory_tree(directory):
-    """Confirm that the file system directory tree creation works."""
+    """Using Hypothesis to confirm that the file system directory tree creation works."""
     tree = filesystem.create_directory_tree_visualization(directory)
     # confirm that it is a rich tree object
     assert isinstance(tree, Tree)
@@ -101,3 +104,60 @@ def test_fuzz_create_directory_tree(directory):
     # confirm that it contains all of the directory and file names
     assert set(dirs) == set(p.name for p in directory.iterdir() if p.is_dir())
     assert set(files) == set(p.name for p in directory.iterdir() if p.is_file())
+
+
+@patch("chasten.configuration.user_config_dir")
+def test_create_config_dir(mock_user_config_dir, tmp_path):
+    # monkeypath the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that it controlled by Pytest
+    # monkeypatch.setattr("platformdirs.user_config_dir", lambda *_: tmpdir)
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    print(platformdirs.user_config_dir())
+    dir_path = tmp_path / ".chasten"
+    # Call without force first
+    result = filesystem.create_configuration_directory()
+    assert result == dir_path
+    assert dir_path.exists()
+
+    # # Call with force=True
+    # result = filesystem.create_configuration_directory(force=True)
+    # assert result == dir_path
+    # assert not dir_path.exists()
+    # # Confirm fails if called again without force
+    # with pytest.raises(FileExistsError):
+    #     filesystem.create_configuration_directory(dir_path)
+
+# @given(force=strategies.booleans())
+# @pytest.mark.fuzz
+# def test_create_config_dir(force):
+#     with tempfile.TemporaryDirectory() as tmp_dir:
+#         path = filesystem.create_configuration_directory(force)
+#         assert path == pathlib.Path(tmp_dir)
+#         if force:
+#             assert not pathlib.Path(tmp_dir).exists()
+#         else:
+#             assert pathlib.Path(tmp_dir).exists()
+#             with pytest.raises(FileExistsError):
+#                 filesystem.create_configuration_directory(tmp_dir)
+
+
+# @pytest.mark.fuzz
+# def test_fuzz_create_config_dir(tmpdir, monkeypatch):
+#     """Using Hypothesis to confirm that the configuration directory creation works."""
+#     # monkeypath the platformdirs user_config_dir to always return
+#     # the tmpdir test fixture that it controlled by Pytest
+#     monkeypatch.setattr("platformdirs.user_config_dir", lambda *_: tmpdir)
+#     print("test")
+#     # define an "internal" test case now that monkeypatching is finished
+#     @given(force=strategies.booleans())
+#     def test(force):
+#         path = filesystem.create_configuration_directory(force=force)
+#         print(force)
+#         print(path)
+#         assert path == pathlib.Path(tmpdir)
+#         if force:
+#             assert not tmpdir.exists()
+#         else:
+#             assert tmpdir.exists()
+#             with pytest.raises(FileExistsError):
+#                 filesystem.create_configuration_directory()
