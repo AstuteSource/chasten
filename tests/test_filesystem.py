@@ -73,8 +73,12 @@ def test_create_directory_tree(tmpdir):
     # confirm that the child nodes contain the expected dirs and files
     dirs = [node.label for node in tree.children if ":open_file_folder:" in node.label]  # type: ignore
     files = [node.label for node in tree.children if ":page_facing_up:" in node.label]  # type: ignore
-    assert set(dirs) == {f":open_file_folder: {p.name}" for p in tmp_dir.iterdir() if p.is_dir()}
-    assert set(files) == {f":page_facing_up: {p.name}" for p in tmp_dir.iterdir() if p.is_file()}
+    assert set(dirs) == {
+        f":open_file_folder: {p.name}" for p in tmp_dir.iterdir() if p.is_dir()
+    }
+    assert set(files) == {
+        f":page_facing_up: {p.name}" for p in tmp_dir.iterdir() if p.is_file()
+    }
 
 
 @given(directory=strategies.builds(pathlib.Path))

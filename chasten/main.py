@@ -61,7 +61,9 @@ def configure(
     )
     # display the configuration directory and its contents
     if task == ConfigureTask.DISPLAY:
-        output.console.print(":sparkles: Configuration directory:" + constants.markers.Newline)
+        output.console.print(
+            ":sparkles: Configuration directory:" + constants.markers.Newline
+        )
         chasten_user_config_dir_str = user_config_dir(
             appname=constants.chasten.Application_Name,
             appauthor=constants.chasten.Application_Author,
