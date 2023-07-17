@@ -7,14 +7,30 @@ import os
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import List
 
+import jsonschema
 import platformdirs
-from pydantic import BaseModel
 from rich.logging import RichHandler
 from rich.traceback import install
 
 from chasten import constants
+
+JSON_SCHEMA = {
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+        "chasten": {
+            "type": "object",
+            "properties": {
+                "verbose": {"type": "boolean"},
+                "debug_level": {
+                    "type": "string",
+                    "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+                },
+            },
+        }
+    },
+}
 
 
 class Configuration(str, Enum):
@@ -89,7 +105,6 @@ def configure_logging_syslog(
     return logger
 
 
-class ChastenConfiguration(BaseModel):
-    """Configuration of Chasten."""
-
-    directory: List[Path]
+def validate_configuration(configuration: str):
+    """Validate the configuration."""
+    jsonschema.validate(instance=configuration, schema=JSON_SCHEMA)
