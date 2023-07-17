@@ -1,11 +1,35 @@
 """Check and access contents of the filesystem."""
 
+import shutil
 from pathlib import Path
-from typing import List
+from typing import List, NoReturn, Union
 
+from platformdirs import user_config_dir
 from rich.tree import Tree
 
-from chasten import constants
+from chasten import configuration, constants
+
+
+def create_configuration_directory(force: bool = False) -> Union[Path, NoReturn]:
+    """Create the configuration directory."""
+    # use the configuration package to detect what is the
+    # platform-specific user configuration directory; provide
+    # the function with the default name of the application
+    # and the default name of the application's author
+    chasten_user_config_dir_str = configuration.user_config_dir(
+        application_name=constants.chasten.Application_Name,
+        application_author=constants.chasten.Application_Author,
+    )
+    chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
+    # recursively delete the configuration directory and all of its
+    # contents because the force parameter permits deletion
+    if force:
+        shutil.rmtree(chasten_user_config_dir_path)
+    # create the configuration directory, a step that
+    # may fail if the directory already exists; in this
+    # case the FileExistsError will be passed to caller
+    chasten_user_config_dir_path.mkdir(parents=True)
+    return chasten_user_config_dir_path
 
 
 def create_directory_tree_visualization(directory: Path) -> Tree:
