@@ -11,14 +11,16 @@ from rich.console import Console
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import filesystem
-from chasten import output
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    configuration,
+    constants,
+    debug,
+    filesystem,
+    output,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -58,13 +60,8 @@ def output_preamble(
     )
 
 
-@cli.command()
-def interact(ctx: typer.Context) -> None:
-    """Interactively configure and run."""
-    Trogon(get_group(cli), click_context=ctx).run()
-
-
 def display_configuration_details(chasten_user_config_dir_str, rich_path_tree):
+    """Display details about the configuration."""
     output.console.print(rich_path_tree)
     output.console.print()
     configuration_file_str = (
@@ -76,6 +73,26 @@ def display_configuration_details(chasten_user_config_dir_str, rich_path_tree):
     with open(configuration_file_str) as user_configuration_file:
         data = yaml.safe_load(user_configuration_file)
     return configuration_file_str, configuration_file_yml, data
+
+
+def validate_configuration(configuration_file_str, configuration_file_yml, data):
+    """Validate the provided configuration file."""
+    (validated, errors) = validate.validate_configuration(data)
+    output.console.print(
+        f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}"
+    )
+    if not validated:
+        output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
+    else:
+        output.console.print()
+        output.console.print(f"Contents of {configuration_file_str}:\n")
+        output.console.print(configuration_file_yml)
+
+
+@cli.command()
+def interact(ctx: typer.Context) -> None:
+    """Interactively configure and run."""
+    Trogon(get_group(cli), click_context=ctx).run()
 
 
 @cli.command()
@@ -114,23 +131,14 @@ def configure(
         rich_path_tree = filesystem.create_directory_tree_visualization(
             chasten_user_config_dir_path
         )
-        # display the configuration directory
+        # display details about the configuration directory
         (
             configuration_file_str,
             configuration_file_yml,
             data,
         ) = display_configuration_details(chasten_user_config_dir_str, rich_path_tree)
         # validate the user's configuration and display the results
-        (validated, errors) = validate.validate_configuration(data)
-        output.console.print(
-            f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}"
-        )
-        if not validated:
-            output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
-        else:
-            output.console.print()
-            output.console.print(f"Contents of {configuration_file_str}:\n")
-            output.console.print(configuration_file_yml)
+        validate_configuration(configuration_file_str, configuration_file_yml, data)
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
