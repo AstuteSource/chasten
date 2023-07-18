@@ -1,7 +1,6 @@
 """Perform logging and/or console output."""
 
 import logging
-from typing import Union
 
 from rich.console import Console
 
@@ -24,7 +23,9 @@ def setup(
     configuration.configure_tracebacks()
     # --> logging to keep track of key events during program execution;
     # pass in the actual values as strings instead of using class enums
-    logger, _ = configuration.configure_logging(debug_level.value, debug_destination.value)
+    logger, _ = configuration.configure_logging(
+        debug_level.value, debug_destination.value
+    )
 
 
 def print_diagnostics(verbose, **configurations) -> None:
