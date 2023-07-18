@@ -1,8 +1,10 @@
 """Pytest test suite for the validate module."""
 
 import pytest
+from hypothesis import given, strategies
+from hypothesis_jsonschema import from_schema
 
-from chasten.validate import validate_configuration
+from chasten.validate import JSON_SCHEMA, validate_configuration
 
 
 def test_validate_config_valid_simple():
@@ -59,3 +61,53 @@ def test_validate_config_invalid_realistic():
     assert not is_valid
     assert errors
     assert "is not of type" in errors
+
+
+@given(
+    config=strategies.fixed_dictionaries({
+        "chasten": strategies.fixed_dictionaries({})
+    })
+)
+@pytest.mark.fuzz
+def test_validate_empty_config(config):
+    """Use Hypothesis to confirm that an empty configuration will validate."""
+    is_valid, errors = validate_configuration(config)
+    assert is_valid
+    assert errors == ""
+
+
+@given(
+    config=strategies.fixed_dictionaries({
+        "chasten": strategies.fixed_dictionaries({
+            "verbose": strategies.booleans(),
+        })
+    })
+)
+@pytest.mark.fuzz
+def test_validate_config_with_verbose(config):
+    is_valid, errors = validate_configuration(config)
+    assert is_valid
+    assert errors == ""
+
+
+@given(
+    config=strategies.fixed_dictionaries({
+        "chasten": strategies.fixed_dictionaries({
+            "debug-level": strategies.sampled_from(["INFO", "WARNING"]),
+        })
+    })
+)
+@pytest.mark.fuzz
+def test_validate_config_with_debug_level(config):
+    is_valid, errors = validate_configuration(config)
+    assert is_valid
+    assert errors == ""
+
+
+@given(from_schema(JSON_SCHEMA))
+@pytest.mark.fuzz
+def test_integers(config):
+    print(config)
+    is_valid, errors = validate_configuration(config)
+    assert is_valid
+    assert errors == ""
