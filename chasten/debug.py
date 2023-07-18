@@ -16,5 +16,5 @@ class DebugLevel(str, Enum):
 class DebugDestination(str, Enum):
     """The destination for debugging."""
 
-    CONSOLE = "console"
-    SYSLOG = "syslog"
+    CONSOLE = "CONSOLE"
+    SYSLOG = "SYSLOG"
