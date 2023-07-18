@@ -484,6 +484,22 @@ redis = ["redis (>=3.0.0)"]
 zoneinfo = ["backports.zoneinfo (>=0.2.1)", "tzdata (>=2023.3)"]
 
 [[package]]
+name = "hypothesis-jsonschema"
+version = "0.22.1"
+description = "Generate test data from JSON schemata with Hypothesis"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "hypothesis-jsonschema-0.22.1.tar.gz", hash = "sha256:5dd7449009f323e408a9aa64afb4d18bd1f60ea2eabf5bf152a510da728b34f2"},
+    {file = "hypothesis_jsonschema-0.22.1-py3-none-any.whl", hash = "sha256:082968cb86a6aac2369627b08753cbf714c08054b1ebfce3588e3756e652cde6"},
+]
+
+[package.dependencies]
+hypothesis = ">=6.31.6"
+jsonschema = ">=4.0.0"
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -1989,4 +2005,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ce5619dfe5307c91486abfcc683f9628870d225234e58aefc1333428f843103a"
+content-hash = "cd01e9953ac0d09138505c3e1962c9060e32a83e959f4e7159ad863504ad3841"
