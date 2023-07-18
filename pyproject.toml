@@ -39,6 +39,7 @@ filterwarnings = [
 ]
 
 [tool.ruff]
+line-length = 79
 ignore = [
     "E501", # do not check line length
 ]
