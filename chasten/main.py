@@ -7,7 +7,9 @@ from typing import List
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
+from rich import print
 from rich.console import Console
+from rich.markdown import Markdown
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
@@ -93,6 +95,7 @@ def configure(
         configuration_file_str = f"{chasten_user_config_dir_str}/config.yml"
         configuration_file_path = Path(configuration_file_str)
         configuration_file_yml = configuration_file_path.read_text()
+        data = None
         with open(configuration_file_str) as user_configuration_file:
             data = yaml.safe_load(user_configuration_file)
         # validate the user's configuration and display the results
@@ -104,6 +107,7 @@ def configure(
             output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
         else:
             output.console.print()
+            output.console.print(f"Contents of {configuration_file_str}:\n")
             output.console.print(configuration_file_yml)
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
