@@ -101,7 +101,7 @@ def configure(
         (validated, errors) = validate.validate_configuration(data)
         output.console.print(f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}")
         if not validated:
-            output.console.print(f":person_shrugging: Validation errors:\n\n {errors}")
+            output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
         else:
             output.console.print()
             output.console.print(configuration_file_yml)
