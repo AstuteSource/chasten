@@ -18,6 +18,10 @@ JSON_SCHEMA = {
                     "type": "string",
                     "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
                 },
+                "debug_destination": {
+                    "type": "string",
+                    "enum": ["CONSOLE", "SYSLOG"],
+                },
             },
             "additionalProperties": False,
         },
