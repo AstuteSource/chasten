@@ -170,17 +170,24 @@ def analyze(
             invalid_directories.append(current_directory)
     # create the list of valid directories by removing the invalid ones
     valid_directories = list(set(directory) - set(invalid_directories))
-    console.print(valid_directories)
+    output.console.print(
+        f":sparkles: Analyzing Python source code in:\n {', '.join(str(d) for d in valid_directories)}\n"
+    )
     # search for the XML contents of an AST that match the provided
     # XPATH query using the search_python_file in search module of pyastgrep
     match_generator = pyastgrepsearch.search_python_files(
         paths=valid_directories,
         expression='.//FunctionDef[@name="classify"]/body//If[ancestor::If and not(parent::orelse)]',
     )
-    # display debugging information about the contents of the match generator
-    console.print(match_generator)
+    # materialize a list out of the generator and then count
+    # and display the number of matches inside of the list
+    match_generator_list = list(match_generator)
+    output.console.print(f"Analyze a total of {len(match_generator_list)} files")
+    # display debugging information about the contents of the match generator,
+    # note that this only produces output when --verbose is enabled
+    output.print_diagnostics(verbose, match_generator_list=match_generator_list)
     for search_output in match_generator:
-        console.print(search_output)
+        output.print_diagnostics(verbose, search_output=search_output)
 
 
 @cli.command()
