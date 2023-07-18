@@ -20,6 +20,7 @@ from chasten import (
     filesystem,
     output,
     server,
+    util,
     validate,
 )
 
@@ -91,12 +92,19 @@ def configure(
         # display the configuration directory
         output.console.print(rich_path_tree)
         output.console.print()
-        with open(f"{chasten_user_config_dir_str}/config.yml") as user_configuration_file:
+        configuration_file_str = f"{chasten_user_config_dir_str}/config.yml"
+        configuration_file_path = Path(configuration_file_str)
+        configuration_file_yml = configuration_file_path.read_text()
+        with open(configuration_file_str) as user_configuration_file:
             data = yaml.safe_load(user_configuration_file)
-            json_data = json.dumps(data)
         # validate the user's configuration and display the results
-        output.console.print(json_data)
-        settings = validate.validate_configuration(data)
+        (validated, errors) = validate.validate_configuration(data)
+        output.console.print(f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}")
+        if not validated:
+            output.console.print(f":person_shrugging: Validation errors:\n\n {errors}")
+        else:
+            output.console.print()
+            output.console.print(configuration_file_yml)
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
