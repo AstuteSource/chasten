@@ -33,6 +33,11 @@ JSON_SCHEMA = {
                     "items": {"type": "string"},
                     "required": [],
                 },
+                "checks-file": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "required": [],
+                },
             },
             "additionalProperties": False,
         },
