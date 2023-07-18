@@ -27,7 +27,7 @@ chasten = Chasten(
     Name="chasten",
     Separator="/",
     Server_Shutdown=":person_shrugging: Shut down chasten's sylog server",
-    Tagline="chasten: Check the AST of Python Source Code",
+    Tagline="chasten: Analyze the AST of Python Source Code",
     Website=":link: GitHub: https://github.com/gkapfham/chasten",
 )
 
@@ -38,9 +38,10 @@ class Filesystem:
     """Define the Filesystem dataclass for constant(s)."""
 
     Current_Directory: str
+    Main_Configuration_File: str
 
 
-filesystem = Filesystem(Current_Directory=".")
+filesystem = Filesystem(Current_Directory=".", Main_Configuration_File="config.yml")
 
 
 # humanreadable constant
