@@ -13,7 +13,15 @@ from rich.console import Console
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import configuration, constants, debug, filesystem, output, server
+from chasten import (
+    configuration,
+    constants,
+    debug,
+    filesystem,
+    output,
+    server,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -69,23 +77,26 @@ def configure(
         output.console.print(
             ":sparkles: Configuration directory:" + constants.markers.Newline
         )
-        chasten_user_config_dir_str = user_config_dir(
-            appname=constants.chasten.Application_Name,
-            appauthor=constants.chasten.Application_Author,
+        # detect and store the platform-specific user
+        # configuration directory
+        chasten_user_config_dir_str = configuration.user_config_dir(
+            application_name=constants.chasten.Application_Name,
+            application_author=constants.chasten.Application_Author,
         )
+        # create a visualization of the user's configuration directory
         chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
         rich_path_tree = filesystem.create_directory_tree_visualization(
             chasten_user_config_dir_path
         )
+        # display the configuration directory
         output.console.print(rich_path_tree)
         output.console.print()
-        with open(f"{chasten_user_config_dir_str}/config.yml") as f:
-            data = yaml.safe_load(f)
+        with open(f"{chasten_user_config_dir_str}/config.yml") as user_configuration_file:
+            data = yaml.safe_load(user_configuration_file)
             json_data = json.dumps(data)
-        # Validate
+        # validate the user's configuration and display the results
         output.console.print(json_data)
-        settings = configuration.validate_configuration(data)
-        # print(settings.chasten.verbose)
+        settings = validate.validate_configuration(data)
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
