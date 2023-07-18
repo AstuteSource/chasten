@@ -11,16 +11,14 @@ from rich.console import Console
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    filesystem,
-    output,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import filesystem
+from chasten import output
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -66,6 +64,20 @@ def interact(ctx: typer.Context) -> None:
     Trogon(get_group(cli), click_context=ctx).run()
 
 
+def display_configuration_details(chasten_user_config_dir_str, rich_path_tree):
+    output.console.print(rich_path_tree)
+    output.console.print()
+    configuration_file_str = (
+        f"{chasten_user_config_dir_str}/{constants.filesystem.Main_Configuration_File}"
+    )
+    configuration_file_path = Path(configuration_file_str)
+    configuration_file_yml = configuration_file_path.read_text()
+    data = None
+    with open(configuration_file_str) as user_configuration_file:
+        data = yaml.safe_load(user_configuration_file)
+    return configuration_file_str, configuration_file_yml, data
+
+
 @cli.command()
 def configure(
     task: ConfigureTask = typer.Argument(ConfigureTask.VALIDATE.value),
@@ -103,14 +115,11 @@ def configure(
             chasten_user_config_dir_path
         )
         # display the configuration directory
-        output.console.print(rich_path_tree)
-        output.console.print()
-        configuration_file_str = f"{chasten_user_config_dir_str}/{constants.filesystem.Main_Configuration_File}"
-        configuration_file_path = Path(configuration_file_str)
-        configuration_file_yml = configuration_file_path.read_text()
-        data = None
-        with open(configuration_file_str) as user_configuration_file:
-            data = yaml.safe_load(user_configuration_file)
+        (
+            configuration_file_str,
+            configuration_file_yml,
+            data,
+        ) = display_configuration_details(chasten_user_config_dir_str, rich_path_tree)
         # validate the user's configuration and display the results
         (validated, errors) = validate.validate_configuration(data)
         output.console.print(
