@@ -64,9 +64,7 @@ def test_validate_config_invalid_realistic():
 
 
 @given(
-    config=strategies.fixed_dictionaries({
-        "chasten": strategies.fixed_dictionaries({})
-    })
+    config=strategies.fixed_dictionaries({"chasten": strategies.fixed_dictionaries({})})
 )
 @pytest.mark.fuzz
 def test_validate_empty_config(config):
@@ -77,11 +75,15 @@ def test_validate_empty_config(config):
 
 
 @given(
-    config=strategies.fixed_dictionaries({
-        "chasten": strategies.fixed_dictionaries({
-            "verbose": strategies.booleans(),
-        })
-    })
+    config=strategies.fixed_dictionaries(
+        {
+            "chasten": strategies.fixed_dictionaries(
+                {
+                    "verbose": strategies.booleans(),
+                }
+            )
+        }
+    )
 )
 @pytest.mark.fuzz
 def test_validate_config_with_verbose(config):
@@ -92,11 +94,15 @@ def test_validate_config_with_verbose(config):
 
 
 @given(
-    config=strategies.fixed_dictionaries({
-        "chasten": strategies.fixed_dictionaries({
-            "debug-level": strategies.sampled_from(["INFO", "WARNING"]),
-        })
-    })
+    config=strategies.fixed_dictionaries(
+        {
+            "chasten": strategies.fixed_dictionaries(
+                {
+                    "debug-level": strategies.sampled_from(["INFO", "WARNING"]),
+                }
+            )
+        }
+    )
 )
 @pytest.mark.fuzz
 def test_validate_config_with_debug_level(config):
