@@ -33,6 +33,33 @@ class ConfigureTask(str, Enum):
     VALIDATE = "validate"
 
 
+def output_preamble(
+    verbose: bool,
+    debug_level: debug.DebugLevel = debug.DebugLevel.ERROR,
+    debug_destination: debug.DebugDestination = debug.DebugDestination.CONSOLE,
+    **kwargs,
+) -> None:
+    """Output all of the preamble content."""
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
+    # display the header
+    output.print_header()
+    # display details about configuration as
+    # long as verbose output was requested;
+    # note that passing **kwargs to this function
+    # will pass along all of the extra keyword
+    # arguments that were input to the function
+    output.print_diagnostics(
+        verbose,
+        debug_level=debug_level.value,
+        debug_destination=debug_destination.value,
+        **kwargs,
+    )
+
+
 @cli.command()
 def interact(ctx: typer.Context) -> None:
     """Interactively configure and run."""
@@ -55,21 +82,9 @@ def configure(
     ),
 ) -> None:
     """Manage tool configuration."""
-    # setup the console and the logger through the output module
-    output.setup(debug_level, debug_destination)
-    output.logger.debug(f"Task? {task}")
-    output.logger.debug(f"Display verbose output? {verbose}")
-    output.logger.debug(f"Debug level? {debug_level.value}")
-    output.logger.debug(f"Debug destination? {debug_destination.value}")
-    # display the header
-    output.print_header()
-    # display details about configuration as
-    # long as verbose output was requested
-    output.print_diagnostics(
-        verbose,
-        task=task.value,
-        debug_level=debug_level.value,
-        debug_destination=debug_destination.value,
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(
+        verbose, debug_level, debug_destination, task=task.value, force=force
     )
     # display the configuration directory and its contents
     if task == ConfigureTask.VALIDATE:
@@ -128,15 +143,22 @@ def configure(
 
 
 @cli.command()
-def search(
+def analyze(
     directory: List[Path] = typer.Option(
         filesystem.get_default_directory_list(),
         "--search-directory",
         "-d",
         help="One or more directories with Python code",
     ),
+    verbose: bool = typer.Option(False),
+    debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value, "--debug-dest"
+    ),
 ) -> None:
-    """Check the AST of Python source code."""
+    """Analyze the AST of Python source code."""
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(verbose, debug_level, debug_destination, directory=directory)
     # create a console for rich text output
     console = Console()
     # add extra space after the command to run the program
