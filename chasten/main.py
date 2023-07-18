@@ -7,9 +7,7 @@ from typing import List
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from rich import print
 from rich.console import Console
-from rich.markdown import Markdown
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
