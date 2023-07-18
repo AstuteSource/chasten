@@ -2,7 +2,7 @@
 
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List, Tuple
 
 import typer
 import yaml
@@ -60,29 +60,49 @@ def output_preamble(
     )
 
 
-def display_configuration_details(chasten_user_config_dir_str, rich_path_tree):
+def display_configuration_details(
+    chasten_user_config_dir_str: str,
+) -> Tuple[str, str, Dict[str, Dict[str, Any]]]:
     """Display details about the configuration."""
+    # create a visualization of the configuration directory
+    chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
+    rich_path_tree = filesystem.create_directory_tree_visualization(
+        chasten_user_config_dir_path
+    )
+    # display the visualization of the configuration directory
     output.console.print(rich_path_tree)
     output.console.print()
+    # create the name of the main configuration file
     configuration_file_str = (
         f"{chasten_user_config_dir_str}/{constants.filesystem.Main_Configuration_File}"
     )
+    # load the text of the main configuration file
     configuration_file_path = Path(configuration_file_str)
     configuration_file_yml = configuration_file_path.read_text()
-    data = None
+    # load the contents of the main configuration file
+    yaml_data = None
     with open(configuration_file_str) as user_configuration_file:
-        data = yaml.safe_load(user_configuration_file)
-    return configuration_file_str, configuration_file_yml, data
+        yaml_data = yaml.safe_load(user_configuration_file)
+    # return the file name, the textual contents of the configuration file, and
+    # a dict-based representation of the configuration file
+    return configuration_file_str, configuration_file_yml, yaml_data
 
 
-def validate_configuration(configuration_file_str, configuration_file_yml, data):
+def validate_configuration(
+    configuration_file_str: str,
+    configuration_file_yml: str,
+    data: Dict[str, Dict[str, Any]],
+) -> None:
     """Validate the provided configuration file."""
+    # perform the validation of the configuration file
     (validated, errors) = validate.validate_configuration(data)
     output.console.print(
         f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}"
     )
+    # there was a validation error, so display the error report
     if not validated:
         output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
+    # validation worked correctly, so display the configuration file
     else:
         output.console.print()
         output.console.print(f"Contents of {configuration_file_str}:\n")
@@ -127,16 +147,12 @@ def configure(
             application_author=constants.chasten.Application_Author,
         )
         # create a visualization of the user's configuration directory
-        chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
-        rich_path_tree = filesystem.create_directory_tree_visualization(
-            chasten_user_config_dir_path
-        )
         # display details about the configuration directory
         (
             configuration_file_str,
             configuration_file_yml,
             data,
-        ) = display_configuration_details(chasten_user_config_dir_str, rich_path_tree)
+        ) = display_configuration_details(chasten_user_config_dir_str)
         # validate the user's configuration and display the results
         validate_configuration(configuration_file_str, configuration_file_yml, data)
     # create the configuration directory and a starting version of the configuration file
