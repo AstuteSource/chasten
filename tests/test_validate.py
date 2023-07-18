@@ -73,7 +73,7 @@ def test_validate_empty_config(config):
     """Use Hypothesis to confirm that an empty configuration will validate."""
     is_valid, errors = validate_configuration(config)
     assert is_valid
-    assert errors == ""
+    assert not errors
 
 
 @given(
@@ -85,9 +85,10 @@ def test_validate_empty_config(config):
 )
 @pytest.mark.fuzz
 def test_validate_config_with_verbose(config):
+    """Use Hypothesis to confirm that a very simple valid schema will validate correctly."""
     is_valid, errors = validate_configuration(config)
     assert is_valid
-    assert errors == ""
+    assert not errors
 
 
 @given(
@@ -99,15 +100,16 @@ def test_validate_config_with_verbose(config):
 )
 @pytest.mark.fuzz
 def test_validate_config_with_debug_level(config):
+    """Use Hypothesis to confirm that a simple valid schema will validate correctly."""
     is_valid, errors = validate_configuration(config)
     assert is_valid
-    assert errors == ""
+    assert not errors
 
 
 @given(from_schema(JSON_SCHEMA))
 @pytest.mark.fuzz
 def test_integers(config):
-    print(config)
+    """Use Hypothesis and the JSON schema plugin to confirm validation works for all possible valid instances."""
     is_valid, errors = validate_configuration(config)
     assert is_valid
-    assert errors == ""
+    assert not errors
