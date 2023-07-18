@@ -1,13 +1,11 @@
 """Chasten checks the AST of a Python program."""
 
-import json
 from enum import Enum
 from pathlib import Path
 from typing import List
 
 import typer
 import yaml
-from platformdirs import user_config_dir
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from rich.console import Console
 from trogon import Trogon  # type: ignore
@@ -99,7 +97,9 @@ def configure(
             data = yaml.safe_load(user_configuration_file)
         # validate the user's configuration and display the results
         (validated, errors) = validate.validate_configuration(data)
-        output.console.print(f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}")
+        output.console.print(
+            f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}"
+        )
         if not validated:
             output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
         else:
