@@ -1,13 +1,14 @@
 """Perform logging and/or console output."""
 
 import logging
+from typing import Union
 
 from rich.console import Console
 
 from chasten import configuration, constants, debug
 
 # declare a default logger
-logger = logging.getLogger()
+logger: logging.Logger = logging.getLogger()
 
 # create a default console
 console = Console()
@@ -17,13 +18,13 @@ def setup(
     debug_level: debug.DebugLevel, debug_destination: debug.DebugDestination
 ) -> None:
     """Perform the setup steps and return a Console for terminal-based display."""
-    global logger  # noqa: disable=PLW0603
+    global logger
     # configure the use of rich for improved terminal output:
     # --> rich-based tracebacks to enable better debugging on program crash
     configuration.configure_tracebacks()
     # --> logging to keep track of key events during program execution;
     # pass in the actual values as strings instead of using class enums
-    logger = configuration.configure_logging(debug_level.value, debug_destination.value)
+    logger, _ = configuration.configure_logging(debug_level.value, debug_destination.value)
 
 
 def print_diagnostics(verbose, **configurations) -> None:
