@@ -96,7 +96,7 @@ def validate_file(
     configuration_file_str: str,
     configuration_file_yml: str,
     yml_data_dict: Dict[str, Dict[str, Any]],
-    json_schema: Dict[str, Dict[str, Any]] = validate.JSON_SCHEMA_CONFIG,
+    json_schema: Dict[str, Any] = validate.JSON_SCHEMA_CONFIG,
 ) -> None:
     """Validate the provided file."""
     # perform the validation of the configuration file
@@ -167,14 +167,10 @@ def configure(
             validate.JSON_SCHEMA_CONFIG,
         )
         # if one or more exist, retrieve the name of the checks files
-        (found_checks_file, checks_file_name_list) = validate.extract_checks_file_name(
-            yml_data_dict
-        )
-        output.console.print(found_checks_file)
+        (_, checks_file_name_list) = validate.extract_checks_file_name(yml_data_dict)
         # iteratively extract the contents of each checks file
         # and then validate the contents of that checks file
         for checks_file_name in checks_file_name_list:
-            output.console.print(checks_file_name)
             (
                 configuration_file_str,
                 configuration_file_yml,

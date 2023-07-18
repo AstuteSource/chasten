@@ -96,7 +96,7 @@ def extract_checks_file_name(
 
 def validate_configuration(
     configuration: Dict[str, Dict[str, Any]],
-    schema: Dict[str, Dict[str, Any]] = JSON_SCHEMA_CONFIG,
+    schema: Dict[str, Any] = JSON_SCHEMA_CONFIG,
 ) -> Tuple[bool, str]:
     """Validate the main configuration."""
     # indicate that validation passed; since there
