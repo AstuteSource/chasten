@@ -55,5 +55,4 @@ def validate_configuration(
     except ValidationError as validation_error:
         error_message = str(validation_error)
         error_message = error_message.lstrip()
-        print(error_message)
         return (False, error_message)
