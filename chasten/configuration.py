@@ -7,6 +7,7 @@ import os
 import sys
 from enum import Enum
 from pathlib import Path
+from typing import Tuple
 
 import platformdirs
 from rich.logging import RichHandler
@@ -41,7 +42,7 @@ def user_config_dir(application_name: str, application_author: str) -> str:
 def configure_logging(
     debug_level: str = constants.logging.Default_Logging_Level,
     debug_dest: str = constants.logging.Default_Logging_Destination,
-) -> logging.Logger:
+) -> Tuple[logging.Logger, bool]:
     """Configure standard Python logging package."""
     # use the specified logger with the specified destination
     # by dynamically constructing the function to call and then
@@ -49,7 +50,13 @@ def configure_logging(
     debug_dest = debug_dest.lower()
     function_name = constants.logger.Function_Prefix + debug_dest
     configure_module = sys.modules[__name__]
-    return getattr(configure_module, function_name)(debug_level)
+    # it was possible to create the requested logger, so return it
+    try:
+        return (getattr(configure_module, function_name)(debug_level), True)
+    # it was not possible to create the requested logger, so
+    # return the default console logger as a safe alternative
+    except AttributeError:
+        return (configure_logging_console(debug_level), False)
 
 
 def configure_logging_console(
