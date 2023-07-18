@@ -28,8 +28,24 @@ def test_fuzz_create_use_config_dir(
     debug_dest=strategies.sampled_from(["CONSOLE", "SYSLOG"]),
 )
 @pytest.mark.fuzz
-def test_configure_logging(debug_level, debug_dest):
+def test_fuzz_configure_logging(debug_level, debug_dest):
     """Use Hypothesis to confirm that the function does not crash and always produces logger with valid data."""
-    logger = configuration.configure_logging(debug_level, debug_dest)
+    logger, created = configuration.configure_logging(debug_level, debug_dest)
     assert logger
+    assert created
+    assert isinstance(logger, logging.Logger)
+
+
+@given(
+    debug_level=strategies.sampled_from(
+        ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+    ),
+    debug_dest=strategies.sampled_from(["CONSOLE-WRONG", "SYSLOG-WRONG"]),
+)
+@pytest.mark.fuzz
+def test_fuzz_configure_logging_incorrect_inputs(debug_level, debug_dest):
+    """Use Hypothesis to confirm that the function does not crash and always produces logger with valid data."""
+    logger, created = configuration.configure_logging(debug_level, debug_dest)
+    assert logger
+    assert not created
     assert isinstance(logger, logging.Logger)
