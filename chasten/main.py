@@ -60,10 +60,7 @@ def output_preamble(
     )
 
 
-def display_configuration_details(
-    chasten_user_config_dir_str: str,
-) -> Tuple[str, str, Dict[str, Dict[str, Any]]]:
-    """Display details about the configuration."""
+def display_configuration_directory(chasten_user_config_dir_str: str):
     # create a visualization of the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     rich_path_tree = filesystem.create_directory_tree_visualization(
@@ -72,10 +69,17 @@ def display_configuration_details(
     # display the visualization of the configuration directory
     output.console.print(rich_path_tree)
     output.console.print()
+
+
+
+def extract_configuration_details(
+    chasten_user_config_dir_str: str,
+    configuration_file: str = constants.filesystem.Main_Configuration_File,
+) -> Tuple[str, str, Dict[str, Dict[str, Any]]]:
+    """Display details about the configuration."""
+    # display_configuration_directory(chasten_user_config_dir_str)
     # create the name of the main configuration file
-    configuration_file_str = (
-        f"{chasten_user_config_dir_str}/{constants.filesystem.Main_Configuration_File}"
-    )
+    configuration_file_str = f"{chasten_user_config_dir_str}/{configuration_file}"
     # load the text of the main configuration file
     configuration_file_path = Path(configuration_file_str)
     configuration_file_yml = configuration_file_path.read_text()
@@ -88,16 +92,16 @@ def display_configuration_details(
     return configuration_file_str, configuration_file_yml, yaml_data
 
 
-def validate_main_configuration(
+def validate_file(
     configuration_file_str: str,
     configuration_file_yml: str,
     yml_data_dict: Dict[str, Dict[str, Any]],
 ) -> None:
-    """Validate the provided configuration file."""
+    """Validate the provided file."""
     # perform the validation of the configuration file
-    (validated, errors) = validate.validate_main_configuration(yml_data_dict)
+    (validated, errors) = validate.validate_configuration(yml_data_dict)
     output.console.print(
-        f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}"
+        f":sparkles: Validated file? {util.get_human_readable_boolean(validated)}"
     )
     # there was a validation error, so display the error report
     if not validated:
@@ -148,16 +152,28 @@ def configure(
         )
         # create a visualization of the user's configuration directory
         # display details about the configuration directory
+        display_configuration_directory(chasten_user_config_dir_str)
         (
             configuration_file_str,
             configuration_file_yml,
             yml_data_dict,
-        ) = display_configuration_details(chasten_user_config_dir_str)
+        ) = extract_configuration_details(chasten_user_config_dir_str)
         # validate the user's configuration and display the results
-        validate_main_configuration(
-            configuration_file_str, configuration_file_yml, yml_data_dict
+        validate_file(configuration_file_str, configuration_file_yml, yml_data_dict)
+        # if one or more exist, retrieve the name of the checks files
+        (found_checks_file, checks_file_name_list) = validate.extract_checks_file_name(
+            yml_data_dict
         )
-        # if it exists, input and validate the contents of the checks file
+        output.console.print(found_checks_file)
+        # iteratively extract the contents of each checks file
+        # and then validate the contents of that checks file
+        for checks_file_name in checks_file_name_list:
+            output.console.print(checks_file_name)
+            (
+                configuration_file_str,
+                configuration_file_yml,
+                yml_data_dict,
+            ) = extract_configuration_details(chasten_user_config_dir_str, checks_file_name)
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
