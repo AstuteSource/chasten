@@ -19,7 +19,8 @@ def test_cli_search(tmpdir):
     test_two = tmpdir.mkdir("test_two")
     # call the search command
     result = runner.invoke(
-        main.cli, ["search", "--search-directory", test_one, "--search-directory", test_two]
+        main.cli,
+        ["search", "--search-directory", test_one, "--search-directory", test_two],
     )
     assert result.exit_code == 0
 
