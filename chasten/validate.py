@@ -14,13 +14,17 @@ JSON_SCHEMA = {
             "type": "object",
             "properties": {
                 "verbose": {"type": "boolean"},
-                "debug_level": {
+                "debug-level": {
                     "type": "string",
                     "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
                 },
-                "debug_destination": {
+                "debug-destination": {
                     "type": "string",
                     "enum": ["CONSOLE", "SYSLOG"],
+                },
+                "search-directory": {
+                    "type": "array",
+                    "items": {"type": "string"},
                 },
             },
             "additionalProperties": False,
