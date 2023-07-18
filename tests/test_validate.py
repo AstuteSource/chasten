@@ -37,4 +37,25 @@ def test_validate_config_invalid_simple():
     invalid_config_correct_schema = {"chasten": {"verbose": "yes"}}
     is_valid, errors = validate_configuration(invalid_config_correct_schema)
     assert not is_valid
+    assert errors
+    assert "is not of type" in errors
+
+
+def test_validate_config_invalid_realistic():
+    """Confirm that validation with built-in schema works for a realistic valid example."""
+    valid_config_correct_schema = {
+        "chasten": {
+            "verbose": "yes",
+            "debug-level": "ERROR",
+            "debug-destination": "CONSOLE",
+            "search-directory": [
+                "/path/to/dir/f1",
+                "/path/to/dir/f2",
+                "/path/to/dir/f3",
+            ],
+        }
+    }
+    is_valid, errors = validate_configuration(valid_config_correct_schema)
+    assert not is_valid
+    assert errors
     assert "is not of type" in errors
