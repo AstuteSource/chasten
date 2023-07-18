@@ -46,6 +46,7 @@ def configure_logging(
     # use the specified logger with the specified destination
     # by dynamically constructing the function to call and then
     # invoking it with the provided debug_dest parameter
+    debug_dest = debug_dest.lower()
     function_name = constants.logger.Function_Prefix + debug_dest
     configure_module = sys.modules[__name__]
     return getattr(configure_module, function_name)(debug_level)
