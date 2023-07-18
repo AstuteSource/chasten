@@ -45,7 +45,7 @@ JSON_SCHEMA = {
 }
 
 
-def validate_configuration(
+def validate_main_configuration(
     configuration: Dict[str, Dict[str, Any]]
 ) -> Tuple[bool, str]:
     """Validate the configuration."""

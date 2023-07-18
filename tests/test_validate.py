@@ -4,13 +4,13 @@ import pytest
 from hypothesis import given, strategies
 from hypothesis_jsonschema import from_schema
 
-from chasten.validate import JSON_SCHEMA, validate_configuration
+from chasten.validate import JSON_SCHEMA, validate_main_configuration
 
 
 def test_validate_config_valid_simple():
     """Confirm that validation with built-in schema works for a simple valid example."""
     valid_config_correct_schema = {"chasten": {"verbose": True, "debug-level": "ERROR"}}
-    is_valid, errors = validate_configuration(valid_config_correct_schema)
+    is_valid, errors = validate_main_configuration(valid_config_correct_schema)
     assert is_valid
     assert not errors
 
@@ -29,7 +29,7 @@ def test_validate_config_valid_realistic():
             ],
         }
     }
-    is_valid, errors = validate_configuration(valid_config_correct_schema)
+    is_valid, errors = validate_main_configuration(valid_config_correct_schema)
     assert is_valid
     assert not errors
 
@@ -37,7 +37,7 @@ def test_validate_config_valid_realistic():
 def test_validate_config_invalid_simple():
     """Confirm that validation with built-in schema does not work for a simple invalid example."""
     invalid_config_correct_schema = {"chasten": {"verbose": "yes"}}
-    is_valid, errors = validate_configuration(invalid_config_correct_schema)
+    is_valid, errors = validate_main_configuration(invalid_config_correct_schema)
     assert not is_valid
     assert errors
     assert "is not of type" in errors
@@ -57,7 +57,7 @@ def test_validate_config_invalid_realistic():
             ],
         }
     }
-    is_valid, errors = validate_configuration(valid_config_correct_schema)
+    is_valid, errors = validate_main_configuration(valid_config_correct_schema)
     assert not is_valid
     assert errors
     assert "is not of type" in errors
@@ -69,7 +69,7 @@ def test_validate_config_invalid_realistic():
 @pytest.mark.fuzz
 def test_validate_empty_config(config):
     """Use Hypothesis to confirm that an empty configuration will validate."""
-    is_valid, errors = validate_configuration(config)
+    is_valid, errors = validate_main_configuration(config)
     assert is_valid
     assert not errors
 
@@ -88,7 +88,7 @@ def test_validate_empty_config(config):
 @pytest.mark.fuzz
 def test_validate_config_with_verbose(config):
     """Use Hypothesis to confirm that a very simple valid schema will validate correctly."""
-    is_valid, errors = validate_configuration(config)
+    is_valid, errors = validate_main_configuration(config)
     assert is_valid
     assert not errors
 
@@ -107,7 +107,7 @@ def test_validate_config_with_verbose(config):
 @pytest.mark.fuzz
 def test_validate_config_with_debug_level(config):
     """Use Hypothesis to confirm that a simple valid schema will validate correctly."""
-    is_valid, errors = validate_configuration(config)
+    is_valid, errors = validate_main_configuration(config)
     assert is_valid
     assert not errors
 
@@ -116,6 +116,6 @@ def test_validate_config_with_debug_level(config):
 @pytest.mark.fuzz
 def test_integers(config):
     """Use Hypothesis and the JSON schema plugin to confirm validation works for all possible valid instances."""
-    is_valid, errors = validate_configuration(config)
+    is_valid, errors = validate_main_configuration(config)
     assert is_valid
     assert not errors

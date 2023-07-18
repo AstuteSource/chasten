@@ -88,14 +88,14 @@ def display_configuration_details(
     return configuration_file_str, configuration_file_yml, yaml_data
 
 
-def validate_configuration(
+def validate_main_configuration(
     configuration_file_str: str,
     configuration_file_yml: str,
-    data: Dict[str, Dict[str, Any]],
+    yml_data_dict: Dict[str, Dict[str, Any]],
 ) -> None:
     """Validate the provided configuration file."""
     # perform the validation of the configuration file
-    (validated, errors) = validate.validate_configuration(data)
+    (validated, errors) = validate.validate_main_configuration(yml_data_dict)
     output.console.print(
         f":sparkles: Validated configuration? {util.get_human_readable_boolean(validated)}"
     )
@@ -105,7 +105,7 @@ def validate_configuration(
     # validation worked correctly, so display the configuration file
     else:
         output.console.print()
-        output.console.print(f"Contents of {configuration_file_str}:\n")
+        output.console.print(f":sparkles: Contents of {configuration_file_str}:\n")
         output.console.print(configuration_file_yml)
 
 
@@ -151,10 +151,13 @@ def configure(
         (
             configuration_file_str,
             configuration_file_yml,
-            data,
+            yml_data_dict,
         ) = display_configuration_details(chasten_user_config_dir_str)
         # validate the user's configuration and display the results
-        validate_configuration(configuration_file_str, configuration_file_yml, data)
+        validate_main_configuration(
+            configuration_file_str, configuration_file_yml, yml_data_dict
+        )
+        # if it exists, input and validate the contents of the checks file
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
