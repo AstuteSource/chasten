@@ -8,29 +8,11 @@ import sys
 from enum import Enum
 from pathlib import Path
 
-import jsonschema
 import platformdirs
 from rich.logging import RichHandler
 from rich.traceback import install
 
 from chasten import constants
-
-JSON_SCHEMA = {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "type": "object",
-    "properties": {
-        "chasten": {
-            "type": "object",
-            "properties": {
-                "verbose": {"type": "boolean"},
-                "debug_level": {
-                    "type": "string",
-                    "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-                },
-            },
-        }
-    },
-}
 
 
 class Configuration(str, Enum):
@@ -103,8 +85,3 @@ def configure_logging_syslog(
     # create a logger and then return it
     logger = logging.getLogger()
     return logger
-
-
-def validate_configuration(configuration: str):
-    """Validate the configuration."""
-    jsonschema.validate(instance=configuration, schema=JSON_SCHEMA)
