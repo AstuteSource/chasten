@@ -105,7 +105,7 @@ def configure(
         # display the configuration directory
         output.console.print(rich_path_tree)
         output.console.print()
-        configuration_file_str = f"{chasten_user_config_dir_str}/config.yml"
+        configuration_file_str = f"{chasten_user_config_dir_str}/{constants.filesystem.Main_Configuration_File}"
         configuration_file_path = Path(configuration_file_str)
         configuration_file_yml = configuration_file_path.read_text()
         data = None
