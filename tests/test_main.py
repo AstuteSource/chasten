@@ -20,7 +20,14 @@ def test_cli_analyze(tmpdir):
     # call the analyze command
     result = runner.invoke(
         main.cli,
-        ["analyze", "--search-directory", test_one, "--search-directory", test_two],
+        [
+            "analyze",
+            "--search-directory",
+            test_one,
+            "--search-directory",
+            test_two,
+            "--no-verbose",
+        ],
     )
     assert result.exit_code == 0
 
@@ -36,6 +43,7 @@ def test_fuzz_analyze(directory: typing.List[Path]) -> None:
         directory=directory,
         debug_level=debug.DebugLevel.ERROR,
         debug_destination=debug.DebugDestination.CONSOLE,
+        verbose=False,
     )
 
 
@@ -43,7 +51,9 @@ def test_fuzz_analyze(directory: typing.List[Path]) -> None:
 @pytest.mark.fuzz
 def test_fuzz_cli_analyze_single_directory(directory):
     """Confirm that the function does not crash when called through the command-line interface."""
-    result = runner.invoke(main.cli, ["analyze", "--search-directory", str(directory)])
+    result = runner.invoke(
+        main.cli, ["analyze", "--search-directory", str(directory), "--no-verbose"]
+    )
     assert result.exit_code == 0
 
 
@@ -59,6 +69,7 @@ def test_fuzz_cli_analyze_multiple_directory(directory_one, directory_two):
             str(directory_one),
             "--search-directory",
             str(directory_two),
+            "--no-verbose",
         ],
     )
     assert result.exit_code == 0
