@@ -32,7 +32,7 @@ class ConfigureTask(str, Enum):
     """Define the different task possibilities."""
 
     CREATE = "create"
-    DISPLAY = "display"
+    VALIDATE = "validate"
 
 
 @cli.command()
@@ -43,7 +43,7 @@ def interact(ctx: typer.Context) -> None:
 
 @cli.command()
 def configure(
-    task: ConfigureTask = typer.Argument(ConfigureTask.DISPLAY.value),
+    task: ConfigureTask = typer.Argument(ConfigureTask.VALIDATE.value),
     force: bool = typer.Option(
         False,
         "--force",
@@ -56,7 +56,7 @@ def configure(
         debug.DebugDestination.CONSOLE.value, "--debug-dest"
     ),
 ) -> None:
-    """Create a configuration."""
+    """Manage tool configuration."""
     # setup the console and the logger through the output module
     output.setup(debug_level, debug_destination)
     output.logger.debug(f"Task? {task}")
@@ -74,7 +74,7 @@ def configure(
         debug_destination=debug_destination.value,
     )
     # display the configuration directory and its contents
-    if task == ConfigureTask.DISPLAY:
+    if task == ConfigureTask.VALIDATE:
         output.console.print(
             ":sparkles: Configuration directory:" + constants.markers.Newline
         )
