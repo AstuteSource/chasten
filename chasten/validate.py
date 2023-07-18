@@ -26,10 +26,16 @@ JSON_SCHEMA = {
 
 def validate_configuration(configuration) -> Tuple[bool, str]:
     """Validate the configuration."""
+    # indicate that validation passed; since there
+    # were no validation errors, return an empty string
     try:
         validator = Draft7Validator(JSON_SCHEMA)
         validator.validate(configuration, JSON_SCHEMA)
         return (True, constants.markers.Empty)
+    # indicate that validation failed;
+    # since validation errors exist, package them up
+    # and return them along with the indication
     except ValidationError as validation_error:
         error_message = str(validation_error)
+        error_message = error_message.lstrip()
         return (False, error_message)
