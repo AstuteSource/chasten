@@ -131,7 +131,7 @@ def configure(
 def search(
     directory: List[Path] = typer.Option(
         filesystem.get_default_directory_list(),
-        "--directory",
+        "--search-directory",
         "-d",
         help="One or more directories with Python code",
     ),
