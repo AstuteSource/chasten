@@ -60,7 +60,8 @@ def output_preamble(
     )
 
 
-def display_configuration_directory(chasten_user_config_dir_str: str):
+def display_configuration_directory(chasten_user_config_dir_str: str) -> None:
+    """Display information about the configuration in the console."""
     # create a visualization of the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     rich_path_tree = filesystem.create_directory_tree_visualization(
@@ -69,7 +70,6 @@ def display_configuration_directory(chasten_user_config_dir_str: str):
     # display the visualization of the configuration directory
     output.console.print(rich_path_tree)
     output.console.print()
-
 
 
 def extract_configuration_details(
@@ -96,10 +96,11 @@ def validate_file(
     configuration_file_str: str,
     configuration_file_yml: str,
     yml_data_dict: Dict[str, Dict[str, Any]],
+    json_schema: Dict[str, Dict[str, Any]] = validate.JSON_SCHEMA_CONFIG,
 ) -> None:
     """Validate the provided file."""
     # perform the validation of the configuration file
-    (validated, errors) = validate.validate_configuration(yml_data_dict)
+    (validated, errors) = validate.validate_configuration(yml_data_dict, json_schema)
     output.console.print(
         f":sparkles: Validated file? {util.get_human_readable_boolean(validated)}"
     )
@@ -159,7 +160,12 @@ def configure(
             yml_data_dict,
         ) = extract_configuration_details(chasten_user_config_dir_str)
         # validate the user's configuration and display the results
-        validate_file(configuration_file_str, configuration_file_yml, yml_data_dict)
+        validate_file(
+            configuration_file_str,
+            configuration_file_yml,
+            yml_data_dict,
+            validate.JSON_SCHEMA_CONFIG,
+        )
         # if one or more exist, retrieve the name of the checks files
         (found_checks_file, checks_file_name_list) = validate.extract_checks_file_name(
             yml_data_dict
@@ -173,7 +179,16 @@ def configure(
                 configuration_file_str,
                 configuration_file_yml,
                 yml_data_dict,
-            ) = extract_configuration_details(chasten_user_config_dir_str, checks_file_name)
+            ) = extract_configuration_details(
+                chasten_user_config_dir_str, checks_file_name
+            )
+            # validate a checks configuration file
+            validate_file(
+                configuration_file_str,
+                configuration_file_yml,
+                yml_data_dict,
+                validate.JSON_SCHEMA_CHECKS,
+            )
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
