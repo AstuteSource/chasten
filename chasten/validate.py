@@ -28,6 +28,7 @@ JSON_SCHEMA = {
     },
 }
 
+
 def validate_configuration(configuration) -> Tuple[bool, str]:
     """Validate the configuration."""
     # indicate that validation passed; since there
