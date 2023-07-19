@@ -294,7 +294,7 @@ def analyze(
                 output.console.print(":sparkles: Matching source code:")
                 position_end = search_output.position.lineno
                 all_lines = search_output.file_lines
-                all_lines[position_end] = f"* {all_lines[position_end]}"
+                all_lines[position_end] = f"*{all_lines[position_end][1:]}"
                 lines = all_lines[position_end - 5 : position_end + 5]
                 code_syntax = Syntax(
                     "\n".join(str(l) for l in lines),
