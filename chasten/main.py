@@ -266,12 +266,15 @@ def analyze(
     # create the list of valid directories by removing the invalid ones
     valid_directories = list(set(directory) - set(invalid_directories))
     output.console.print(
-        f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}\n"
+        f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
     )
     for current_check in check_list:
         current_xpath_pattern = current_check["pattern"]  # type: ignore
-        output.console.print(":sparkles: Using XPATH expression:")
-        print(current_xpath_pattern)
+        output.console.print("\n:sparkles: Performing check:")
+        xpath_syntax = Syntax(current_xpath_pattern, "xml", theme="ansi_dark")
+        output.console.print(
+            Panel(xpath_syntax, expand=False, title=f"{current_check['name']}")
+        )
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep
         match_generator = pyastgrepsearch.search_python_files(
@@ -296,7 +299,7 @@ def analyze(
                 all_lines[position_end] = f"*{all_lines[position_end][1:]}"
                 lines = all_lines[position_end - 5 : position_end + 5]
                 code_syntax = Syntax(
-                    "\n".join(str(l) for l in lines),
+                    "\n".join(str(line) for line in lines),
                     "python",
                     theme="ansi_dark",
                     background_color="default",
