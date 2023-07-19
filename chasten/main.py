@@ -288,8 +288,7 @@ def analyze(
         # print(match_generator_list)
         # output.print_diagnostics(verbose, match_generator_list=match_generator_list)
         for search_output in match_generator:
-            # output.console.print(search_output)
-            if not isinstance(search_output, pyastgrepsearch.FileFinished):
+            if isinstance(search_output, pyastgrepsearch.Match):
                 output.console.print()
                 output.console.print(":sparkles: Matching source code:")
                 position_end = search_output.position.lineno
