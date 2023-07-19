@@ -115,12 +115,6 @@ def validate_file(
 
 
 @cli.command()
-def interact(ctx: typer.Context) -> None:
-    """Interactively configure and run."""
-    Trogon(get_group(cli), click_context=ctx).run()
-
-
-@cli.command()
 def configure(
     task: ConfigureTask = typer.Argument(ConfigureTask.VALIDATE.value),
     force: bool = typer.Option(
@@ -203,6 +197,12 @@ def configure(
                 output.console.print(
                     "Use --force to recreate configuration directory and its containing files."
                 )
+
+
+@cli.command()
+def interact(ctx: typer.Context) -> None:
+    """Interactively configure and run."""
+    Trogon(get_group(cli), click_context=ctx).run()
 
 
 @cli.command()
