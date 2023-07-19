@@ -269,11 +269,12 @@ def analyze(
         f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
     )
     for current_check in check_list:
+        print(", ".join(f"{k}={v}" for k, v in current_check["count"].items()))
         current_xpath_pattern = current_check["pattern"]  # type: ignore
         output.console.print("\n:sparkles: Performing check:")
         xpath_syntax = Syntax(current_xpath_pattern, "xml", theme="ansi_dark")
         output.console.print(
-            Panel(xpath_syntax, expand=False, title=f"{current_check['name']}")
+            Panel(xpath_syntax, expand=False, title=f"Id={current_check['id']}, Name={current_check['name']}")
         )
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep
