@@ -1,26 +1,31 @@
 """Chasten checks the AST of a Python program."""
 
+import sys
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    filesystem,
-    output,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import filesystem
+from chasten import output
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -97,7 +102,7 @@ def validate_file(
     configuration_file_yml: str,
     yml_data_dict: Dict[str, Dict[str, Any]],
     json_schema: Dict[str, Any] = validate.JSON_SCHEMA_CONFIG,
-) -> None:
+) -> bool:
     """Validate the provided file."""
     # perform the validation of the configuration file
     (validated, errors) = validate.validate_configuration(yml_data_dict, json_schema)
@@ -112,6 +117,70 @@ def validate_file(
         output.console.print()
         output.console.print(f":sparkles: Contents of {configuration_file_str}:\n")
         output.console.print(configuration_file_yml)
+    return validated
+
+
+def validate_configuration_files() -> (
+    Tuple[bool, Union[Dict[str, Dict[str, Any]], Dict[Any, Any]]]
+):
+    """Validate the configuration."""
+    output.console.print(
+        ":sparkles: Configuration directory:" + constants.markers.Newline
+    )
+    # detect and store the platform-specific user
+    # configuration directory
+    chasten_user_config_dir_str = configuration.user_config_dir(
+        application_name=constants.chasten.Application_Name,
+        application_author=constants.chasten.Application_Author,
+    )
+    # create a visualization of the user's configuration directory
+    # display details about the configuration directory
+    display_configuration_directory(chasten_user_config_dir_str)
+    (
+        configuration_file_str,
+        configuration_file_yml,
+        yml_data_dict,
+    ) = extract_configuration_details(chasten_user_config_dir_str)
+    # validate the user's configuration and display the results
+    config_file_validated = validate_file(
+        configuration_file_str,
+        configuration_file_yml,
+        yml_data_dict,
+        validate.JSON_SCHEMA_CONFIG,
+    )
+    # if one or more exist, retrieve the name of the checks files
+    (_, checks_file_name_list) = validate.extract_checks_file_name(yml_data_dict)
+    # iteratively extract the contents of each checks file
+    # and then validate the contents of that checks file
+    checks_files_validated_list = []
+    check_files_validated = False
+    for checks_file_name in checks_file_name_list:
+        (
+            configuration_file_str,
+            configuration_file_yml,
+            yml_data_dict,
+        ) = extract_configuration_details(chasten_user_config_dir_str, checks_file_name)
+        # validate a checks configuration file
+        check_file_validated = validate_file(
+            configuration_file_str,
+            configuration_file_yml,
+            yml_data_dict,
+            validate.JSON_SCHEMA_CHECKS,
+        )
+        # output.console.print(yml_data_dict)
+        checks_files_validated_list.append(check_file_validated)
+    check_files_validated = all(checks_files_validated_list)
+    # the files validated correctly
+    if config_file_validated and check_files_validated:
+        return (True, yml_data_dict)
+    # there was at least one validation error
+    return (False, {})
+
+
+@cli.command()
+def interact(ctx: typer.Context) -> None:
+    """Interactively configure and run."""
+    Trogon(get_group(cli), click_context=ctx).run()
 
 
 @cli.command()
@@ -136,49 +205,7 @@ def configure(
     )
     # display the configuration directory and its contents
     if task == ConfigureTask.VALIDATE:
-        output.console.print(
-            ":sparkles: Configuration directory:" + constants.markers.Newline
-        )
-        # detect and store the platform-specific user
-        # configuration directory
-        chasten_user_config_dir_str = configuration.user_config_dir(
-            application_name=constants.chasten.Application_Name,
-            application_author=constants.chasten.Application_Author,
-        )
-        # create a visualization of the user's configuration directory
-        # display details about the configuration directory
-        display_configuration_directory(chasten_user_config_dir_str)
-        (
-            configuration_file_str,
-            configuration_file_yml,
-            yml_data_dict,
-        ) = extract_configuration_details(chasten_user_config_dir_str)
-        # validate the user's configuration and display the results
-        validate_file(
-            configuration_file_str,
-            configuration_file_yml,
-            yml_data_dict,
-            validate.JSON_SCHEMA_CONFIG,
-        )
-        # if one or more exist, retrieve the name of the checks files
-        (_, checks_file_name_list) = validate.extract_checks_file_name(yml_data_dict)
-        # iteratively extract the contents of each checks file
-        # and then validate the contents of that checks file
-        for checks_file_name in checks_file_name_list:
-            (
-                configuration_file_str,
-                configuration_file_yml,
-                yml_data_dict,
-            ) = extract_configuration_details(
-                chasten_user_config_dir_str, checks_file_name
-            )
-            # validate a checks configuration file
-            validate_file(
-                configuration_file_str,
-                configuration_file_yml,
-                yml_data_dict,
-                validate.JSON_SCHEMA_CHECKS,
-            )
+        validate_configuration_files()
     # create the configuration directory and a starting version of the configuration file
     if task == ConfigureTask.CREATE:
         # attempt to create the configuration directory
@@ -200,12 +227,6 @@ def configure(
 
 
 @cli.command()
-def interact(ctx: typer.Context) -> None:
-    """Interactively configure and run."""
-    Trogon(get_group(cli), click_context=ctx).run()
-
-
-@cli.command()
 def analyze(
     directory: List[Path] = typer.Option(
         filesystem.get_default_directory_list(),
@@ -222,10 +243,21 @@ def analyze(
     """Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(verbose, debug_level, debug_destination, directory=directory)
-    # create a console for rich text output
-    console = Console()
     # add extra space after the command to run the program
-    console.print()
+    output.console.print()
+    # validate the configuration
+    (validated, checks_dict) = validate_configuration_files()
+    # some aspect of the configuration was not
+    # valid, so exit early and signal an error
+    if not validated:
+        output.console.print(
+            "\n:sparkles: Cannot perform analysis due to configuration error(s).\n"
+        )
+        sys.exit(1)
+    # extract the list of the specific patterns (i.e., the XPATH expressions)
+    # that will be used to analyze all of the XML-based representations of
+    # the Python source code found in the valid directories
+    check_list = checks_dict["checks"]
     # collect all of the directories that are invalid
     invalid_directories = []
     for current_directory in directory:
@@ -234,23 +266,50 @@ def analyze(
     # create the list of valid directories by removing the invalid ones
     valid_directories = list(set(directory) - set(invalid_directories))
     output.console.print(
-        f":sparkles: Analyzing Python source code in:\n {', '.join(str(d) for d in valid_directories)}\n"
+        f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}\n"
     )
-    # search for the XML contents of an AST that match the provided
-    # XPATH query using the search_python_file in search module of pyastgrep
-    match_generator = pyastgrepsearch.search_python_files(
-        paths=valid_directories,
-        expression='.//FunctionDef[@name="classify"]/body//If[ancestor::If and not(parent::orelse)]',
-    )
-    # materialize a list out of the generator and then count
-    # and display the number of matches inside of the list
-    match_generator_list = list(match_generator)
-    output.console.print(f"Analyze a total of {len(match_generator_list)} files")
-    # display debugging information about the contents of the match generator,
-    # note that this only produces output when --verbose is enabled
-    output.print_diagnostics(verbose, match_generator_list=match_generator_list)
-    for search_output in match_generator:
-        output.print_diagnostics(verbose, search_output=search_output)
+    for current_check in check_list:
+        current_xpath_pattern = current_check["pattern"]  # type: ignore
+        output.console.print(":sparkles: Using XPATH expression:")
+        print(current_xpath_pattern)
+        # search for the XML contents of an AST that match the provided
+        # XPATH query using the search_python_file in search module of pyastgrep
+        match_generator = pyastgrepsearch.search_python_files(
+            paths=valid_directories,
+            expression=current_xpath_pattern,
+        )
+        # materialize a list out of the generator and then count
+        # and display the number of matches inside of the list
+        # match_generator_list = list(match_generator)
+        # output.console.print(f"Analyze a total of {len(match_generator_list)} files")
+        # display debugging information about the contents of the match generator,
+        # note that this only produces output when --verbose is enabled
+        # output.logger.debug(match_generator_list)
+        # print(match_generator_list)
+        # output.print_diagnostics(verbose, match_generator_list=match_generator_list)
+        for search_output in match_generator:
+            # output.console.print(search_output)
+            if not isinstance(search_output, pyastgrepsearch.FileFinished):
+                output.console.print()
+                output.console.print(":sparkles: Matching source code:")
+                position_end = search_output.position.lineno
+                all_lines = search_output.file_lines
+                all_lines[position_end] = f"* {all_lines[position_end]}"
+                lines = all_lines[position_end - 5 : position_end + 5]
+                code_syntax = Syntax(
+                    "\n".join(str(l) for l in lines),
+                    "python",
+                    theme="ansi_dark",
+                    background_color="default",
+                )
+                output.console.print(
+                    Panel(
+                        code_syntax,
+                        expand=False,
+                        title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
+                    )
+                )
+                # output.print_diagnostics(verbose, search_output=search_output)
 
 
 @cli.command()
