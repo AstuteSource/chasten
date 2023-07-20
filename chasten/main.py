@@ -280,6 +280,8 @@ def analyze(
     output.console.print(
         f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
     )
+    output.console.print(f"\n:tada: Preparing to perform {len(check_list)} check(s):")
+    # iterate through and perform each of the checks
     for current_check in check_list:
         current_xpath_pattern = current_check["pattern"]  # type: ignore
         output.console.print("\n:tada: Performing check:")
