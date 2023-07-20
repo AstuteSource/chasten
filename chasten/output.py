@@ -59,7 +59,7 @@ def opt_print_log(verbose: bool, **contents: Any) -> None:
 
 def print_header() -> None:
     """Display tool details in the header."""
-    global console
+    global console  # noqa: disable=PLW0603
     console.print()
     console.print(
         constants.chasten.Emoji + constants.markers.Space + constants.chasten.Tagline
