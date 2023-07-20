@@ -3,29 +3,26 @@
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import filesystem
-from chasten import output
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    configuration,
+    constants,
+    debug,
+    filesystem,
+    output,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -253,7 +250,7 @@ def analyze(
         output.console.print(
             "\n:sparkles: Cannot perform analysis due to configuration error(s).\n"
         )
-        sys.exit(1)
+        sys.exit(constants.markers.Non_Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
     # the Python source code found in the valid directories
