@@ -2,11 +2,7 @@
 
 import sys
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -16,15 +12,17 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    configuration,
+    constants,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -57,7 +55,9 @@ def output_preamble(
     )
 
 
-def display_configuration_directory(chasten_user_config_dir_str: str) -> None:
+def display_configuration_directory(
+    chasten_user_config_dir_str: str, verbose: bool = False
+) -> None:
     """Display information about the configuration in the console."""
     # create a visualization of the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
@@ -65,8 +65,8 @@ def display_configuration_directory(chasten_user_config_dir_str: str) -> None:
         chasten_user_config_dir_path
     )
     # display the visualization of the configuration directory
-    output.console.print(rich_path_tree)
-    output.console.print()
+    output.opt_print_log(verbose, tree=rich_path_tree)
+    output.opt_print_log(verbose, empty="")
 
 
 def extract_configuration_details(
@@ -94,40 +94,46 @@ def validate_file(
     configuration_file_yml: str,
     yml_data_dict: Dict[str, Dict[str, Any]],
     json_schema: Dict[str, Any] = validate.JSON_SCHEMA_CONFIG,
+    verbose: bool = False,
 ) -> bool:
     """Validate the provided file."""
     # perform the validation of the configuration file
     (validated, errors) = validate.validate_configuration(yml_data_dict, json_schema)
     output.console.print(
-        f":sparkles: Validated file? {util.get_human_readable_boolean(validated)}"
+        f":sparkles: Validated {configuration_file_str}? {util.get_human_readable_boolean(validated)}"
     )
     # there was a validation error, so display the error report
     if not validated:
         output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
     # validation worked correctly, so display the configuration file
     else:
-        output.console.print()
-        output.console.print(f":sparkles: Contents of {configuration_file_str}:\n")
-        output.console.print(configuration_file_yml)
+        output.opt_print_log(verbose, newline="")
+        output.opt_print_log(
+            verbose, label=f":sparkles: Contents of {configuration_file_str}:\n"
+        )
+        output.opt_print_log(verbose, config_file=configuration_file_yml)
     return validated
 
 
-def validate_configuration_files() -> (
-    Tuple[bool, Union[Dict[str, Dict[str, Any]], Dict[Any, Any]]]
-):
+def validate_configuration_files(
+    verbose: bool = False,
+) -> Tuple[bool, Union[Dict[str, Dict[str, Any]], Dict[Any, Any]]]:
     """Validate the configuration."""
-    output.console.print(
-        ":sparkles: Configuration directory:" + constants.markers.Newline
-    )
     # detect and store the platform-specific user
     # configuration directory
     chasten_user_config_dir_str = configuration.user_config_dir(
         application_name=constants.chasten.Application_Name,
         application_author=constants.chasten.Application_Author,
     )
+    output.console.print(
+        ":sparkles: Configuration directory:"
+        + constants.markers.Space
+        + chasten_user_config_dir_str
+        + constants.markers.Newline
+    )
     # create a visualization of the user's configuration directory
     # display details about the configuration directory
-    display_configuration_directory(chasten_user_config_dir_str)
+    display_configuration_directory(chasten_user_config_dir_str, verbose)
     (
         configuration_file_str,
         configuration_file_yml,
@@ -139,6 +145,7 @@ def validate_configuration_files() -> (
         configuration_file_yml,
         yml_data_dict,
         validate.JSON_SCHEMA_CONFIG,
+        verbose,
     )
     # if one or more exist, retrieve the name of the checks files
     (_, checks_file_name_list) = validate.extract_checks_file_name(yml_data_dict)
@@ -158,6 +165,7 @@ def validate_configuration_files() -> (
             configuration_file_yml,
             yml_data_dict,
             validate.JSON_SCHEMA_CHECKS,
+            verbose,
         )
         # output.console.print(yml_data_dict)
         checks_files_validated_list.append(check_file_validated)
@@ -245,7 +253,7 @@ def analyze(
     # valid, so exit early and signal an error
     if not validated:
         output.console.print(
-            "\n:sparkles: Cannot perform analysis due to configuration error(s).\n"
+            "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
@@ -281,8 +289,8 @@ def analyze(
         )
         for search_output in match_generator:
             if isinstance(search_output, pyastgrepsearch.Match):
-                output.opl(verbose, blank="*")
-                output.opl(verbose, label=":sparkles: Matching source code:")
+                output.opt_print_log(verbose, blank="*")
+                output.opt_print_log(verbose, label=":sparkles: Matching source code:")
                 position_end = search_output.position.lineno
                 all_lines = search_output.file_lines
                 all_lines[position_end] = f"*{all_lines[position_end][1:]}"
@@ -293,7 +301,7 @@ def analyze(
                     theme="ansi_dark",
                     background_color="default",
                 )
-                output.opl(
+                output.opt_print_log(
                     verbose,
                     panel=Panel(
                         code_syntax,

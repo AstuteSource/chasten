@@ -1,6 +1,7 @@
 """Perform logging and/or console output."""
 
 import logging
+from typing import Any
 
 from rich.console import Console
 
@@ -28,7 +29,7 @@ def setup(
     )
 
 
-def print_diagnostics(verbose, **configurations) -> None:
+def print_diagnostics(verbose: bool, **configurations: Any) -> None:
     """Display all variables input to the function."""
     global console  # noqa: disable=PLW0603
     # display diagnostic information for each configuration keyword argument
@@ -43,15 +44,28 @@ def print_diagnostics(verbose, **configurations) -> None:
         console.print()
 
 
+def opt_print_log(verbose: bool, **contents: Any) -> None:
+    """Produce logging information and only print when not verbose."""
+    global console  # noqa: disable=PLW0603
+    # iterate through each of the configuration keyword arguments
+    for current in contents:
+        # print the name and the value of the keyword argument
+        # to the console if verbose mode is enabled
+        if verbose:
+            console.print(contents[current])
+        # always log the information to the configured logger
+        logger.debug(contents[current])
+
+
 def print_header() -> None:
     """Display tool details in the header."""
-    global console  # noqa: disable=PLW0603
+    global console
     console.print()
     console.print(
         constants.chasten.Emoji + constants.markers.Space + constants.chasten.Tagline
     )
     console.print(constants.chasten.Website)
-    console.print()
+    # console.print()
 
 
 def print_server() -> None:
