@@ -3,11 +3,7 @@
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -18,14 +14,16 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import filesystem
-from chasten import output
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    configuration,
+    constants,
+    debug,
+    filesystem,
+    output,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -274,7 +272,11 @@ def analyze(
         output.console.print("\n:sparkles: Performing check:")
         xpath_syntax = Syntax(current_xpath_pattern, "xml", theme="ansi_dark")
         output.console.print(
-            Panel(xpath_syntax, expand=False, title=f"Id={current_check['id']}, Name={current_check['name']}")
+            Panel(
+                xpath_syntax,
+                expand=False,
+                title=f"Id={current_check['id']}, Name={current_check['name']}",
+            )
         )
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep
