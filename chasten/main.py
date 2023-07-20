@@ -28,6 +28,11 @@ from chasten import (
 cli = typer.Typer()
 
 
+# ---
+# Region: helper functions
+# ---
+
+
 def output_preamble(
     verbose: bool,
     debug_level: debug.DebugLevel = debug.DebugLevel.ERROR,
@@ -177,6 +182,11 @@ def validate_configuration_files(
     return (False, {})
 
 
+# ---
+# Region: command-line interface functions
+# ---
+
+
 @cli.command()
 def interact(ctx: typer.Context) -> None:
     """Interactively configure and run."""
@@ -289,7 +299,7 @@ def analyze(
         )
         for search_output in match_generator:
             if isinstance(search_output, pyastgrepsearch.Match):
-                output.opt_print_log(verbose, blank="*")
+                output.opt_print_log(verbose, blank="")
                 output.opt_print_log(verbose, label=":sparkles: Matching source code:")
                 position_end = search_output.position.lineno
                 all_lines = search_output.file_lines
