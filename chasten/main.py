@@ -314,6 +314,7 @@ def analyze(
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         match_generator_list = list(match_generator)
+        output.console.print(f":sparkles: Found a total of {len(match_generator_list)} matches")
         for search_output in match_generator_list:
             if isinstance(search_output, pyastgrepsearch.Match):
                 output.opt_print_log(verbose, blank="")
