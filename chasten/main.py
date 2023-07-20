@@ -294,11 +294,15 @@ def analyze(
             constants.markers.Xml,
             theme=constants.chasten.Theme_Colors,
         )
+        # extract details about the check to display in the header
+        # of the syntax box for this specific check
+        check_id = current_check[constants.checks.Check_Id]  # type: ignore
+        check_name = current_check[constants.checks.Check_Name]  # type: ignore
         output.console.print(
             Panel(
                 xpath_syntax,
                 expand=False,
-                title=f"Id={current_check[constants.checks.Check_Id]}, Name={current_check['name']}",  # type: ignore
+                title=f"Id={check_id}, Name={check_name}",
             )
         )
         # search for the XML contents of an AST that match the provided
@@ -309,7 +313,8 @@ def analyze(
         )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
-        for search_output in match_generator:
+        match_generator_list = list(match_generator)
+        for search_output in match_generator_list:
             if isinstance(search_output, pyastgrepsearch.Match):
                 output.opt_print_log(verbose, blank="")
                 output.opt_print_log(verbose, label=":sparkles: Matching source code:")
