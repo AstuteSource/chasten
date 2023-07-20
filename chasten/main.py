@@ -282,7 +282,7 @@ def analyze(
     )
     for current_check in check_list:
         current_xpath_pattern = current_check["pattern"]  # type: ignore
-        output.console.print("\n:sparkles: Performing check:")
+        output.console.print("\n:tada: Performing check:")
         xpath_syntax = Syntax(current_xpath_pattern, "xml", theme="ansi_dark")
         output.console.print(
             Panel(
