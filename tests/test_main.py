@@ -4,7 +4,7 @@ import typing
 from pathlib import Path
 
 import pytest
-from hypothesis import given, strategies
+from hypothesis import given, settings, strategies
 from typer.testing import CliRunner
 
 from chasten import debug, main
@@ -33,9 +33,14 @@ def test_cli_analyze(tmpdir):
 
 
 @given(directory=strategies.lists(strategies.builds(Path), min_size=1, max_size=5))
+@settings(deadline=None)
 @pytest.mark.fuzz
 def test_fuzz_analyze(directory: typing.List[Path]) -> None:
     """Confirm that the function does not crash when called directly."""
+    # note that this Hypothesis-driven test does not set a deadline
+    # because sometimes it can take more than the default 200ms deadline
+    # to run through the chasten program with a generated directory
+    #
     # need to pass all of the command-line arguments because otherwise
     # the default values are set as a typer.Option and not converted to
     # the actual enums that are normally manipulated after input to the CLI
