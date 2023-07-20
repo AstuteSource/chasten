@@ -121,6 +121,7 @@ class Markers:
     Hidden: str
     Indent: str
     Newline: str
+    Non_Zero_Exit: int
     Nothing: str
     Single_Quote: str
     Space: str
@@ -139,6 +140,7 @@ markers = Markers(
     Hidden=".",
     Indent="   ",
     Newline="\n",
+    Non_Zero_Exit=1,
     Nothing="",
     Single_Quote="'",
     Space=" ",
