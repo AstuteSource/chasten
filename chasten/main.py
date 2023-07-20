@@ -1,9 +1,12 @@
 """Chasten checks the AST of a Python program."""
 
 import sys
-from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -13,26 +16,18 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    filesystem,
-    output,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
-
-
-class ConfigureTask(str, Enum):
-    """Define the different task possibilities."""
-
-    CREATE = "create"
-    VALIDATE = "validate"
 
 
 def output_preamble(
@@ -182,7 +177,9 @@ def interact(ctx: typer.Context) -> None:
 
 @cli.command()
 def configure(
-    task: ConfigureTask = typer.Argument(ConfigureTask.VALIDATE.value),
+    task: enumerations.ConfigureTask = typer.Argument(
+        enumerations.ConfigureTask.VALIDATE.value
+    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -201,10 +198,10 @@ def configure(
         verbose, debug_level, debug_destination, task=task.value, force=force
     )
     # display the configuration directory and its contents
-    if task == ConfigureTask.VALIDATE:
+    if task == enumerations.ConfigureTask.VALIDATE:
         validate_configuration_files()
     # create the configuration directory and a starting version of the configuration file
-    if task == ConfigureTask.CREATE:
+    if task == enumerations.ConfigureTask.CREATE:
         # attempt to create the configuration directory
         try:
             created_directory_path = filesystem.create_configuration_directory(force)
@@ -284,26 +281,26 @@ def analyze(
         )
         for search_output in match_generator:
             if isinstance(search_output, pyastgrepsearch.Match):
-                if verbose:
-                    output.console.print()
-                    output.console.print(":sparkles: Matching source code:")
-                    position_end = search_output.position.lineno
-                    all_lines = search_output.file_lines
-                    all_lines[position_end] = f"*{all_lines[position_end][1:]}"
-                    lines = all_lines[position_end - 5 : position_end + 5]
-                    code_syntax = Syntax(
-                        "\n".join(str(line) for line in lines),
-                        "python",
-                        theme="ansi_dark",
-                        background_color="default",
-                    )
-                    output.console.print(
-                        Panel(
-                            code_syntax,
-                            expand=False,
-                            title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
-                        )
-                    )
+                output.opl(verbose, blank="*")
+                output.opl(verbose, label=":sparkles: Matching source code:")
+                position_end = search_output.position.lineno
+                all_lines = search_output.file_lines
+                all_lines[position_end] = f"*{all_lines[position_end][1:]}"
+                lines = all_lines[position_end - 5 : position_end + 5]
+                code_syntax = Syntax(
+                    "\n".join(str(line) for line in lines),
+                    "python",
+                    theme="ansi_dark",
+                    background_color="default",
+                )
+                output.opl(
+                    verbose,
+                    panel=Panel(
+                        code_syntax,
+                        expand=False,
+                        title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
+                    ),
+                )
 
 
 @cli.command()
