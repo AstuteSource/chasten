@@ -38,6 +38,25 @@ chasten = Chasten(
 )
 
 
+# checks constant
+@dataclass(frozen=True)
+class Checks:
+    """Define the Checks dataclass for constant(s)."""
+
+    Check_Code: str
+    Check_Id: str
+    Check_Name: str
+    Check_Pattern: str
+
+
+checks = Checks(
+    Check_Code="code",
+    Check_Id="id",
+    Check_Name="name",
+    Check_Pattern="pattern",
+)
+
+
 # filesystem constant
 @dataclass(frozen=True)
 class Filesystem:
@@ -135,12 +154,13 @@ class Markers:
     Space: str
     Tab: str
     Underscore: str
+    Xml: str
 
 
 markers = Markers(
     Bad_Fifteen="<15>",
     Bad_Zero_Zero="",
-    Code_Context = 5,
+    Code_Context=5,
     Empty_Bytes=b"",
     Empty="",
     Ellipse="...",
@@ -156,6 +176,7 @@ markers = Markers(
     Space=" ",
     Tab="\t",
     Underscore="_",
+    Xml = "xml"
 )
 
 
