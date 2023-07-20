@@ -3,7 +3,11 @@
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -14,16 +18,14 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    filesystem,
-    output,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import filesystem
+from chasten import output
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -267,7 +269,6 @@ def analyze(
         f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
     )
     for current_check in check_list:
-        print(", ".join(f"{k}={v}" for k, v in current_check["count"].items()))
         current_xpath_pattern = current_check["pattern"]  # type: ignore
         output.console.print("\n:sparkles: Performing check:")
         xpath_syntax = Syntax(current_xpath_pattern, "xml", theme="ansi_dark")
@@ -275,7 +276,7 @@ def analyze(
             Panel(
                 xpath_syntax,
                 expand=False,
-                title=f"Id={current_check['id']}, Name={current_check['name']}",
+                title=f"Id={current_check['id']}, Name={current_check['name']}",  # type: ignore
             )
         )
         # search for the XML contents of an AST that match the provided
@@ -284,37 +285,28 @@ def analyze(
             paths=valid_directories,
             expression=current_xpath_pattern,
         )
-        # materialize a list out of the generator and then count
-        # and display the number of matches inside of the list
-        # match_generator_list = list(match_generator)
-        # output.console.print(f"Analyze a total of {len(match_generator_list)} files")
-        # display debugging information about the contents of the match generator,
-        # note that this only produces output when --verbose is enabled
-        # output.logger.debug(match_generator_list)
-        # print(match_generator_list)
-        # output.print_diagnostics(verbose, match_generator_list=match_generator_list)
         for search_output in match_generator:
             if isinstance(search_output, pyastgrepsearch.Match):
-                output.console.print()
-                output.console.print(":sparkles: Matching source code:")
-                position_end = search_output.position.lineno
-                all_lines = search_output.file_lines
-                all_lines[position_end] = f"*{all_lines[position_end][1:]}"
-                lines = all_lines[position_end - 5 : position_end + 5]
-                code_syntax = Syntax(
-                    "\n".join(str(line) for line in lines),
-                    "python",
-                    theme="ansi_dark",
-                    background_color="default",
-                )
-                output.console.print(
-                    Panel(
-                        code_syntax,
-                        expand=False,
-                        title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
+                if verbose:
+                    output.console.print()
+                    output.console.print(":sparkles: Matching source code:")
+                    position_end = search_output.position.lineno
+                    all_lines = search_output.file_lines
+                    all_lines[position_end] = f"*{all_lines[position_end][1:]}"
+                    lines = all_lines[position_end - 5 : position_end + 5]
+                    code_syntax = Syntax(
+                        "\n".join(str(line) for line in lines),
+                        "python",
+                        theme="ansi_dark",
+                        background_color="default",
                     )
-                )
-                # output.print_diagnostics(verbose, search_output=search_output)
+                    output.console.print(
+                        Panel(
+                            code_syntax,
+                            expand=False,
+                            title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
+                        )
+                    )
 
 
 @cli.command()
