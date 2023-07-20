@@ -277,13 +277,17 @@ def analyze(
             invalid_directories.append(current_directory)
     # create the list of valid directories by removing the invalid ones
     valid_directories = list(set(directory) - set(invalid_directories))
+    # output the list of directories subject to checking
     output.console.print(
         f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
     )
+    # output the number of checks that will be performed
     output.console.print(f"\n:tada: Preparing to perform {len(check_list)} check(s):")
     # iterate through and perform each of the checks
     for current_check in check_list:
+        # extract the pattern for the current check
         current_xpath_pattern = current_check["pattern"]  # type: ignore
+        # display the XPATH expression for the current check
         output.console.print("\n:tada: Performing check:")
         xpath_syntax = Syntax(current_xpath_pattern, "xml", theme="ansi_dark")
         output.console.print(
@@ -299,19 +303,31 @@ def analyze(
             paths=valid_directories,
             expression=current_xpath_pattern,
         )
+        # for each potential match, log and, if verbose model is enabled,
+        # display details about each of the matches
         for search_output in match_generator:
             if isinstance(search_output, pyastgrepsearch.Match):
                 output.opt_print_log(verbose, blank="")
                 output.opt_print_log(verbose, label=":sparkles: Matching source code:")
+                # extract the direct line number for this match
                 position_end = search_output.position.lineno
+                # get a pre-defined number of the lines both
+                # before and after the line that is the closest match
                 all_lines = search_output.file_lines
-                all_lines[position_end] = f"*{all_lines[position_end][1:]}"
-                lines = all_lines[position_end - 5 : position_end + 5]
+                all_lines[
+                    position_end
+                ] = f"*{all_lines[position_end][constants.markers.Slice_One:]}"
+                lines = all_lines[
+                    position_end
+                    - constants.markers.Code_Context : position_end
+                    + constants.markers.Code_Context
+                ]
+                # create a rich panel to display the results
                 code_syntax = Syntax(
                     "\n".join(str(line) for line in lines),
                     "python",
-                    theme="ansi_dark",
-                    background_color="default",
+                    theme=constants.chasten.Theme_Colors,
+                    background_color=constants.chasten.Theme_Background,
                 )
                 output.opt_print_log(
                     verbose,
