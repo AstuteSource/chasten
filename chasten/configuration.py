@@ -3,10 +3,7 @@
 import logging
 import logging.config
 import logging.handlers
-import os
 import sys
-from enum import Enum
-from pathlib import Path
 from typing import Tuple
 
 import platformdirs
@@ -14,13 +11,6 @@ from rich.logging import RichHandler
 from rich.traceback import install
 
 from chasten import constants
-
-
-class Configuration(str, Enum):
-    """The predefined values for the configuration file."""
-
-    HOME = Path.home()
-    SEPARATOR = os.sep
 
 
 def configure_tracebacks() -> None:
