@@ -286,15 +286,19 @@ def analyze(
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
-        current_xpath_pattern = current_check["pattern"]  # type: ignore
+        current_xpath_pattern = current_check[constants.checks.Check_Pattern]  # type: ignore
         # display the XPATH expression for the current check
         output.console.print("\n:tada: Performing check:")
-        xpath_syntax = Syntax(current_xpath_pattern, "xml", theme="ansi_dark")
+        xpath_syntax = Syntax(
+            current_xpath_pattern,
+            constants.markers.Xml,
+            theme=constants.chasten.Theme_Colors,
+        )
         output.console.print(
             Panel(
                 xpath_syntax,
                 expand=False,
-                title=f"Id={current_check['id']}, Name={current_check['name']}",  # type: ignore
+                title=f"Id={current_check[constants.checks.Check_Id]}, Name={current_check['name']}",  # type: ignore
             )
         )
         # search for the XML contents of an AST that match the provided
@@ -312,7 +316,9 @@ def analyze(
                 # extract the direct line number for this match
                 position_end = search_output.position.lineno
                 # get a pre-defined number of the lines both
-                # before and after the line that is the closest match
+                # before and after the line that is the closest match;
+                # note that the use of "*" is an indicator of the
+                # specific line that is the focus of the search
                 all_lines = search_output.file_lines
                 all_lines[
                     position_end
