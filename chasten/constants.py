@@ -13,9 +13,12 @@ class Chasten:
     Emoji: str
     Https: str
     Name: str
+    Programming_Language: str
     Separator: str
     Server_Shutdown: str
     Tagline: str
+    Theme_Background: str
+    Theme_Colors: str
     Website: str
 
 
@@ -25,9 +28,12 @@ chasten = Chasten(
     Emoji=":dizzy:",
     Https="https://",
     Name="chasten",
+    Programming_Language="python",
     Separator="/",
     Server_Shutdown=":person_shrugging: Shut down chasten's sylog server",
     Tagline="chasten: Analyze the AST of Python Source Code",
+    Theme_Background="default",
+    Theme_Colors="ansi_dark",
     Website=":link: GitHub: https://github.com/gkapfham/chasten",
 )
 
@@ -113,6 +119,7 @@ class Markers:
 
     Bad_Fifteen: str
     Bad_Zero_Zero: str
+    Code_Context: int
     Empty_Bytes: bytes
     Empty: str
     Ellipse: str
@@ -124,6 +131,7 @@ class Markers:
     Non_Zero_Exit: int
     Nothing: str
     Single_Quote: str
+    Slice_One: int
     Space: str
     Tab: str
     Underscore: str
@@ -132,6 +140,7 @@ class Markers:
 markers = Markers(
     Bad_Fifteen="<15>",
     Bad_Zero_Zero="",
+    Code_Context = 5,
     Empty_Bytes=b"",
     Empty="",
     Ellipse="...",
@@ -143,6 +152,7 @@ markers = Markers(
     Non_Zero_Exit=1,
     Nothing="",
     Single_Quote="'",
+    Slice_One=1,
     Space=" ",
     Tab="\t",
     Underscore="_",
