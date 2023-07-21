@@ -242,7 +242,7 @@ def configure(
 
 
 @cli.command()
-def analyze(
+def analyze(  # noqa: PLR0913
     directory: List[Path] = typer.Option(
         filesystem.get_default_directory_list(),
         "--search-directory",
@@ -250,10 +250,10 @@ def analyze(
         help="One or more directories with Python code",
     ),
     check_include: list[str] = typer.Option(
-        None, "--check-include", help="List of checks to include."
+        [], "--check-include", help="List of checks to include."
     ),
     check_exclude: list[str] = typer.Option(
-        None, "--check-exclude", help="List of checks to exclude."
+        [], "--check-exclude", help="List of checks to exclude."
     ),
     verbose: bool = typer.Option(False),
     debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
@@ -291,7 +291,8 @@ def analyze(
         f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
     )
     # output the number of checks that will be performed
-    output.console.print(f"\n:tada: Found a total of {len(check_list)} check(s):")
+    output.console.print()
+    output.console.print(f":tada: Found a total of {len(check_list)} check(s):")
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the name of the current check and confirm that:
@@ -339,6 +340,7 @@ def analyze(
         (match_generator_list, _) = process.filter_matches(
             match_generator_list, pyastgrepsearch.Match
         )
+        output.console.print()
         output.console.print(
             f":sparkles: Found a total of {len(match_generator_list)} matches"
         )
