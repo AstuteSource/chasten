@@ -176,7 +176,7 @@ markers = Markers(
     Space=" ",
     Tab="\t",
     Underscore="_",
-    Xml = "xml"
+    Xml="xml",
 )
 
 
