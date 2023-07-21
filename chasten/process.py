@@ -2,7 +2,7 @@
 
 from typing import Any, List, Tuple, Union
 
-from pyastgrep import search as pyastgrepsearch
+from pyastgrep import search as pyastgrepsearch  # type: ignore
 
 
 def filter_matches(
