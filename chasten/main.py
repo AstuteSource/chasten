@@ -2,7 +2,11 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -12,17 +16,16 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -246,6 +249,12 @@ def analyze(
         "-d",
         help="One or more directories with Python code",
     ),
+    check_include: list[str] = typer.Option(
+        None, "--check-include", help="List of checks to include."
+    ),
+    check_exclude: list[str] = typer.Option(
+        None, "--check-exclude", help="List of checks to exclude."
+    ),
     verbose: bool = typer.Option(False),
     debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
     debug_destination: debug.DebugDestination = typer.Option(
@@ -282,9 +291,19 @@ def analyze(
         f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
     )
     # output the number of checks that will be performed
-    output.console.print(f"\n:tada: Preparing to perform {len(check_list)} check(s):")
+    output.console.print(f"\n:tada: Found a total of {len(check_list)} check(s):")
     # iterate through and perform each of the checks
     for current_check in check_list:
+        # extract the name of the current check and confirm that:
+        # --> It is not in the exclude list
+        # --> It is in the include list
+        current_check_name = current_check[constants.checks.Check_Name]  # type: ignore
+        # go to the next check if this one was not specified
+        if (
+            current_check_name in check_exclude
+            or current_check_name not in check_include
+        ):
+            continue
         # extract the pattern for the current check
         current_xpath_pattern = current_check[constants.checks.Check_Pattern]  # type: ignore
         # display the XPATH expression for the current check
@@ -314,9 +333,17 @@ def analyze(
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         match_generator_list = list(match_generator)
-        output.console.print(f":sparkles: Found a total of {len(match_generator_list)} matches")
+        # filter the list of matches so that it only includes
+        # those that are a Match object that will contain source code
+        (match_generator_list, _) = process.filter_matches(
+            match_generator_list, pyastgrepsearch.Match
+        )
+        output.console.print(
+            f":sparkles: Found a total of {len(match_generator_list)} matches"
+        )
         for search_output in match_generator_list:
             if isinstance(search_output, pyastgrepsearch.Match):
+                # display a label for matching output information
                 output.opt_print_log(verbose, blank="")
                 output.opt_print_log(verbose, label=":sparkles: Matching source code:")
                 # extract the direct line number for this match
