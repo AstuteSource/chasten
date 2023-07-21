@@ -330,8 +330,9 @@ def analyze(
             paths=valid_directories,
             expression=current_xpath_pattern,
         )
-        # for each potential match, log and, if verbose model is enabled,
-        # display details about each of the matches
+        # materialize a list from the generator of (potential) matches;
+        # note that this list will also contain an object that will
+        # indicate that the analysis completed for each located file
         match_generator_list = list(match_generator)
         # filter the list of matches so that it only includes
         # those that are a Match object that will contain source code
@@ -341,6 +342,8 @@ def analyze(
         output.console.print(
             f":sparkles: Found a total of {len(match_generator_list)} matches"
         )
+        # for each potential match, log and, if verbose model is enabled,
+        # display details about each of the matches
         for search_output in match_generator_list:
             if isinstance(search_output, pyastgrepsearch.Match):
                 # display a label for matching output information
