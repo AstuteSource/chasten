@@ -123,7 +123,9 @@ def validate_file(
 
 def validate_configuration_files(
     verbose: bool = False,
-) -> Tuple[bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]]:
+) -> Tuple[
+    bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
+]:
     """Validate the configuration."""
     # detect and store the platform-specific user
     # configuration directory
@@ -292,12 +294,18 @@ def analyze(  # noqa: PLR0913
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
     # the Python source code found in the valid directories
-    check_list: List[Dict[str, Union[str, Dict[str, int]]]] = checks_dict[constants.checks.Checks_Label]
+    check_list: List[Dict[str, Union[str, Dict[str, int]]]] = checks_dict[
+        constants.checks.Checks_Label
+    ]
     # filter the list of checks based on the include and exclude parameters
     # --> only run those checks that were included
-    check_list = process.include_or_exclude_checks(check_list, check_include[0], check_include[1], check_include[2], include=True)
+    check_list = process.include_or_exclude_checks(
+        check_list, check_include[0], check_include[1], check_include[2], include=True
+    )
     # --> remove those checks that were excluded
-    check_list = process.include_or_exclude_checks(check_list, check_exclude[0], check_exclude[1], check_exclude[2], include=False)
+    check_list = process.include_or_exclude_checks(
+        check_list, check_exclude[0], check_exclude[1], check_exclude[2], include=False
+    )
     # collect all of the directories that are invalid
     invalid_directories = []
     for current_directory in directory:
@@ -311,7 +319,9 @@ def analyze(  # noqa: PLR0913
     )
     # output the number of checks that will be performed
     output.console.print()
-    output.console.print(f":tada: Found a total of {len(check_list)} matching check(s):")
+    output.console.print(
+        f":tada: Found a total of {len(check_list)} matching check(s):"
+    )
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
