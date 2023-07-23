@@ -44,14 +44,18 @@ class Checks:
     """Define the Checks dataclass for constant(s)."""
 
     Check_Code: str
+    Check_Confidence: int
     Check_Id: str
+    Checks_Label: str
     Check_Name: str
     Check_Pattern: str
 
 
 checks = Checks(
     Check_Code="code",
+    Check_Confidence=80,
     Check_Id="id",
+    Checks_Label="checks",
     Check_Name="name",
     Check_Pattern="pattern",
 )
