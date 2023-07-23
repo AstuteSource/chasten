@@ -78,13 +78,16 @@ def display_configuration_directory(
 def extract_configuration_details(
     chasten_user_config_dir_str: str,
     configuration_file: str = constants.filesystem.Main_Configuration_File,
-) -> Tuple[str, str, Dict[str, Dict[str, Any]]]:
+) -> Tuple[bool, str, str, Dict[str, Dict[str, Any]]]:
     """Display details about the configuration."""
-    # display_configuration_directory(chasten_user_config_dir_str)
     # create the name of the main configuration file
     configuration_file_str = f"{chasten_user_config_dir_str}/{configuration_file}"
     # load the text of the main configuration file
     configuration_file_path = Path(configuration_file_str)
+    # the configueration file does not exist and thus
+    # the extraction process cannot continue
+    if not configuration_file_path.exists():
+        return(False, "", "", None)
     configuration_file_yml = configuration_file_path.read_text()
     # load the contents of the main configuration file
     yaml_data = None
@@ -92,7 +95,7 @@ def extract_configuration_details(
         yaml_data = yaml.safe_load(user_configuration_file)
     # return the file name, the textual contents of the configuration file, and
     # a dict-based representation of the configuration file
-    return configuration_file_str, configuration_file_yml, yaml_data
+    return True, configuration_file_str, configuration_file_yml, yaml_data
 
 
 def validate_file(
@@ -122,17 +125,21 @@ def validate_file(
 
 
 def validate_configuration_files(
+    config: Path,
     verbose: bool = False,
 ) -> Tuple[
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
 ]:
     """Validate the configuration."""
-    # detect and store the platform-specific user
-    # configuration directory
-    chasten_user_config_dir_str = configuration.user_config_dir(
-        application_name=constants.chasten.Application_Name,
-        application_author=constants.chasten.Application_Author,
-    )
+    if config.exists():
+        chasten_user_config_dir_str = str(config)
+    else:
+        # detect and store the platform-specific user
+        # configuration directory
+        chasten_user_config_dir_str = configuration.user_config_dir(
+            application_name=constants.chasten.Application_Name,
+            application_author=constants.chasten.Application_Author,
+        )
     output.console.print(
         ":sparkles: Configuration directory:"
         + constants.markers.Space
@@ -143,10 +150,13 @@ def validate_configuration_files(
     # display details about the configuration directory
     display_configuration_directory(chasten_user_config_dir_str, verbose)
     (
+        configuration_valid,
         configuration_file_str,
         configuration_file_yml,
         yml_data_dict,
     ) = extract_configuration_details(chasten_user_config_dir_str)
+    if not configuration_valid:
+        return (False, {})
     # validate the user's configuration and display the results
     config_file_validated = validate_file(
         configuration_file_str,
@@ -163,6 +173,7 @@ def validate_configuration_files(
     check_files_validated = False
     for checks_file_name in checks_file_name_list:
         (
+            check_file_valid,
             configuration_file_str,
             configuration_file_yml,
             yml_data_dict,
@@ -175,7 +186,6 @@ def validate_configuration_files(
             validate.JSON_SCHEMA_CHECKS,
             verbose,
         )
-        # output.console.print(yml_data_dict)
         checks_files_validated_list.append(check_file_validated)
     check_files_validated = all(checks_files_validated_list)
     # the files validated correctly
@@ -261,6 +271,12 @@ def analyze(  # noqa: PLR0913
         "-d",
         help="One or more directories with Python code",
     ),
+    config: Path = typer.Option(
+        "",
+        "--config",
+        "-c",
+        help="One or more directories with Python code",
+    ),
     verbose: bool = typer.Option(
         False, "--verbose", "-v", help="Enable verbose mode output."
     ),
@@ -283,7 +299,7 @@ def analyze(  # noqa: PLR0913
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
-    (validated, checks_dict) = validate_configuration_files()
+    (validated, checks_dict) = validate_configuration_files(config)
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:
