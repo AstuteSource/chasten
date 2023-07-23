@@ -300,11 +300,11 @@ def analyze(  # noqa: PLR0913
     # filter the list of checks based on the include and exclude parameters
     # --> only run those checks that were included
     check_list = process.include_or_exclude_checks(
-        check_list, check_include[0], check_include[1], check_include[2], include=True
+        check_list, include=True, *check_include
     )
     # --> remove those checks that were excluded
     check_list = process.include_or_exclude_checks(
-        check_list, check_exclude[0], check_exclude[1], check_exclude[2], include=False
+        check_list, include=False, *check_exclude
     )
     # collect all of the directories that are invalid
     invalid_directories = []

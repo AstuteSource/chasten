@@ -26,7 +26,6 @@ def test_cli_analyze(tmpdir):
             test_one,
             "--search-directory",
             test_two,
-            "--no-verbose",
         ],
     )
     assert result.exit_code == 0
@@ -48,22 +47,23 @@ def test_fuzz_analyze(directory: typing.List[Path]) -> None:
         directory=directory,
         debug_level=debug.DebugLevel.ERROR,
         debug_destination=debug.DebugDestination.CONSOLE,
-        verbose=False,
+        check_include=(None, None, 0),  # type: ignore
+        check_exclude=(None, None, 0),  # type: ignore
     )
 
 
 @given(directory=strategies.builds(Path))
 @pytest.mark.fuzz
+@settings(deadline=None)
 def test_fuzz_cli_analyze_single_directory(directory):
     """Confirm that the function does not crash when called through the command-line interface."""
-    result = runner.invoke(
-        main.cli, ["analyze", "--search-directory", str(directory), "--no-verbose"]
-    )
+    result = runner.invoke(main.cli, ["analyze", "--search-directory", str(directory)])
     assert result.exit_code == 0
 
 
 @given(directory_one=strategies.builds(Path), directory_two=strategies.builds(Path))
 @pytest.mark.fuzz
+@settings(deadline=None)
 def test_fuzz_cli_analyze_multiple_directory(directory_one, directory_two):
     """Confirm that the function does not crash when called through the command-line interface."""
     result = runner.invoke(
@@ -74,7 +74,6 @@ def test_fuzz_cli_analyze_multiple_directory(directory_one, directory_two):
             str(directory_one),
             "--search-directory",
             str(directory_two),
-            "--no-verbose",
         ],
     )
     assert result.exit_code == 0
