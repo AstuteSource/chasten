@@ -2,7 +2,7 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -123,7 +123,7 @@ def validate_file(
 
 def validate_configuration_files(
     verbose: bool = False,
-) -> Tuple[bool, Union[Dict[str, Dict[str, Any]], Dict[Any, Any]]]:
+) -> Tuple[bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]]:
     """Validate the configuration."""
     # detect and store the platform-specific user
     # configuration directory
@@ -292,7 +292,7 @@ def analyze(  # noqa: PLR0913
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
     # the Python source code found in the valid directories
-    check_list = checks_dict[constants.checks.Checks_Label]
+    check_list: List[Dict[str, Union[str, Dict[str, int]]]] = checks_dict[constants.checks.Checks_Label]
     # filter the list of checks based on the include and exclude parameters
     # --> only run those checks that were included
     check_list = process.include_checks(check_list, check_include[0], check_include[1], check_include[2])
@@ -309,17 +309,11 @@ def analyze(  # noqa: PLR0913
     )
     # output the number of checks that will be performed
     output.console.print()
-    output.console.print(f":tada: Found a total of {len(check_list)} check(s):")
+    output.console.print(f":tada: Found a total of {len(check_list)} matching check(s):")
     # iterate through and perform each of the checks
-    output.console.print("The check list:")
-    output.console.print(check_list)
     for current_check in check_list:
-        # extract the name of the current check and confirm that:
-        # --> It is not in the exclude list
-        # --> It is in the include list
-        current_check_name = current_check[constants.checks.Check_Name]  # type: ignore
         # extract the pattern for the current check
-        current_xpath_pattern = current_check[constants.checks.Check_Pattern]  # type: ignore
+        current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
         # display the XPATH expression for the current check
         output.console.print("\n:tada: Performing check:")
         xpath_syntax = Syntax(
