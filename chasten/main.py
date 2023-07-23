@@ -146,9 +146,7 @@ def validate_configuration_files(
         + chasten_user_config_dir_str
         + constants.markers.Newline
     )
-    # create a visualization of the user's configuration directory
-    # display details about the configuration directory
-    display_configuration_directory(chasten_user_config_dir_str, verbose)
+    # extract the configuration details
     (
         configuration_valid,
         configuration_file_str,
@@ -157,6 +155,9 @@ def validate_configuration_files(
     ) = extract_configuration_details(chasten_user_config_dir_str)
     if not configuration_valid:
         return (False, {})
+    # create a visualization of the user's configuration directory
+    # display details about the configuration directory
+    display_configuration_directory(chasten_user_config_dir_str, verbose)
     # validate the user's configuration and display the results
     config_file_validated = validate_file(
         configuration_file_str,
