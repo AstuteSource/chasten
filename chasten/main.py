@@ -2,7 +2,7 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import typer
 import yaml
@@ -241,22 +241,38 @@ def configure(
 
 @cli.command()
 def analyze(  # noqa: PLR0913
+    check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
+        (None, None, 0),
+        "--check-include",
+        "-i",
+        help="Attribute name, value, and match confidence level for inclusion.",
+    ),
+    check_exclude: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
+        (None, None, 0),
+        "--check-exclude",
+        "-e",
+        help="Attribute name, value, and match confidence level for exclusion.",
+    ),
     directory: List[Path] = typer.Option(
         filesystem.get_default_directory_list(),
         "--search-directory",
         "-d",
         help="One or more directories with Python code",
     ),
-    check_include: list[str] = typer.Option(
-        [], "--check-include", help="List of checks to include."
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Enable verbose mode output."
     ),
-    check_exclude: list[str] = typer.Option(
-        [], "--check-exclude", help="List of checks to exclude."
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
     ),
-    verbose: bool = typer.Option(False),
-    debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
     debug_destination: debug.DebugDestination = typer.Option(
-        debug.DebugDestination.CONSOLE.value, "--debug-dest"
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
     ),
 ) -> None:
     """Analyze the AST of Python source code."""
@@ -276,7 +292,10 @@ def analyze(  # noqa: PLR0913
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
     # the Python source code found in the valid directories
-    check_list = checks_dict["checks"]
+    check_list = checks_dict[constants.checks.Checks_Label]
+    # filter the list of checks based on the include and exclude parameters
+    # --> only run those checks that were included
+    check_list = process.include_checks(check_list, check_include[0], check_include[1], check_include[2])
     # collect all of the directories that are invalid
     invalid_directories = []
     for current_directory in directory:
@@ -292,17 +311,13 @@ def analyze(  # noqa: PLR0913
     output.console.print()
     output.console.print(f":tada: Found a total of {len(check_list)} check(s):")
     # iterate through and perform each of the checks
+    output.console.print("The check list:")
+    output.console.print(check_list)
     for current_check in check_list:
         # extract the name of the current check and confirm that:
         # --> It is not in the exclude list
         # --> It is in the include list
         current_check_name = current_check[constants.checks.Check_Name]  # type: ignore
-        # go to the next check if this one was not specified
-        if (
-            current_check_name in check_exclude
-            or current_check_name not in check_include
-        ):
-            continue
         # extract the pattern for the current check
         current_xpath_pattern = current_check[constants.checks.Check_Pattern]  # type: ignore
         # display the XPATH expression for the current check
