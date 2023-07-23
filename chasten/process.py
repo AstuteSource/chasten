@@ -29,9 +29,7 @@ def include_or_exclude_checks(
         # compute the fuzzy match value for the specific:
         # --> requested include attribute
         # --> specified match string
-        fuzzy_value = fuzz.ratio(
-            check_match, check_requested_include_attribute
-        )
+        fuzzy_value = fuzz.ratio(check_match, check_requested_include_attribute)
         # include the check if the fuzzy inclusion value is above (or equal to) threshold
         # and the purpose of the function call is to include values
         if (fuzzy_value >= check_confidence) and include:
