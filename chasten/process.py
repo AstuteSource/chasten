@@ -5,15 +5,15 @@ from typing import Any, Dict, List, Tuple, Union
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from thefuzz import fuzz
 
-from chasten import constants, enumerations, output
+from chasten import constants, enumerations
 
 
 def include_checks(
-    checks: Union[List[Dict[str, Dict[str, Any]]], Any],
+    checks: List[Dict[str, Union[str, Dict[str, int]]]],
     check_include_attribute: enumerations.FilterableAttribute,
     check_include_match: str,
     check_include_confidence: int = constants.checks.Check_Confidence,
-) -> List[Dict[str, Dict[str, Any]]]:
+) -> List[Dict[str, Union[str, Dict[str, int]]]]:
     """Perform all of the includes and excludes for the list of checks."""
     filtered_checks = []
     # at least one aspect of the inputs was not specified (likely due to
@@ -31,7 +31,6 @@ def include_checks(
         fuzzy_include_value = fuzz.ratio(
             check_include_match, check_requested_include_attribute
         )
-        output.console.print(fuzzy_include_value)
         # include the check if the fuzzy inclusion value is above the default threshold
         if fuzzy_include_value >= check_include_confidence:
             filtered_checks.append(check)
