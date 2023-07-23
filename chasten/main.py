@@ -320,7 +320,7 @@ def analyze(  # noqa: PLR0913
     # output the number of checks that will be performed
     output.console.print()
     output.console.print(
-        f":tada: Found a total of {len(check_list)} matching check(s):"
+        f":tada: Running a total of {len(check_list)} matching check(s):"
     )
     # iterate through and perform each of the checks
     for current_check in check_list:
