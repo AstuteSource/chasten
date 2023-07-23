@@ -3,7 +3,7 @@
 from typing import Any, Dict, List, Tuple, Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from thefuzz import fuzz
+from thefuzz import fuzz  # type: ignore
 
 from chasten import constants, enumerations
 
