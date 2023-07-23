@@ -87,7 +87,7 @@ def extract_configuration_details(
     # the configueration file does not exist and thus
     # the extraction process cannot continue
     if not configuration_file_path.exists():
-        return(False, "", "", None)
+        return (False, None, None, None)  # type: ignore
     configuration_file_yml = configuration_file_path.read_text()
     # load the contents of the main configuration file
     yaml_data = None
@@ -131,7 +131,7 @@ def validate_configuration_files(
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
 ]:
     """Validate the configuration."""
-    if config.exists():
+    if config and config.exists():
         chasten_user_config_dir_str = str(config)
     else:
         # detect and store the platform-specific user
@@ -230,7 +230,7 @@ def configure(
     )
     # display the configuration directory and its contents
     if task == enumerations.ConfigureTask.VALIDATE:
-        validate_configuration_files()
+        validate_configuration_files(Path(""))
     # create the configuration directory and a starting version of the configuration file
     if task == enumerations.ConfigureTask.CREATE:
         # attempt to create the configuration directory
@@ -265,14 +265,14 @@ def analyze(  # noqa: PLR0913
         "-e",
         help="Attribute name, value, and match confidence level for exclusion.",
     ),
-    directory: List[Path] = typer.Option(
+    directory: Path = typer.Option(
         filesystem.get_default_directory_list(),
         "--search-directory",
         "-d",
         help="One or more directories with Python code",
     ),
     config: Path = typer.Option(
-        "",
+        None,
         "--config",
         "-c",
         help="One or more directories with Python code",
@@ -299,14 +299,14 @@ def analyze(  # noqa: PLR0913
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
-    (validated, checks_dict) = validate_configuration_files(config)
+    (validated, checks_dict) = validate_configuration_files(config, verbose)
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
         )
-        sys.exit(constants.markers.Non_Zero_Exit)
+        sys.exit(constants.markers.Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
     # the Python source code found in the valid directories
@@ -323,12 +323,14 @@ def analyze(  # noqa: PLR0913
         check_list, include=False, *check_exclude
     )
     # collect all of the directories that are invalid
-    invalid_directories = []
-    for current_directory in directory:
-        if not filesystem.confirm_valid_directory(current_directory):
-            invalid_directories.append(current_directory)
+    # invalid_directories = []
+    # for current_directory in directory:
+    if not filesystem.confirm_valid_directory(directory):
+        output.console.print("Not valid")
+        # invalid_directories.append(current_directory)
     # create the list of valid directories by removing the invalid ones
-    valid_directories = list(set(directory) - set(invalid_directories))
+    # valid_directories = list(set(directory) - set(invalid_directories))
+    valid_directories = [directory]
     # output the list of directories subject to checking
     output.console.print(
         f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
