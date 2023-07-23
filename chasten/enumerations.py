@@ -8,3 +8,12 @@ class ConfigureTask(str, Enum):
 
     CREATE = "create"
     VALIDATE = "validate"
+
+
+class FilterableAttribute(str, Enum):
+    """Define the names of attributes that are subject to filtering."""
+
+    NAME = "name"
+    CODE = "code"
+    ID = "id"
+    PATTERN = "pattern"
