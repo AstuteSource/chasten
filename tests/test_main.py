@@ -26,6 +26,7 @@ def test_cli_analyze(tmpdir):
             test_one,
             "--search-directory",
             test_two,
+            "--verbose"
         ],
     )
     assert result.exit_code == 0
