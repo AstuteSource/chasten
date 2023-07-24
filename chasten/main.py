@@ -133,8 +133,13 @@ def validate_configuration_files(
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
 ]:
     """Validate the configuration."""
+    # there is a specified configuration file path and thus
+    # this overrides the use of any configuration files
     if config and config.exists():
         chasten_user_config_dir_str = str(config)
+    # there is no configuration file specified and thus
+    # this function should access the platform-specific
+    # configuration directory detected by platformdirs
     else:
         # detect and store the platform-specific user
         # configuration directory
@@ -155,10 +160,13 @@ def validate_configuration_files(
         configuration_file_yml,
         yml_data_dict,
     ) = extract_configuration_details(chasten_user_config_dir_str)
+    # it was not possible to extract the configuration details and
+    # thus this function should return immediately with False
+    # to indicate the failure and an empty configuration dictionary
     if not configuration_valid:
         return (False, {})
-    # create a visualization of the user's configuration directory
-    # display details about the configuration directory
+    # create a visualization of the user's configuration directory;
+    # display details about the configuration directory in console
     display_configuration_directory(chasten_user_config_dir_str, verbose)
     # validate the user's configuration and display the results
     config_file_validated = validate_file(
