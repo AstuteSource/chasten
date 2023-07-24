@@ -6,7 +6,6 @@ import pytest
 from hypothesis import given, settings, strategies
 from typer.testing import CliRunner
 
-# from chasten import debug, main
 from chasten import main
 
 runner = CliRunner()
