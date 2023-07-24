@@ -84,7 +84,7 @@ def extract_configuration_details(
     configuration_file_str = f"{chasten_user_config_dir_str}/{configuration_file}"
     # load the text of the main configuration file
     configuration_file_path = Path(configuration_file_str)
-    # the configueration file does not exist and thus
+    # the configuration file does not exist and thus
     # the extraction process cannot continue, the use of
     # these return values indicates that the extraction
     # failed and any future steps cannot continue
@@ -107,7 +107,7 @@ def validate_file(
     json_schema: Dict[str, Any] = validate.JSON_SCHEMA_CONFIG,
     verbose: bool = False,
 ) -> bool:
-    """Validate the provided file."""
+    """Validate the provided file according to the provided JSON schema."""
     # perform the validation of the configuration file
     (validated, errors) = validate.validate_configuration(yml_data_dict, json_schema)
     output.console.print(
@@ -168,6 +168,11 @@ def validate_configuration_files(
     # create a visualization of the user's configuration directory;
     # display details about the configuration directory in console
     display_configuration_directory(chasten_user_config_dir_str, verbose)
+    # Summary of the remaining steps:
+    # --> Step 1: Validate the main configuration file
+    # --> Step 2: Validate the one or more checks files
+    # --> Step 3: If all files are valid, return overall validity
+    # --> Step 3: Otherwise, return an invalid configuration
     # validate the user's configuration and display the results
     config_file_validated = validate_file(
         configuration_file_str,
@@ -184,20 +189,30 @@ def validate_configuration_files(
     check_files_validated = False
     for checks_file_name in checks_file_name_list:
         (
-            check_file_valid,
+            checks_file_extracted_valid,
             configuration_file_str,
             configuration_file_yml,
             yml_data_dict,
         ) = extract_configuration_details(chasten_user_config_dir_str, checks_file_name)
-        # validate a checks configuration file
-        check_file_validated = validate_file(
-            configuration_file_str,
-            configuration_file_yml,
-            yml_data_dict,
-            validate.JSON_SCHEMA_CHECKS,
-            verbose,
-        )
+        # the checks file could not be extracted in a valid
+        # fashion and thus there is no need to continue the
+        # validation of this file or any of the other check file
+        if not checks_file_extracted_valid:
+            check_file_validated = False
+        # the checks file could be extract and thus the
+        # function should proceed to validate a checks configuration file
+        else:
+            check_file_validated = validate_file(
+                configuration_file_str,
+                configuration_file_yml,
+                yml_data_dict,
+                validate.JSON_SCHEMA_CHECKS,
+                verbose,
+            )
+        # keep track of the validation of all of validation
+        # records for each of the check files
         checks_files_validated_list.append(check_file_validated)
+    # the check files are only validated if all of them are valid
     check_files_validated = all(checks_files_validated_list)
     # the files validated correctly
     if config_file_validated and check_files_validated:
