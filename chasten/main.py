@@ -85,7 +85,9 @@ def extract_configuration_details(
     # load the text of the main configuration file
     configuration_file_path = Path(configuration_file_str)
     # the configueration file does not exist and thus
-    # the extraction process cannot continue
+    # the extraction process cannot continue, the use of
+    # these return values indicates that the extraction
+    # failed and any future steps cannot continue
     if not configuration_file_path.exists():
         return (False, None, None, None)  # type: ignore
     configuration_file_yml = configuration_file_path.read_text()
@@ -95,7 +97,7 @@ def extract_configuration_details(
         yaml_data = yaml.safe_load(user_configuration_file)
     # return the file name, the textual contents of the configuration file, and
     # a dict-based representation of the configuration file
-    return True, configuration_file_str, configuration_file_yml, yaml_data
+    return (True, configuration_file_str, configuration_file_yml, yaml_data)
 
 
 def validate_file(
