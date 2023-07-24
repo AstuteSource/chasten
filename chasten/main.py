@@ -2,7 +2,11 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -12,18 +16,16 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -285,6 +287,9 @@ def configure(
 
 @cli.command()
 def analyze(  # noqa: PLR0913
+    project: str = typer.Option(
+        ..., "--project-name", "-p", help="Name of the project."
+    ),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -301,13 +306,13 @@ def analyze(  # noqa: PLR0913
         filesystem.get_default_directory_list(),
         "--search-directory",
         "-d",
-        help="One or more directories with Python code",
+        help="A directory with Python source code.",
     ),
     config: Path = typer.Option(
         None,
         "--config",
         "-c",
-        help="One or more directories with Python code",
+        help="A directory with configuration file(s).",
     ),
     verbose: bool = typer.Option(
         False, "--verbose", "-v", help="Enable verbose mode output."
@@ -327,7 +332,7 @@ def analyze(  # noqa: PLR0913
 ) -> None:
     """Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
-    output_preamble(verbose, debug_level, debug_destination, directory=directory)
+    output_preamble(verbose, debug_level, debug_destination, project=project, directory=directory, )
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
