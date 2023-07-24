@@ -56,6 +56,12 @@ def test_fuzz_cli_analyze_single_directory(directory):
     project_name = "testing"
     result = runner.invoke(
         main.cli,
-        ["analyze", "--project-name", project_name, "--search-directory", str(directory)],
+        [
+            "analyze",
+            "--project-name",
+            project_name,
+            "--search-directory",
+            str(directory),
+        ],
     )
     assert result.exit_code == 0
