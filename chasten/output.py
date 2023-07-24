@@ -41,7 +41,6 @@ def print_diagnostics(verbose: bool, **configurations: Any) -> None:
             console.print(
                 f"{constants.markers.Indent}{configuration_current} = {configurations[configuration_current]}"
             )
-        console.print()
 
 
 def opt_print_log(verbose: bool, **contents: Any) -> None:
