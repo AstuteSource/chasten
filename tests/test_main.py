@@ -65,7 +65,7 @@ def test_fuzz_cli_analyze_single_directory(directory):
 @given(directory_one=strategies.builds(Path), directory_two=strategies.builds(Path))
 @pytest.mark.fuzz
 @settings(deadline=None)
-def test_fuzz_cli_analyze_multiple_directory(directory_one, directory_two):
+def test_fuzz_cli_analyze_multiple_directory(directory_one):
     """Confirm that the function does not crash when called through the command-line interface."""
     result = runner.invoke(
         main.cli,
