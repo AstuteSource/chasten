@@ -107,7 +107,7 @@ def test_fuzz_create_directory_tree(directory):
 @patch("chasten.configuration.user_config_dir")
 def test_create_config_dir_does_not_exist(mock_user_config_dir, tmp_path):
     """Confirm possible to create the user configuration directory when it does not exist."""
-    # monkeypath the platformdirs user_config_dir to always return
+    # monkeypatch the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
     # directory inside of that will be ".chasten" by default
     mock_user_config_dir.return_value = str(tmp_path / ".chasten")
@@ -122,7 +122,7 @@ def test_create_config_dir_already_exist_throw_exception(
     mock_user_config_dir, tmp_path
 ):
     """Confirm not possible to create the user configuration directory when it does exist."""
-    # monkeypath the platformdirs user_config_dir to always return
+    # monkeypatch the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
     # directory inside of that will be ".chasten" by default
     mock_user_config_dir.return_value = str(tmp_path / ".chasten")
@@ -140,7 +140,7 @@ def test_create_config_dir_already_exist_no_exception_when_no_force(
     mock_user_config_dir, tmp_path
 ):
     """Confirm possible to create the user configuration directory when it does not exist."""
-    # monkeypath the platformdirs user_config_dir to always return
+    # monkeypatch the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
     # directory inside of that will be ".chasten" by default
     mock_user_config_dir.return_value = str(tmp_path / ".chasten")
@@ -158,7 +158,7 @@ def test_create_config_dir_already_exist_no_exception_when_force(
     mock_user_config_dir, tmp_path
 ):
     """Confirm possible to create the user configuration directory when it does not exist."""
-    # monkeypath the platformdirs user_config_dir to always return
+    # monkeypatch the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
     # directory inside of that will be ".chasten" by default
     mock_user_config_dir.return_value = str(tmp_path / ".chasten")
