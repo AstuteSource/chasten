@@ -134,7 +134,8 @@ def validate_configuration_files(
 ]:
     """Validate the configuration."""
     # there is a specified configuration file path and thus
-    # this overrides the use of any configuration files
+    # this overrides the use of the configuration files that
+    # may exist inside of the platform-specific directory
     if config:
         # the configuration file exists and thus it should
         # be used instead of the platform-specific directory
@@ -296,7 +297,7 @@ def configure(
     if task == enumerations.ConfigureTask.CREATE:
         # attempt to create the configuration directory
         try:
-            created_directory_path = filesystem.create_configuration_directory(force)
+            created_directory_path = filesystem.create_configuration_directory(config, force)
             output.console.print(
                 f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
             )
