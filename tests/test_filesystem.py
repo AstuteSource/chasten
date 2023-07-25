@@ -218,3 +218,27 @@ def test_create_main_configuration_file(mock_user_config_dir, tmp_path):
         main_configuation_file.read_text()
         == filesystem.CONFIGURATION_FILE_DEFAULT_CONTENTS
     )
+
+
+@patch("chasten.configuration.user_config_dir")
+def test_create_checks_configuration_file(mock_user_config_dir, tmp_path):
+    """Confirm that it is possible to create the checks configuration file if it does not exist."""
+    # monkeypatch the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    dir_path = tmp_path / ".chasten"
+    result = filesystem.create_configuration_directory()
+    assert result == dir_path
+    assert dir_path.exists()
+    # create the main configuration file
+    filesystem.create_configuration_file(config=None, config_file_name=constants.filesystem.Main_Checks_File)  # type: ignore
+    # create the path to the main configuration file
+    # and then assert that it exists and has correct content
+    main_configuation_file = dir_path / "checks.yml"
+    assert main_configuation_file.exists()
+    # confirm that the configuration file has correct text
+    assert (
+        main_configuation_file.read_text()
+        == filesystem.CHECKS_FILE_DEFAULT_CONTENTS
+    )
