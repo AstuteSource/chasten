@@ -2,7 +2,11 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -12,18 +16,16 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -135,8 +137,16 @@ def validate_configuration_files(
     """Validate the configuration."""
     # there is a specified configuration file path and thus
     # this overrides the use of any configuration files
-    if config and config.exists():
-        chasten_user_config_dir_str = str(config)
+    if config:
+        # the configuration file exists and thus it should
+        # be used instead of the platform-specific directory
+        if config.exists():
+            chasten_user_config_dir_str = str(config)
+        # the configuration file does not exist and thus,
+        # since config was explicit, it is not possible
+        # to validate the configuration file
+        else:
+            return (False, {})
     # there is no configuration file specified and thus
     # this function should access the platform-specific
     # configuration directory detected by platformdirs
@@ -347,7 +357,7 @@ def analyze(  # noqa: PLR0913
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
         )
-        sys.exit(constants.markers.Zero_Exit)
+        sys.exit(constants.markers.Non_Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
     # the Python source code found in the valid directories
@@ -364,17 +374,14 @@ def analyze(  # noqa: PLR0913
         check_list, include=False, *check_exclude
     )
     # collect all of the directories that are invalid
-    # invalid_directories = []
     # for current_directory in directory:
     if not filesystem.confirm_valid_directory(directory):
         output.console.print("Not valid")
-        # invalid_directories.append(current_directory)
-    # create the list of valid directories by removing the invalid ones
-    # valid_directories = list(set(directory) - set(invalid_directories))
+    # create the list of directories
     valid_directories = [directory]
     # output the list of directories subject to checking
     output.console.print(
-        f":sparkles: Analyzing Python source code in:\n{', '.join(str(d) for d in valid_directories)}"
+        f":sparkles: Analyzing Python source code in:\n{directory}"
     )
     # output the number of checks that will be performed
     output.console.print()
