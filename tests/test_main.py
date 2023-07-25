@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from hypothesis import given, settings, strategies
+from hypothesis import HealthCheck, given, settings, strategies
 from typer.testing import CliRunner
 
 from chasten import main
@@ -91,7 +91,7 @@ def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
         ],
     )
     assert result.exit_code == 1
-    assert "Cannot perform analysis due to configuration error" in result.output
+    assert "Cannot perform analysis due to configuration" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
@@ -118,10 +118,11 @@ def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
         ],
     )
     assert result.exit_code == 1
+    assert "Cannot perform analysis due to configuration" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
-    """Confirm that using the command-line interface does return non-zero due to no files: analyze command correct arguments."""
+    """Confirm that using the command-line interface does return non-zero due to no config files: analyze command correct arguments."""
     # create some temporary directories
     test_one = tmpdir.mkdir("test_one")
     project_name = "test"
@@ -143,6 +144,7 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
         ],
     )
     assert result.exit_code == 1
+    assert "Cannot perform analysis due to configuration" in result.output
 
 
 @patch("chasten.configuration.user_config_dir")
@@ -191,17 +193,22 @@ def test_cli_configure_cannot_create_config_when_does_exist(
 
 
 @given(directory=strategies.builds(Path))
-@settings(deadline=None)
+@settings(deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture])
 @pytest.mark.fuzz
-def test_fuzz_cli_analyze_single_directory(directory):
+def test_fuzz_cli_analyze_single_directory(cwd, directory):
     """Confirm that the function does not crash when called through the command-line interface."""
     project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
     result = runner.invoke(
         main.cli,
         [
             "analyze",
             "--project-name",
             project_name,
+            "--config",
+            configuration_directory,
             "--search-directory",
             str(directory),
         ],
