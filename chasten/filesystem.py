@@ -9,16 +9,22 @@ from rich.tree import Tree
 from chasten import configuration, constants
 
 
-def create_configuration_directory(force: bool = False) -> Union[Path, NoReturn]:
+def create_configuration_directory(config: Path, force: bool = False) -> Union[Path, NoReturn]:
     """Create the configuration directory."""
-    # use the configuration package to detect what is the
-    # platform-specific user configuration directory; provide
-    # the function with the default name of the application
-    # and the default name of the application's author
-    chasten_user_config_dir_str = configuration.user_config_dir(
-        application_name=constants.chasten.Application_Name,
-        application_author=constants.chasten.Application_Author,
-    )
+    # there is a specified configuration file path and thus
+    # this overrides the use of the platform-specific configuration
+    if config:
+        chasten_user_config_dir_str = str(config)
+    # there is no configuration file specified and thus
+    # this function should access the platform-specific
+    # configuration directory detected by platformdirs
+    else:
+        # detect and store the platform-specific user
+        # configuration directory
+        chasten_user_config_dir_str = configuration.user_config_dir(
+            application_name=constants.chasten.Application_Name,
+            application_author=constants.chasten.Application_Author,
+        )
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     # recursively delete the configuration directory and all of its
     # contents because the force parameter permits deletion
