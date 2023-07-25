@@ -1,6 +1,7 @@
 """Pytest test suite for the main module."""
 
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from hypothesis import given, settings, strategies
@@ -100,20 +101,6 @@ def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
     assert result.exit_code == 1
 
 
-# def test_cli_configure_create_config_when_does_not_exist(tmpdir):
-#     """Confirm that using the command-line interface does create .config directory when it does not exist."""
-#     # call the configure command
-#     result = runner.invoke(
-#         main.cli,
-#         [
-#             "configure",
-#             "validate",
-#             "--verbose",
-#         ],
-#     )
-#     assert result.exit_code == 1
-
-
 def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
     """Confirm that using the command-line interface does return non-zero due to no files: analyze command correct arguments."""
     # create some temporary directories
@@ -133,6 +120,51 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
             test_one,
             "--config",
             correct_config_dir,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
+
+
+@patch("chasten.configuration.user_config_dir")
+def test_cli_configure_create_config_when_does_not_exist(
+    mock_user_config_dir, tmp_path
+):
+    """Confirm that using the command-line interface does create .config directory when it does not exist."""
+    # monkeypatch the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    # call the configure command
+    result = runner.invoke(
+        main.cli,
+        [
+            "configure",
+            "create",
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+@patch("chasten.configuration.user_config_dir")
+def test_cli_configure_cannot_create_config_when_does_exist(
+    mock_user_config_dir, tmp_path
+):
+    """Confirm that using the command-line interface does create .config directory when it does exist."""
+    # monkeypatch the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    config_directory = Path(tmp_path / ".chasten")
+    config_directory.mkdir()
+    assert config_directory.exists()
+    # call the configure command
+    result = runner.invoke(
+        main.cli,
+        [
+            "configure",
+            "create",
             "--verbose",
         ],
     )
