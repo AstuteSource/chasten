@@ -12,6 +12,7 @@ from chasten import main
 
 runner = CliRunner()
 
+
 @pytest.fixture
 def cwd():
     """Define a test fixture for the current working directory."""
