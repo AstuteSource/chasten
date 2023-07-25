@@ -2,7 +2,11 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -12,18 +16,16 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    server,
-    util,
-    validate,
-)
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -304,7 +306,13 @@ def configure(  # noqa: PLR0913
                 config, force
             )
             # write the configuration file for the chasten tool in the created directory
-            filesystem.create_main_configuration_file(created_directory_path)
+            filesystem.create_main_configuration_file(
+                created_directory_path, constants.filesystem.Main_Configuration_File
+            )
+            # write the check file for the chasten tool in the created directory
+            filesystem.create_main_configuration_file(
+                created_directory_path, constants.filesystem.Main_Checks_File
+            )
             # display diagnostic information about the completed process
             output.console.print(
                 f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
