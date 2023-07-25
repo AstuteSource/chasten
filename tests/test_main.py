@@ -1,5 +1,6 @@
 """Pytest test suite for the main module."""
 
+import os
 from pathlib import Path
 from unittest.mock import patch
 
@@ -11,13 +12,21 @@ from chasten import main
 
 runner = CliRunner()
 
+@pytest.fixture
+def cwd():
+    """Define a test fixture for the current working directory."""
+    return os.getcwd()
 
-def test_cli_analyze_correct_arguments(tmpdir):
-    """Confirm that using the command-line interface does not crash: analyze command correct arguments."""
+
+def test_cli_analyze_correct_arguments(cwd, tmpdir):
+    """Confirm that using the command-line interface does not crash: analyze command with correct arguments."""
     # create some temporary directories
     test_one = tmpdir.mkdir("test_one")
     # call the analyze command
     project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
     result = runner.invoke(
         main.cli,
         [
@@ -26,6 +35,8 @@ def test_cli_analyze_correct_arguments(tmpdir):
             test_one,
             "--project-name",
             project_name,
+            "--config",
+            configuration_directory,
             "--verbose",
         ],
     )
