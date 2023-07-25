@@ -272,12 +272,19 @@ def configure(
     """Manage tool configuration."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
-        verbose, debug_level, debug_destination, task=task.value, force=force
+        verbose,
+        debug_level,
+        debug_destination,
+        task=task.value,
+        config=config,
+        force=force,
     )
     # display the configuration directory and its contents
     if task == enumerations.ConfigureTask.VALIDATE:
-        # validate the configuration
-        (validated, checks_dict) = validate_configuration_files(config, verbose)
+        # validate the configuration files:
+        # --> config.yml
+        # --> checks.yml (or whatever file is reference in config.yml)
+        (validated, _) = validate_configuration_files(config, verbose)
         # some aspect of the configuration was not
         # valid, so exit early and signal an error
         if not validated:
