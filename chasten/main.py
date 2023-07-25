@@ -2,11 +2,7 @@
 
 import sys
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -16,16 +12,18 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import process
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    configuration,
+    constants,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    process,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -380,9 +378,7 @@ def analyze(  # noqa: PLR0913
     # create the list of directories
     valid_directories = [directory]
     # output the list of directories subject to checking
-    output.console.print(
-        f":sparkles: Analyzing Python source code in:\n{directory}"
-    )
+    output.console.print(f":sparkles: Analyzing Python source code in:\n{directory}")
     # output the number of checks that will be performed
     output.console.print()
     output.console.print(
