@@ -75,12 +75,12 @@ def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
 
 
 def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
-    """Confirm that using the command-line interface does not return non-zero: analyze command correct arguments."""
+    """Confirm that using the command-line interface does return non-zero due to no files: analyze command correct arguments."""
     # create some temporary directories
     test_one = tmpdir.mkdir("test_one")
     project_name = "test"
     # create a configuration directory
-    # that does not currently exist
+    # that does currently exist
     correct_config_dir = tmpdir.mkdir("config")
     # call the analyze command
     result = runner.invoke(
