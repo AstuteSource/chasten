@@ -148,7 +148,7 @@ def test_create_config_dir_already_exist_no_exception_when_no_force(
     result = filesystem.create_configuration_directory()
     assert result == dir_path
     assert dir_path.exists()
-    # confirm fails if called again without force
+    # confirm that it fails if called again without force
     with pytest.raises(FileExistsError):
         filesystem.create_configuration_directory(force=False)
 
@@ -166,7 +166,7 @@ def test_create_config_dir_already_exist_no_exception_when_force(
     result = filesystem.create_configuration_directory()
     assert result == dir_path
     assert dir_path.exists()
-    # confirm fails if called again with force
+    # confirm that it does not fail if called again with force
     filesystem.create_configuration_directory(force=True)
 
 
@@ -194,3 +194,25 @@ def test_detect_configuration_with_input_config_directory_use_default(
     assert dir_path.exists()
     detected_directory = filesystem.detect_configuration(None)
     assert detected_directory == str(dir_path)
+
+
+@patch("chasten.configuration.user_config_dir")
+def test_create_main_configuration_file(
+    mock_user_config_dir, tmp_path
+):
+    """Confirm that it is possible to create the main configuration file if it does not exist."""
+    # monkeypatch the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    dir_path = tmp_path / ".chasten"
+    result = filesystem.create_configuration_directory()
+    assert result == dir_path
+    assert dir_path.exists()
+    # create the main configuration file
+    filesystem.create_main_configuration_file(config=None)  # type: ignore
+    # create the path to the main configuration file
+    # and then assert that it exists and has correct content
+    main_configuation_file = dir_path / "config.yml"
+    assert main_configuation_file.exists()
+    assert main_configuation_file.read_text() == filesystem.CONFIGURATION_FILE_DEFAULT_CONTENTS
