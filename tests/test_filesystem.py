@@ -238,7 +238,4 @@ def test_create_checks_configuration_file(mock_user_config_dir, tmp_path):
     main_configuation_file = dir_path / "checks.yml"
     assert main_configuation_file.exists()
     # confirm that the configuration file has correct text
-    assert (
-        main_configuation_file.read_text()
-        == filesystem.CHECKS_FILE_DEFAULT_CONTENTS
-    )
+    assert main_configuation_file.read_text() == filesystem.CHECKS_FILE_DEFAULT_CONTENTS
