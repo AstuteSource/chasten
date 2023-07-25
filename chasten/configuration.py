@@ -29,11 +29,6 @@ def user_config_dir(application_name: str, application_author: str) -> str:
     return chasten_user_config_dir_str
 
 
-def get_default_config_file_contents() -> str:
-    """Return the default configuration file contents."""
-    return CONFIGURATION_FILE_DEFAULT_CONTENTS
-
-
 def configure_logging(
     debug_level: str = constants.logging.Default_Logging_Level,
     debug_dest: str = constants.logging.Default_Logging_Destination,
