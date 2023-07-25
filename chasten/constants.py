@@ -68,9 +68,14 @@ class Filesystem:
 
     Current_Directory: str
     Main_Configuration_File: str
+    Main_Checks_File: str
 
 
-filesystem = Filesystem(Current_Directory=".", Main_Configuration_File="config.yml")
+filesystem = Filesystem(
+    Current_Directory=".",
+    Main_Configuration_File="config.yml",
+    Main_Checks_File="checks.yml",
+)
 
 
 # humanreadable constant
