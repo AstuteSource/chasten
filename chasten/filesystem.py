@@ -20,11 +20,6 @@ chasten:
   # in the console (note that
   # when testing this is hidden)
   debug-destination: CONSOLE
-  # run the tool with the local
-  # directory (i.e., chasten will
-  # analyze itself)
-  search-directory:
-    - .
   # point to a checks file
   checks-file:
     - checks.yml
