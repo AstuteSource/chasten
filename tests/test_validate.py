@@ -22,11 +22,6 @@ def test_validate_config_valid_realistic():
             "verbose": True,
             "debug-level": "ERROR",
             "debug-destination": "CONSOLE",
-            "search-directory": [
-                "/path/to/dir/f1",
-                "/path/to/dir/f2",
-                "/path/to/dir/f3",
-            ],
         }
     }
     is_valid, errors = validate_configuration(valid_config_correct_schema)
@@ -50,11 +45,6 @@ def test_validate_config_invalid_realistic():
             "verbose": "yes",
             "debug-level": "ERROR",
             "debug-destination": "CONSOLE",
-            "search-directory": [
-                "/path/to/dir/f1",
-                "/path/to/dir/f2",
-                "/path/to/dir/f3",
-            ],
         }
     }
     is_valid, errors = validate_configuration(valid_config_correct_schema)
