@@ -12,6 +12,17 @@ from rich.traceback import install
 
 from chasten import constants
 
+CONFIGURATION_FILE_DEFAULT_CONTENTS = """
+chasten:
+   verbose: True
+   debug-level: ERROR
+   debug-destination: CONSOLE
+   search-directory:
+      - .
+   checks-file:
+      - checks.yml
+"""
+
 
 def configure_tracebacks() -> None:
     """Configure stack tracebacks arising from a crash to use rich."""
@@ -27,6 +38,11 @@ def user_config_dir(application_name: str, application_author: str) -> str:
         appauthor=application_author,
     )
     return chasten_user_config_dir_str
+
+
+def get_default_config_file_contents() -> str:
+    """Return the default configuration file contents."""
+    return CONFIGURATION_FILE_DEFAULT_CONTENTS
 
 
 def configure_logging(
