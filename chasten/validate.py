@@ -14,23 +14,8 @@ JSON_SCHEMA_CONFIG = {
         "chasten": {
             "type": "object",
             "properties": {
-                "verbose": {
-                    "type": "boolean",
-                    "required": [],
-                },
-                "debug-level": {
-                    "type": "string",
-                    "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-                    "required": [],
-                },
-                "debug-destination": {
-                    "type": "string",
-                    "enum": ["CONSOLE", "SYSLOG"],
-                    "required": [],
-                },
                 "checks-file": {
-                    "type": "array",
-                    "items": {"type": "string"},
+                    "type": "string",
                     "required": [],
                 },
             },
