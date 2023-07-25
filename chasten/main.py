@@ -257,6 +257,12 @@ def configure(
         "-f",
         help="Create configuration directory and files even if they exist",
     ),
+    config: Path = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="A directory with configuration file(s).",
+    ),
     verbose: bool = typer.Option(False),
     debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
     debug_destination: debug.DebugDestination = typer.Option(
@@ -270,7 +276,15 @@ def configure(
     )
     # display the configuration directory and its contents
     if task == enumerations.ConfigureTask.VALIDATE:
-        validate_configuration_files(Path(""))
+        # validate the configuration
+        (validated, checks_dict) = validate_configuration_files(config, verbose)
+        # some aspect of the configuration was not
+        # valid, so exit early and signal an error
+        if not validated:
+            output.console.print(
+                "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
+            )
+            sys.exit(constants.markers.Non_Zero_Exit)
     # create the configuration directory and a starting version of the configuration file
     if task == enumerations.ConfigureTask.CREATE:
         # attempt to create the configuration directory
@@ -371,10 +385,13 @@ def analyze(  # noqa: PLR0913
     check_list = process.include_or_exclude_checks(  # type: ignore
         check_list, include=False, *check_exclude
     )
-    # collect all of the directories that are invalid
-    # for current_directory in directory:
+    # the specified search directory is not valid and thus it is
+    # not possible to analyze the Python source files in this directory
     if not filesystem.confirm_valid_directory(directory):
-        output.console.print("Not valid")
+        output.console.print(
+            "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
+        )
+        sys.exit(constants.markers.Non_Zero_Exit)
     # create the list of directories
     valid_directories = [directory]
     # output the list of directories subject to checking
