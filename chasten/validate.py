@@ -28,11 +28,6 @@ JSON_SCHEMA_CONFIG = {
                     "enum": ["CONSOLE", "SYSLOG"],
                     "required": [],
                 },
-                "search-directory": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "required": [],
-                },
                 "checks-file": {
                     "type": "array",
                     "items": {"type": "string"},
