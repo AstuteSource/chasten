@@ -172,6 +172,23 @@ def test_create_config_dir_already_exist_no_exception_when_force(
 
 def test_detect_configuration_with_input_config_directory(tmp_path):
     """Confirm that it is possible to detect the configuration directory when it exists."""
+    # detecting a configuration directory should happen with
+    # the provided configuration directory over the platform-specific one
     config = tmp_path / "config"
     config.mkdir()
     assert filesystem.detect_configuration(config) == str(config)
+
+
+@patch("chasten.configuration.user_config_dir")
+def test_detect_configuration_with_input_config_directory_use_default(mock_user_config_dir, tmp_path):
+    """Confirm that it is possible to detect the configuration directory when none provided."""
+    # monkeypatch the platformdirs user_config_dir to always return
+    # the tmpdir test fixture that is controlled by Pytest; the
+    # directory inside of that will be ".chasten" by default
+    mock_user_config_dir.return_value = str(tmp_path / ".chasten")
+    dir_path = tmp_path / ".chasten"
+    result = filesystem.create_configuration_directory()
+    assert result == dir_path
+    assert dir_path.exists()
+    detected_directory = filesystem.detect_configuration(None)
+    assert detected_directory == str(dir_path)
