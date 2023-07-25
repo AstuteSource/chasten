@@ -44,10 +44,13 @@ def test_cli_analyze_correct_arguments(cwd, tmpdir):
     assert result.exit_code == 0
 
 
-def test_cli_analyze_incorrect_arguments_no_project(tmpdir):
+def test_cli_analyze_incorrect_arguments_no_project(cwd, tmpdir):
     """Confirm that using the command-line interface does not crash: analyze command incorrect arguments."""
     # create some temporary directories
     test_one = tmpdir.mkdir("test_one")
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
     # call the analyze command
     result = runner.invoke(
         main.cli,
@@ -55,11 +58,14 @@ def test_cli_analyze_incorrect_arguments_no_project(tmpdir):
             "analyze",
             "--search-directory",
             test_one,
+            "--config",
+            configuration_directory,
             "--verbose",
         ],
     )
     # crashes because the command-line arguments are wrong
     assert result.exit_code != 0
+    assert "Missing option '--project-name'" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
