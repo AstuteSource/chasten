@@ -74,6 +74,46 @@ def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
     assert result.exit_code == 1
 
 
+def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
+    """Confirm that using the command-line interface does return non-zero: analyze command incorrect arguments."""
+    # create some temporary directories
+    test_one = tmpdir.mkdir("test_one")
+    test_one_incorrect_name = "test_oneFF"
+    project_name = "test"
+    # create a configuration directory
+    # that does not currently exist
+    wrong_config_dir = "config"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--project-name",
+            project_name,
+            "--search-directory",
+            test_one_incorrect_name,
+            "--config",
+            wrong_config_dir,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
+
+
+# def test_cli_configure_create_config_when_does_not_exist(tmpdir):
+#     """Confirm that using the command-line interface does create .config directory when it does not exist."""
+#     # call the configure command
+#     result = runner.invoke(
+#         main.cli,
+#         [
+#             "configure",
+#             "validate",
+#             "--verbose",
+#         ],
+#     )
+#     assert result.exit_code == 1
+
+
 def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
     """Confirm that using the command-line interface does return non-zero due to no files: analyze command correct arguments."""
     # create some temporary directories
