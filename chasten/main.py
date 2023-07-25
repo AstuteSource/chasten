@@ -306,11 +306,11 @@ def configure(  # noqa: PLR0913
                 config, force
             )
             # write the configuration file for the chasten tool in the created directory
-            filesystem.create_main_configuration_file(
+            filesystem.create_configuration_file(
                 created_directory_path, constants.filesystem.Main_Configuration_File
             )
             # write the check file for the chasten tool in the created directory
-            filesystem.create_main_configuration_file(
+            filesystem.create_configuration_file(
                 created_directory_path, constants.filesystem.Main_Checks_File
             )
             # display diagnostic information about the completed process
