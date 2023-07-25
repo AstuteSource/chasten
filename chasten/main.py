@@ -133,7 +133,7 @@ def validate_configuration_files(
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
 ]:
     """Validate the configuration."""
-    # there is a specified configuration file path and thus
+    # there is a specified configuration directory path;
     # this overrides the use of the configuration files that
     # may exist inside of the platform-specific directory
     if config:
@@ -297,9 +297,13 @@ def configure(  # noqa: PLR0913
     if task == enumerations.ConfigureTask.CREATE:
         # attempt to create the configuration directory
         try:
+            # create the configuration directory, which will either be the one
+            # specified by the config parameter (if it exists) or it will be
+            # the one in the platform-specific directory given by platformdirs
             created_directory_path = filesystem.create_configuration_directory(
                 config, force
             )
+            # write the configuration file for the chasten tool in the created directory
             output.console.print(
                 f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
             )
