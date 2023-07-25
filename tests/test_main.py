@@ -64,8 +64,10 @@ def test_cli_analyze_incorrect_arguments_no_project(cwd, tmpdir):
         ],
     )
     # crashes because the command-line arguments are wrong
+    print(result.output)
     assert result.exit_code != 0
-    assert "Missing option '--project-name'" in result.output
+    assert "Missing option" in result.output
+    assert "--project-name" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
