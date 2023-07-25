@@ -91,6 +91,7 @@ def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
         ],
     )
     assert result.exit_code == 1
+    assert "Cannot perform analysis due to configuration error" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
