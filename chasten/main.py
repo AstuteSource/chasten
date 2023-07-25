@@ -248,7 +248,7 @@ def interact(ctx: typer.Context) -> None:
 
 
 @cli.command()
-def configure(
+def configure(  # noqa: PLR0913
     task: enumerations.ConfigureTask = typer.Argument(
         enumerations.ConfigureTask.VALIDATE.value
     ),
@@ -297,7 +297,9 @@ def configure(
     if task == enumerations.ConfigureTask.CREATE:
         # attempt to create the configuration directory
         try:
-            created_directory_path = filesystem.create_configuration_directory(config, force)
+            created_directory_path = filesystem.create_configuration_directory(
+                config, force
+            )
             output.console.print(
                 f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
             )
@@ -306,7 +308,7 @@ def configure(
         except FileExistsError:
             if not force:
                 output.console.print(
-                    ":person_shrugging: Configuration directory already exists."
+                    "\n:person_shrugging: Configuration directory already exists."
                 )
                 output.console.print(
                     "Use --force to recreate configuration directory and its containing files."
