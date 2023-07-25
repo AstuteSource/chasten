@@ -1,6 +1,9 @@
 """Validate various aspects of configurations and command-line arguments."""
 
-from typing import Any, Dict, List, Tuple
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
 
 import jsonschema
 from jsonschema.exceptions import ValidationError
@@ -15,7 +18,8 @@ JSON_SCHEMA_CONFIG = {
             "type": "object",
             "properties": {
                 "checks-file": {
-                    "type": "string",
+                    "type": "array",
+                    "items": {"type": "string"},
                     "required": [],
                 },
             },
