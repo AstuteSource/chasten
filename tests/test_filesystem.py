@@ -213,6 +213,7 @@ def test_create_main_configuration_file(mock_user_config_dir, tmp_path):
     # and then assert that it exists and has correct content
     main_configuation_file = dir_path / "config.yml"
     assert main_configuation_file.exists()
+    # confirm that the configuration file has correct text
     assert (
         main_configuation_file.read_text()
         == filesystem.CONFIGURATION_FILE_DEFAULT_CONTENTS
