@@ -7,7 +7,7 @@ import pytest
 from hypothesis import given, strategies
 from rich.tree import Tree
 
-from chasten import filesystem
+from chasten import constants, filesystem
 
 
 def test_valid_directory() -> None:
@@ -208,7 +208,7 @@ def test_create_main_configuration_file(mock_user_config_dir, tmp_path):
     assert result == dir_path
     assert dir_path.exists()
     # create the main configuration file
-    filesystem.create_main_configuration_file(config=None)  # type: ignore
+    filesystem.create_configuration_file(config=None, config_file_name=constants.filesystem.Main_Configuration_File)  # type: ignore
     # create the path to the main configuration file
     # and then assert that it exists and has correct content
     main_configuation_file = dir_path / "config.yml"
