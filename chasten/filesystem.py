@@ -2,11 +2,33 @@
 
 import shutil
 from pathlib import Path
-from typing import List, NoReturn, Optional, Union
+from typing import List, NoReturn, Optional, Tuple, Union
 
 from rich.tree import Tree
 
 from chasten import configuration, constants
+
+CONFIGURATION_FILE_DEFAULT_CONTENTS = """
+# chasten configuration
+# used for testing purposes
+chasten:
+  # display verbose debugging output
+  verbose: True
+  # display all debugging output
+  debug-level: DEBUG
+  # render debugging output
+  # in the console (note that
+  # when testing this is hidden)
+  debug-destination: CONSOLE
+  # run the tool with the local
+  # directory (i.e., chasten will
+  # analyze itself)
+  search-directory:
+    - .
+  # point to a checks file
+  checks-file:
+    - checks.yml
+"""
 
 
 def create_configuration_directory(
@@ -37,6 +59,34 @@ def create_configuration_directory(
     # case the FileExistsError will be passed to caller
     chasten_user_config_dir_path.mkdir(parents=True)
     return chasten_user_config_dir_path
+
+
+def create_main_configuration_file(config: Path) -> None:
+    """Create the main configuration file in the configuration directory."""
+    # there is a specified configuration directory path and thus
+    # this overrides the use of the platform-specific configuration
+    if config:
+        chasten_user_config_dir_str = str(config)
+    # there is no configuration directory specified and thus
+    # this function should access the platform-specific
+    # configuration directory detected by platformdirs
+    else:
+        # detect and store the platform-specific user
+        # configuration directory
+        chasten_user_config_dir_str = configuration.user_config_dir(
+            application_name=constants.chasten.Application_Name,
+            application_author=constants.chasten.Application_Author,
+        )
+    # create the final path to the configuration directory
+    chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
+    # create a path to the configuration file
+    chasten_user_config_main_file = (
+        chasten_user_config_dir_path / constants.filesystem.Main_Configuration_File
+    )
+    # create the file (if it does not exist)
+    chasten_user_config_main_file.touch()
+    # write the default contents of the file
+    chasten_user_config_main_file.write_text(CONFIGURATION_FILE_DEFAULT_CONTENTS)
 
 
 def create_directory_tree_visualization(directory: Path) -> Tree:
