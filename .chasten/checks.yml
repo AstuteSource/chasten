@@ -1,0 +1,36 @@
+checks:
+  - name: "class-definition"
+    code: "CDF"
+    id: "C001"
+    pattern: './/ClassDef'
+    count:
+      min: 1
+      max: 10
+  - name: "all-function-definition"
+    code: "AFD"
+    id: "F001"
+    pattern: './/FunctionDef'
+    count:
+      min: 1
+      max: 10
+  - name: "non-test-function-definition"
+    code: "NTF"
+    id: "F002"
+    pattern: './/FunctionDef[not(contains(@name, "test_"))]'
+    count:
+      min: 1
+      max: 10
+  - name: "single-nested-if"
+    code: "SNI"
+    id: "CL001"
+    pattern: './/FunctionDef/body//If'
+    count:
+      min: 1
+      max: 10
+  - name: "double-nested-if"
+    code: "DNI"
+    id: "CL002"
+    pattern: './/FunctionDef/body//If[ancestor::If and not(parent::orelse)]'
+    count:
+      min: 1
+      max: 10
