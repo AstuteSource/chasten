@@ -10,7 +10,7 @@ from chasten import configuration, constants
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
-# used for testing purposes
+# automatically created
 chasten:
   # point to a checks file
   checks-file: checks.yml
