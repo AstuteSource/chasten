@@ -197,9 +197,7 @@ def test_detect_configuration_with_input_config_directory_use_default(
 
 
 @patch("chasten.configuration.user_config_dir")
-def test_create_main_configuration_file(
-    mock_user_config_dir, tmp_path
-):
+def test_create_main_configuration_file(mock_user_config_dir, tmp_path):
     """Confirm that it is possible to create the main configuration file if it does not exist."""
     # monkeypatch the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
@@ -215,4 +213,7 @@ def test_create_main_configuration_file(
     # and then assert that it exists and has correct content
     main_configuation_file = dir_path / "config.yml"
     assert main_configuation_file.exists()
-    assert main_configuation_file.read_text() == filesystem.CONFIGURATION_FILE_DEFAULT_CONTENTS
+    assert (
+        main_configuation_file.read_text()
+        == filesystem.CONFIGURATION_FILE_DEFAULT_CONTENTS
+    )
