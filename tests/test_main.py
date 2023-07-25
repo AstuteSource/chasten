@@ -77,7 +77,7 @@ def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
 def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
     """Confirm that using the command-line interface does return non-zero: analyze command incorrect arguments."""
     # create some temporary directories
-    test_one = tmpdir.mkdir("test_one")
+    _ = tmpdir.mkdir("test_one")
     test_one_incorrect_name = "test_oneFF"
     project_name = "test"
     # create a configuration directory
