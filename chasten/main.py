@@ -304,7 +304,8 @@ def configure(  # noqa: PLR0913
                 f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
             )
         # cannot re-create the configuration directory, so display
-        # a message and suggest the use of --force the next time
+        # a message and suggest the use of --force the next time;
+        # exit early and signal an error
         except FileExistsError:
             if not force:
                 output.console.print(
@@ -313,6 +314,7 @@ def configure(  # noqa: PLR0913
                 output.console.print(
                     "Use --force to recreate configuration directory and its containing files."
                 )
+            sys.exit(constants.markers.Non_Zero_Exit)
 
 
 @cli.command()
