@@ -12,14 +12,6 @@ CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
 # used for testing purposes
 chasten:
-  # display verbose debugging output
-  verbose: True
-  # display all debugging output
-  debug-level: DEBUG
-  # render debugging output
-  # in the console (note that
-  # when testing this is hidden)
-  debug-destination: CONSOLE
   # point to a checks file
   checks-file:
     - checks.yml
