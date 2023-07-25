@@ -12,17 +12,6 @@ from rich.traceback import install
 
 from chasten import constants
 
-CONFIGURATION_FILE_DEFAULT_CONTENTS = """
-chasten:
-   verbose: True
-   debug-level: ERROR
-   debug-destination: CONSOLE
-   search-directory:
-      - .
-   checks-file:
-      - checks.yml
-"""
-
 
 def configure_tracebacks() -> None:
     """Configure stack tracebacks arising from a crash to use rich."""
