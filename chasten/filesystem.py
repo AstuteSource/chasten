@@ -2,7 +2,7 @@
 
 import shutil
 from pathlib import Path
-from typing import List, NoReturn, Optional, Tuple, Union
+from typing import List, NoReturn, Optional, Union
 
 from rich.tree import Tree
 
@@ -31,15 +31,13 @@ chasten:
 """
 
 
-def create_configuration_directory(
-    config: Optional[Path] = None, force: bool = False
-) -> Union[Path, NoReturn]:
-    """Create the configuration directory."""
-    # there is a specified configuration file path and thus
+def detect_configuration(config: Optional[Path]) -> str:
+    """Detect the configuration."""
+    # there is a specified configuration directory path and thus
     # this overrides the use of the platform-specific configuration
-    if config:
+    if config is not None:
         chasten_user_config_dir_str = str(config)
-    # there is no configuration file specified and thus
+    # there is no configuration directory specified and thus
     # this function should access the platform-specific
     # configuration directory detected by platformdirs
     else:
@@ -49,6 +47,17 @@ def create_configuration_directory(
             application_name=constants.chasten.Application_Name,
             application_author=constants.chasten.Application_Author,
         )
+    # return in string form the detected configuration directory
+    return chasten_user_config_dir_str
+
+
+def create_configuration_directory(
+    config: Optional[Path] = None, force: bool = False
+) -> Union[Path, NoReturn]:
+    """Create the configuration directory."""
+    # detect the configuration directory
+    chasten_user_config_dir_str = detect_configuration(config)
+    # create a path out of the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     # recursively delete the configuration directory and all of its
     # contents because the force parameter permits deletion
@@ -63,20 +72,8 @@ def create_configuration_directory(
 
 def create_main_configuration_file(config: Path) -> None:
     """Create the main configuration file in the configuration directory."""
-    # there is a specified configuration directory path and thus
-    # this overrides the use of the platform-specific configuration
-    if config:
-        chasten_user_config_dir_str = str(config)
-    # there is no configuration directory specified and thus
-    # this function should access the platform-specific
-    # configuration directory detected by platformdirs
-    else:
-        # detect and store the platform-specific user
-        # configuration directory
-        chasten_user_config_dir_str = configuration.user_config_dir(
-            application_name=constants.chasten.Application_Name,
-            application_author=constants.chasten.Application_Author,
-        )
+    # detect the configuration directory
+    chasten_user_config_dir_str = detect_configuration(config)
     # create the final path to the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     # create a path to the configuration file
