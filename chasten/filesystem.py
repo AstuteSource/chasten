@@ -9,7 +9,9 @@ from rich.tree import Tree
 from chasten import configuration, constants
 
 
-def create_configuration_directory(config: Path, force: bool = False) -> Union[Path, NoReturn]:
+def create_configuration_directory(
+    config: Path, force: bool = False
+) -> Union[Path, NoReturn]:
     """Create the configuration directory."""
     # there is a specified configuration file path and thus
     # this overrides the use of the platform-specific configuration
