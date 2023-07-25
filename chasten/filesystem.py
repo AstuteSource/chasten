@@ -30,6 +30,50 @@ chasten:
     - checks.yml
 """
 
+CHECKS_FILE_DEFAULT_CONTENTS = """
+checks:
+  - name: "class-definition"
+    code: "CDF"
+    id: "C001"
+    pattern: './/ClassDef'
+    count:
+      min: 1
+      max: 10
+  - name: "all-function-definition"
+    code: "AFD"
+    id: "F001"
+    pattern: './/FunctionDef'
+    count:
+      min: 1
+      max: 10
+  - name: "non-test-function-definition"
+    code: "NTF"
+    id: "F002"
+    pattern: './/FunctionDef[not(contains(@name, "test_"))]'
+    count:
+      min: 1
+      max: 10
+  - name: "single-nested-if"
+    code: "SNI"
+    id: "CL001"
+    pattern: './/FunctionDef/body//If'
+    count:
+      min: 1
+      max: 10
+  - name: "double-nested-if"
+    code: "DNI"
+    id: "CL002"
+    pattern: './/FunctionDef/body//If[ancestor::If and not(parent::orelse)]'
+    count:
+      min: 1
+      max: 10
+"""
+
+FILE_CONTENTS_LOOKUP = {
+    "config.yml": CONFIGURATION_FILE_DEFAULT_CONTENTS,
+    "checks.yml": CHECKS_FILE_DEFAULT_CONTENTS,
+}
+
 
 def detect_configuration(config: Optional[Path]) -> str:
     """Detect the configuration."""
@@ -70,20 +114,21 @@ def create_configuration_directory(
     return chasten_user_config_dir_path
 
 
-def create_main_configuration_file(config: Path) -> None:
+def create_configuration_file(
+    config: Path, config_file_name: str = constants.filesystem.Main_Configuration_File
+) -> None:
     """Create the main configuration file in the configuration directory."""
     # detect the configuration directory
     chasten_user_config_dir_str = detect_configuration(config)
     # create the final path to the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     # create a path to the configuration file
-    chasten_user_config_main_file = (
-        chasten_user_config_dir_path / constants.filesystem.Main_Configuration_File
-    )
+    chasten_user_config_main_file = chasten_user_config_dir_path / config_file_name
     # create the file (if it does not exist)
     chasten_user_config_main_file.touch()
     # write the default contents of the file
-    chasten_user_config_main_file.write_text(CONFIGURATION_FILE_DEFAULT_CONTENTS)
+    file_contents = FILE_CONTENTS_LOOKUP[config_file_name]
+    chasten_user_config_main_file.write_text(file_contents)
 
 
 def create_directory_tree_visualization(directory: Path) -> Tree:
