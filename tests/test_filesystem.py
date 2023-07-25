@@ -180,7 +180,9 @@ def test_detect_configuration_with_input_config_directory(tmp_path):
 
 
 @patch("chasten.configuration.user_config_dir")
-def test_detect_configuration_with_input_config_directory_use_default(mock_user_config_dir, tmp_path):
+def test_detect_configuration_with_input_config_directory_use_default(
+    mock_user_config_dir, tmp_path
+):
     """Confirm that it is possible to detect the configuration directory when none provided."""
     # monkeypatch the platformdirs user_config_dir to always return
     # the tmpdir test fixture that is controlled by Pytest; the
