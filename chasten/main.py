@@ -304,6 +304,8 @@ def configure(  # noqa: PLR0913
                 config, force
             )
             # write the configuration file for the chasten tool in the created directory
+            filesystem.create_main_configuration_file(created_directory_path)
+            # display diagnostic information about the completed process
             output.console.print(
                 f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
             )
