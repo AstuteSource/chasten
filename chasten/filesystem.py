@@ -2,7 +2,7 @@
 
 import shutil
 from pathlib import Path
-from typing import List, NoReturn, Union
+from typing import List, NoReturn, Optional, Union
 
 from rich.tree import Tree
 
@@ -10,7 +10,7 @@ from chasten import configuration, constants
 
 
 def create_configuration_directory(
-    config: Path, force: bool = False
+    config: Optional[Path] = None, force: bool = False
 ) -> Union[Path, NoReturn]:
     """Create the configuration directory."""
     # there is a specified configuration file path and thus
