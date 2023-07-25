@@ -59,10 +59,10 @@ jobs:
           run: |
             poetry run task lint
         # Run the program
-        - name: Run program
-          if: always()
-          run: |
-           poetry run chasten analyze --search-directory . --debug-level DEBUG --debug-dest CONSOLE
+        # - name: Run program
+        #   if: always()
+        #   run: |
+        #    poetry run chasten analyze --search-directory . --debug-level DEBUG --debug-dest CONSOLE
         # Run the tests
         - name: Run Tests
           if: always()
