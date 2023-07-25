@@ -13,7 +13,8 @@ CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # automatically created
 chasten:
   # point to a checks file
-  checks-file: checks.yml
+  checks-file:
+    - checks.yml
 """
 
 CHECKS_FILE_DEFAULT_CONTENTS = """
