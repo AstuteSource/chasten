@@ -168,3 +168,10 @@ def test_create_config_dir_already_exist_no_exception_when_force(
     assert dir_path.exists()
     # confirm fails if called again with force
     filesystem.create_configuration_directory(force=True)
+
+
+def test_detect_configuration_with_input_config_directory(tmp_path):
+    """Confirm that it is possible to detect the configuration directory when it exists."""
+    config = tmp_path / "config"
+    config.mkdir()
+    assert filesystem.detect_configuration(config) == str(config)
