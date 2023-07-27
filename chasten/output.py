@@ -64,7 +64,6 @@ def print_header() -> None:
         constants.chasten.Emoji + constants.markers.Space + constants.chasten.Tagline
     )
     console.print(constants.chasten.Website)
-    # console.print()
 
 
 def print_server() -> None:
