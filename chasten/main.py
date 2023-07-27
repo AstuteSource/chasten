@@ -197,9 +197,11 @@ def validate_configuration_files(
     checks_files_validated_list = []
     check_files_validated = False
     # create an empty dictionary that will store the list of checks
-    overall_checks_dict = {}
+    overall_checks_dict: Union[
+        Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]
+    ] = {}
     # create abn empty list that will store the dicts of checks
-    overall_checks_list = []
+    overall_checks_list: List[Dict[str, Union[str, Dict[str, int]]]] = []
     # initialize the dictionary to contain the empty list
     overall_checks_dict["checks"] = overall_checks_list
     for checks_file_name in checks_file_name_list:
@@ -227,9 +229,9 @@ def validate_configuration_files(
         # keep track of the validation of all of validation
         # records for each of the check files
         checks_files_validated_list.append(check_file_validated)
-        # union the yml_data_dict for each of the check files
-        # overall_checks_dict.update(yml_data_dict)
-        overall_checks_dict["checks"].extend(yml_data_dict["checks"])
+        # add the listing of checks from the current yml_data_dict to
+        # the overall listing of checks in the main dictionary
+        overall_checks_dict["checks"].extend(yml_data_dict["checks"])  # type: ignore
     # the check files are only validated if all of them are valid
     check_files_validated = all(checks_files_validated_list)
     # the files validated correctly; return an indicator to
