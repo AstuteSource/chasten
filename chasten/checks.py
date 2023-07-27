@@ -36,7 +36,10 @@ def join_attribute_labels(attribute_labels: List[str]) -> str:
     # ensuring that the last one does not have a trailing
     # comma and space after it
     for i, attribute_label in enumerate(attribute_labels):
+        # only add the comma and the space when the for loop
+        # is not dealing with the final value in the list of labels
         if i > 0:
             joined_attribute_labels += constants.markers.Comma_Space
+        # append the new attribute label to the running list
         joined_attribute_labels += attribute_label  # type: ignore
     return joined_attribute_labels
