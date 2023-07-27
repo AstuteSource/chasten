@@ -13,16 +13,112 @@ from chasten import main
 runner = CliRunner()
 
 
+CONFIGURATION_FILE_DEFAULT_CONTENTS = """
+# chasten configuration
+# automatically created
+chasten:
+  # point to a checks file
+  checks-file:
+    - checks.yml
+"""
+
+CHECKS_FILE_DEFAULT_CONTENTS = """
+checks:
+  - name: "class-definition"
+    code: "CDF"
+    id: "C001"
+    pattern: './/ClassDef'
+  - name: "all-function-definition"
+    code: "AFD"
+    id: "F001"
+    pattern: './/FunctionDef'
+  - name: "non-test-function-definition"
+    code: "NTF"
+    id: "F002"
+    pattern: './/FunctionDef[not(contains(@name, "test_"))]'
+  - name: "single-nested-if"
+    code: "SNI"
+    id: "CL001"
+    pattern: './/FunctionDef/body//If'
+  - name: "double-nested-if"
+    code: "DNI"
+    id: "CL002"
+    pattern: './/FunctionDef/body//If[ancestor::If and not(parent::orelse)]'
+"""
+
+CHECKS_FILE_DEFAULT_CONTENTS_GOTCHA = """
+checks:
+  - name: "class-definition"
+    code: "CDF"
+    id: "C001"
+    pattern: './/ClassDef'
+    count:
+      min: 1
+      max: 10
+  - name: "all-function-definition"
+    code: "AFD"
+    id: "F001"
+    pattern: './/FunctionDef'
+  - name: "non-test-function-definition"
+    code: "NTF"
+    id: "F002"
+    pattern: './/FunctionDef[not(contains(@name, "test_"))]'
+  - name: "single-nested-if"
+    code: "SNI"
+    id: "CL001"
+    pattern: './/FunctionDef/body//If'
+  - name: "double-nested-if"
+    code: "DNI"
+    id: "CL002"
+    pattern: './/FunctionDef/body//If[ancestor::If and not(parent::orelse)]'
+"""
+
+
 @pytest.fixture
 def cwd():
     """Define a test fixture for the current working directory."""
     return os.getcwd()
 
 
-def test_cli_analyze_correct_arguments(cwd, tmpdir):
+def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(cwd, tmpdir):
     """Confirm that using the command-line interface does not crash: analyze command with correct arguments."""
-    # create some temporary directories
+    # create some temporary directories;
+    # note that there is no code inside of this directory
+    # and thus chasten does not actually have any
+    # Python source code that it can analyze
     test_one = tmpdir.mkdir("test_one")
+    # call the analyze command
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = test_one + "/.chasten"
+    configuration_directory_path = Path(configuration_directory)
+    configuration_directory_path.mkdir()
+    configuration_file = configuration_directory_path / "config.yml"
+    configuration_file.touch()
+    configuration_file.write_text(CONFIGURATION_FILE_DEFAULT_CONTENTS)
+    checks_file = configuration_directory_path / "checks.yml"
+    checks_file.touch()
+    checks_file.write_text(CHECKS_FILE_DEFAULT_CONTENTS)
+    # filesystem.create_configuration_directory(configuration_directory_path, force=True)
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-directory",
+            test_one,
+            "--project-name",
+            project_name,
+            "--config",
+            configuration_directory,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd, tmpdir):
+    """Confirm that using the command-line interface does not crash: analyze command with correct arguments."""
     # call the analyze command
     project_name = "testing"
     # create a reference to the internal
@@ -33,7 +129,7 @@ def test_cli_analyze_correct_arguments(cwd, tmpdir):
         [
             "analyze",
             "--search-directory",
-            test_one,
+            cwd,
             "--project-name",
             project_name,
             "--config",
