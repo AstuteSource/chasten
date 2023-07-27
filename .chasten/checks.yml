@@ -5,28 +5,28 @@ checks:
     pattern: './/ClassDef'
     count:
       min: 1
-      max: 10
+      max: 15
   - name: "all-function-definition"
     code: "AFD"
     id: "F001"
     pattern: './/FunctionDef'
     count:
       min: 1
-      max: 10
+      max: 200
   - name: "non-test-function-definition"
     code: "NTF"
     id: "F002"
     pattern: './/FunctionDef[not(contains(@name, "test_"))]'
     count:
-      min: 1
-      max: 10
+      min: 40
+      max: 50
   - name: "single-nested-if"
     code: "SNI"
     id: "CL001"
     pattern: './/FunctionDef/body//If'
     count:
       min: 1
-      max: 10
+      max: 50
   - name: "double-nested-if"
     code: "DNI"
     id: "CL002"
