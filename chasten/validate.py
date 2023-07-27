@@ -79,7 +79,7 @@ def extract_checks_file_name(
             checks_file_name_list = configuration["chasten"]["checks-file"]
             return (True, checks_file_name_list)
     # contents were not found and thus returen no filenames
-    return (False, [constants.markers.Empty])
+    return (False, [constants.markers.Empty_String])
 
 
 def validate_configuration(
@@ -91,7 +91,7 @@ def validate_configuration(
     # were no validation errors, return an empty string
     try:
         jsonschema.validate(configuration, schema)
-        return (True, constants.markers.Empty)
+        return (True, constants.markers.Empty_String)
     # indicate that validation failed;
     # since validation errors exist, package them up
     # and return them along with the indication
