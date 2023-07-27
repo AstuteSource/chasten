@@ -5,7 +5,9 @@ import pytest
 from hypothesis import given
 from hypothesis_jsonschema import from_schema
 
+from chasten.checks import check_match_count
 from chasten.checks import extract_min_max
+from chasten.checks import _is_in_interval
 
 JSON_SCHEMA_COUNT = {
     "type": "object",
@@ -71,3 +73,34 @@ def test_integers(check):
     min_count, max_count = extract_min_max(check)
     assert isinstance(min_count, int) or min_count is None
     assert isinstance(max_count, int) or max_count is None
+
+
+@pytest.mark.parametrize(
+    "count,min_value,max_value,expected",
+    [
+        (5, 0, 10, True),
+        (5, 4, 6, True),
+        (1, 1, 1, True),
+        (1, None, 1, True),
+        (1, 1, None, True),
+        (1, None, None, True),
+        (5, 6, 4, False),
+        (1, 4, 6, False),
+    ],
+)
+def test_check_match_count_expected(count, min_value, max_value, expected):
+    """Confirm that the check of the match count works for simple examples."""
+    result = check_match_count(count, min_value, max_value)
+    assert result == expected
+
+
+@given(
+    st.integers(),
+    st.integers(min_value=0, max_value=25),
+    st.integers(min_value=0, max_value=25),
+)
+def test_check_match_count(count, min, max):
+    """Use Hypothesis to confirm that the count check works correctly."""
+    confirmation = check_match_count(count, min, max)
+    if _is_in_interval(count, min, max):
+        assert confirmation
