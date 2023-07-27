@@ -1,6 +1,19 @@
 """Pytest test suite for the checks module."""
 
+import hypothesis.strategies as st
+import pytest
+from hypothesis import given
+
 from chasten.checks import extract_min_max
+
+
+@given(st.dictionaries(st.text(), st.integers()))
+@pytest.mark.fuzz
+def test_extract_min_max_hypothesis(check):
+    """Use Hypothesis to confirm that extract works correctly."""
+    min_count, max_count = extract_min_max(check)
+    assert isinstance(min_count, int) or min_count is None
+    assert isinstance(max_count, int) or max_count is None
 
 
 def test_extract_min_max():
