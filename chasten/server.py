@@ -25,10 +25,10 @@ class SyslogUDPHandler(socketserver.BaseRequestHandler):
         )
         # remove not-printable characters that can appear in message
         enhanced_message = str(message).replace(
-            constants.markers.Bad_Fifteen, constants.markers.Empty
+            constants.markers.Bad_Fifteen, constants.markers.Empty_String
         )
         enhanced_message = enhanced_message.replace(
-            constants.markers.Bad_Zero_Zero, constants.markers.Empty
+            constants.markers.Bad_Zero_Zero, constants.markers.Empty_String
         )
         # display the message inside of the syslog's console
         output.console.print(enhanced_message)
