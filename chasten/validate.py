@@ -1,6 +1,9 @@
 """Validate various aspects of configurations and command-line arguments."""
 
-from typing import Any, Dict, List, Tuple
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
 
 import jsonschema
 from jsonschema.exceptions import ValidationError
@@ -79,13 +82,15 @@ def extract_checks_file_name(
 ) -> Tuple[bool, List[str]]:
     """Validate the checks configuration."""
     # there is a main "chasten" key
-    if "chasten" in configuration.keys():
+    if constants.checks.Check_Chasten in configuration.keys():
         # there is a "checks-file" key
-        if "checks-file" in configuration["chasten"]:
+        if constants.checks.Check_File in configuration[constants.checks.Check_Chasten]:
             # extract the name of the checks-files
             # and return them in a list with a boolean
             # indicate to show that checks files were found
-            checks_file_name_list = configuration["chasten"]["checks-file"]
+            checks_file_name_list = configuration[constants.checks.Check_Chasten][
+                constants.checks.Check_File
+            ]
             return (True, checks_file_name_list)
     # contents were not found and thus returen no filenames
     return (False, [constants.markers.Empty_String])
