@@ -440,6 +440,8 @@ def analyze(  # noqa: PLR0913
     output.console.print(
         f":tada: Running a total of {len(check_list)} matching check(s):"
     )
+    # create a check_status list for all of the checks
+    check_status_list: List[bool] = []
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
@@ -495,6 +497,13 @@ def analyze(  # noqa: PLR0913
         output.console.print(
             f":sparkles: Found a total of {len(match_generator_list)} matches"
         )
+        # perform an enforceable check if it is warranted for this check
+        if checks.is_checkable(min_count, max_count):
+            # determine whether or not the number of found matches is within mix and max
+            check_status = checks.check_match_count(len(match_generator_list), min_count, max_count)
+            # produce and display a status message about the check
+            check_status_message = checks.make_checks_status_message(check_status)
+            output.console.print(check_status_message)
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         for search_output in match_generator_list:
