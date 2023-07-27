@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Tuple, Union
 
-from chasten import constants
+from chasten import constants, util
 
 
 def extract_min_max(
@@ -76,3 +76,10 @@ def check_match_count(
     # if none of those conditions were true, then the count is not
     # between the minimum and the maximum value, inclusively
     return False
+
+
+def make_checks_status_message(check_status: bool) -> str:
+    """Make a check status message in human readable format."""
+    if check_status:
+        return f":smiley: Did the check pass? {util.get_human_readable_boolean(check_status)}"
+    return f":worried: Did the check pass? {util.get_human_readable_boolean(check_status)}"
