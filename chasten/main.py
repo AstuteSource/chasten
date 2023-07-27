@@ -13,6 +13,7 @@ from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
 from chasten import (
+    checks,
     configuration,
     constants,
     debug,
@@ -451,6 +452,13 @@ def analyze(  # noqa: PLR0913
             constants.markers.Xml,
             theme=constants.chasten.Theme_Colors,
         )
+        # extract the minimum and maximum values for the checks, if they exist
+        # note that this function will return None for a min or a max if
+        # that attribute does not exist inside of the current_check; importantly,
+        # having a count or a min or a max is all optional in a checks file
+        (min_count, max_count) = checks.extract_min_max(current_check)
+        print(f"min {min_count}")
+        print(f"max {max_count}")
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
