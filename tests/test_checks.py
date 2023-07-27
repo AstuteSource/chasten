@@ -3,17 +3,26 @@
 import hypothesis.strategies as st
 import pytest
 from hypothesis import given
+from hypothesis_jsonschema import from_schema
 
 from chasten.checks import extract_min_max
 
-
-@given(st.dictionaries(st.text(), st.integers()))
-@pytest.mark.fuzz
-def test_extract_min_max_hypothesis(check):
-    """Use Hypothesis to confirm that extract works correctly."""
-    min_count, max_count = extract_min_max(check)
-    assert isinstance(min_count, int) or min_count is None
-    assert isinstance(max_count, int) or max_count is None
+JSON_SCHEMA_COUNT =  {
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        }
+      },
+    }
+  }
+}
 
 
 def test_extract_min_max():
@@ -51,3 +60,21 @@ def test_extract_min_max_missing():
     min_count, max_count = extract_min_max(check)  # type: ignore
     assert min_count is None
     assert max_count is None
+
+
+@given(st.dictionaries(st.text(), st.integers()))
+@pytest.mark.fuzz
+def test_extract_min_max_hypothesis(check):
+    """Use Hypothesis to confirm that extract works correctly."""
+    min_count, max_count = extract_min_max(check)
+    assert isinstance(min_count, int) or min_count is None
+    assert isinstance(max_count, int) or max_count is None
+
+
+@given(from_schema(JSON_SCHEMA_COUNT))
+@pytest.mark.fuzz
+def test_integers(check):
+    """Use Hypothesis and the JSON schema plugin to confirm validation works for all possible check configuratios."""
+    min_count, max_count = extract_min_max(check)
+    assert isinstance(min_count, int) or min_count is None
+    assert isinstance(max_count, int) or max_count is None
