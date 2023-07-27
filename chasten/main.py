@@ -345,7 +345,7 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0913
+def analyze(  # noqa: PLR0913, PLR0915
     project: str = typer.Option(
         ..., "--project-name", "-p", help="Name of the project."
     ),
@@ -500,7 +500,9 @@ def analyze(  # noqa: PLR0913
         # perform an enforceable check if it is warranted for this check
         if checks.is_checkable(min_count, max_count):
             # determine whether or not the number of found matches is within mix and max
-            check_status = checks.check_match_count(len(match_generator_list), min_count, max_count)
+            check_status = checks.check_match_count(
+                len(match_generator_list), min_count, max_count
+            )
             # produce and display a status message about the check
             check_status_message = checks.make_checks_status_message(check_status)
             output.console.print(check_status_message)
@@ -552,13 +554,9 @@ def analyze(  # noqa: PLR0913
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
     if not all_checks_passed:
-        output.console.print(
-            "\n:sweat: At least one check did not pass."
-        )
+        output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print(
-        "\n:joy: All checks passed."
-    )
+    output.console.print("\n:joy: All checks passed.")
 
 
 @cli.command()
