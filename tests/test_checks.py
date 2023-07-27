@@ -5,9 +5,11 @@ import pytest
 from hypothesis import given
 from hypothesis_jsonschema import from_schema
 
-from chasten.checks import check_match_count
-from chasten.checks import extract_min_max
-from chasten.checks import __is_in_closed_interval
+from chasten.checks import (
+    __is_in_closed_interval,
+    check_match_count,
+    extract_min_max,
+)
 
 JSON_SCHEMA_COUNT = {
     "type": "object",
