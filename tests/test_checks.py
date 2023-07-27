@@ -16,7 +16,10 @@ JSON_SCHEMA_COUNT = {
     "properties": {
         "count": {
             "type": "object",
-            "properties": {"min": {"type": "integer"}, "max": {"type": "integer"}},
+            "properties": {
+                "min": {"type": "integer", "minimum": 1, "maximum": 10},
+                "max": {"type": "integer", "minimum": 1, "maximum": 10},
+            },
         }
     },
 }
