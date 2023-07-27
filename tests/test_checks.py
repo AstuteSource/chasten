@@ -7,7 +7,7 @@ from hypothesis_jsonschema import from_schema
 
 from chasten.checks import check_match_count
 from chasten.checks import extract_min_max
-from chasten.checks import _is_in_interval
+from chasten.checks import __is_in_closed_interval
 
 JSON_SCHEMA_COUNT = {
     "type": "object",
@@ -103,5 +103,5 @@ def test_check_match_count_expected(count, min_value, max_value, expected):
 def test_check_match_count(count, min, max):
     """Use Hypothesis to confirm that the count check works correctly."""
     confirmation = check_match_count(count, min, max)
-    if _is_in_interval(count, min, max):
+    if __is_in_closed_interval(count, min, max):
         assert confirmation
