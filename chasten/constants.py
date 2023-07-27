@@ -43,9 +43,11 @@ chasten = Chasten(
 class Checks:
     """Define the Checks dataclass for constant(s)."""
 
+    Check_Chasten: str
     Check_Code: str
     Check_Count: str
     Check_Confidence: int
+    Check_File: str
     Check_Id: str
     Checks_Label: str
     Check_Max: str
@@ -55,9 +57,11 @@ class Checks:
 
 
 checks = Checks(
+    Check_Chasten="chasten",
     Check_Code="code",
     Check_Count="count",
     Check_Confidence=80,
+    Check_File="checks-file",
     Check_Id="id",
     Checks_Label="checks",
     Check_Max="max",
