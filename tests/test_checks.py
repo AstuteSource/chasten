@@ -7,21 +7,14 @@ from hypothesis_jsonschema import from_schema
 
 from chasten.checks import extract_min_max
 
-JSON_SCHEMA_COUNT =  {
-  "type": "object",
-  "properties": {
-    "count": {
-      "type": "object",
-      "properties": {
-        "min": {
-          "type": "integer"
-        },
-        "max": {
-          "type": "integer"
+JSON_SCHEMA_COUNT = {
+    "type": "object",
+    "properties": {
+        "count": {
+            "type": "object",
+            "properties": {"min": {"type": "integer"}, "max": {"type": "integer"}},
         }
-      },
-    }
-  }
+    },
 }
 
 
