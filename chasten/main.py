@@ -457,17 +457,24 @@ def analyze(  # noqa: PLR0913
         # that attribute does not exist inside of the current_check; importantly,
         # having a count or a min or a max is all optional in a checks file
         (min_count, max_count) = checks.extract_min_max(current_check)
-        print(f"min {min_count}")
-        print(f"max {max_count}")
+        min_label = checks.create_attribute_label(min_count, constants.checks.Check_Min)
+        max_label = checks.create_attribute_label(max_count, constants.checks.Check_Max)
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
+        check_id_label = checks.create_attribute_label(check_id, constants.checks.Check_Id)  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
+        check_name_label = checks.create_attribute_label(check_name, constants.checks.Check_Name)  # type: ignore
+        # create the combined attribute label that displays all details for the check
+        combined_attribute_label = checks.join_attribute_labels(
+            [check_id_label, check_name_label, min_label, max_label]
+        )
+        # display the check with additional details about its configuration
         output.console.print(
             Panel(
                 xpath_syntax,
                 expand=False,
-                title=f"Id={check_id}, Name={check_name}",
+                title=f"{combined_attribute_label}",
             )
         )
         # search for the XML contents of an AST that match the provided
