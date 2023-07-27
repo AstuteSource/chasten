@@ -99,6 +99,7 @@ def test_check_match_count_expected(count, min_value, max_value, expected):
     st.integers(min_value=0, max_value=25),
     st.integers(min_value=0, max_value=25),
 )
+@pytest.mark.fuzz
 def test_check_match_count(count, min, max):
     """Use Hypothesis to confirm that the count check works correctly."""
     confirmation = check_match_count(count, min, max)
