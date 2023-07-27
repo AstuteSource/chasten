@@ -154,8 +154,9 @@ class Markers:
     Bad_Fifteen: str
     Bad_Zero_Zero: str
     Code_Context: int
+    Comma_Space: str
     Empty_Bytes: bytes
-    Empty: str
+    Empty_String: str
     Ellipse: str
     Forward_Slash: str
     Dot: str
@@ -177,8 +178,9 @@ markers = Markers(
     Bad_Fifteen="<15>",
     Bad_Zero_Zero="",
     Code_Context=5,
+    Comma_Space=", ",
     Empty_Bytes=b"",
-    Empty="",
+    Empty_String="",
     Ellipse="...",
     Forward_Slash="/",
     Dot=".",
