@@ -47,7 +47,14 @@ def join_attribute_labels(attribute_labels: List[str]) -> str:
     return joined_attribute_labels
 
 
-def is_in_closed_interval(value, min_value, max_value):
+def is_checkable(min_value: Union[int, None], max_value: Union[int, None]) -> bool:
+    """Help to see if the value is in the closed interval."""
+    if min_value is None and max_value is None:
+        return False
+    return True
+
+
+def is_in_closed_interval(value: int, min_value: int, max_value: int) -> bool:
     """Help to see if the value is in the closed interval."""
     return min(max_value, value) == value and max(min_value, value) == value
 
@@ -82,4 +89,6 @@ def make_checks_status_message(check_status: bool) -> str:
     """Make a check status message in human readable format."""
     if check_status:
         return f":smiley: Did the check pass? {util.get_human_readable_boolean(check_status)}"
-    return f":worried: Did the check pass? {util.get_human_readable_boolean(check_status)}"
+    return (
+        f":worried: Did the check pass? {util.get_human_readable_boolean(check_status)}"
+    )
