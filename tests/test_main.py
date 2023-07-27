@@ -80,7 +80,7 @@ def cwd():
     return os.getcwd()
 
 
-def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(cwd, tmpdir):
+def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(tmpdir):
     """Confirm that using the command-line interface does not crash: analyze command with correct arguments."""
     # create some temporary directories;
     # note that there is no code inside of this directory
@@ -117,7 +117,7 @@ def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(cwd, tmpdi
     assert result.exit_code == 0
 
 
-def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd, tmpdir):
+def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd):
     """Confirm that using the command-line interface does not crash: analyze command with correct arguments."""
     # call the analyze command
     project_name = "testing"
