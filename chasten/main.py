@@ -1,6 +1,7 @@
 """Chasten checks the AST of a Python program."""
 
 import sys
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
@@ -510,10 +511,14 @@ def analyze(  # noqa: PLR0913
                 # note that the use of "*" is an indicator of the
                 # specific line that is the focus of the search
                 all_lines = search_output.file_lines
-                all_lines[
+                # create a deepcopy of the listing of lines so that
+                # the annotated version of the lines for this specific
+                # match does not appear in annotated version of other matches
+                all_lines_for_marking = deepcopy(all_lines)
+                all_lines_for_marking[
                     position_end
-                ] = f"*{all_lines[position_end][constants.markers.Slice_One:]}"
-                lines = all_lines[
+                ] = f"*{all_lines_for_marking[position_end][constants.markers.Slice_One:]}"
+                lines = all_lines_for_marking[
                     position_end
                     - constants.markers.Code_Context : position_end
                     + constants.markers.Code_Context
@@ -525,6 +530,7 @@ def analyze(  # noqa: PLR0913
                     theme=constants.chasten.Theme_Colors,
                     background_color=constants.chasten.Theme_Background,
                 )
+                # display the results in a rich panel
                 output.opt_print_log(
                     verbose,
                     panel=Panel(
