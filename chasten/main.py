@@ -402,8 +402,6 @@ def analyze(  # noqa: PLR0913
     output.console.print()
     # validate the configuration
     (validated, checks_dict) = validate_configuration_files(config, verbose)
-    output.console.print("After validation")
-    output.console.print(checks_dict)
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:
@@ -502,7 +500,7 @@ def analyze(  # noqa: PLR0913
         for search_output in match_generator_list:
             if isinstance(search_output, pyastgrepsearch.Match):
                 # display a label for matching output information
-                output.opt_print_log(verbose, blank="")
+                output.opt_print_log(verbose, blank=constants.markers.Empty_String)
                 output.opt_print_log(verbose, label=":sparkles: Matching source code:")
                 # extract the direct line number for this match
                 position_end = search_output.position.lineno
@@ -526,7 +524,7 @@ def analyze(  # noqa: PLR0913
                 # create a rich panel to display the results
                 code_syntax = Syntax(
                     "\n".join(str(line) for line in lines),
-                    "python",
+                    constants.chasten.Programming_Language,
                     theme=constants.chasten.Theme_Colors,
                     background_color=constants.chasten.Theme_Background,
                 )
