@@ -196,6 +196,12 @@ def validate_configuration_files(
     # and then validate the contents of that checks file
     checks_files_validated_list = []
     check_files_validated = False
+    # create an empty dictionary that will store the list of checks
+    overall_checks_dict = {}
+    # create abn empty list that will store the dicts of checks
+    overall_checks_list = []
+    # initialize the dictionary to contain the empty list
+    overall_checks_dict["checks"] = overall_checks_list
     for checks_file_name in checks_file_name_list:
         (
             checks_file_extracted_valid,
@@ -221,11 +227,16 @@ def validate_configuration_files(
         # keep track of the validation of all of validation
         # records for each of the check files
         checks_files_validated_list.append(check_file_validated)
+        # union the yml_data_dict for each of the check files
+        # overall_checks_dict.update(yml_data_dict)
+        overall_checks_dict["checks"].extend(yml_data_dict["checks"])
     # the check files are only validated if all of them are valid
     check_files_validated = all(checks_files_validated_list)
-    # the files validated correctly
+    # the files validated correctly; return an indicator to
+    # show that validation worked and then return the overall
+    # dictionary that contains the listing of valid checks
     if config_file_validated and check_files_validated:
-        return (True, yml_data_dict)
+        return (True, overall_checks_dict)
     # there was at least one validation error
     return (False, {})
 
@@ -387,6 +398,8 @@ def analyze(  # noqa: PLR0913
     output.console.print()
     # validate the configuration
     (validated, checks_dict) = validate_configuration_files(config, verbose)
+    output.console.print("After validation")
+    output.console.print(checks_dict)
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:
