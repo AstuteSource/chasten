@@ -504,6 +504,8 @@ def analyze(  # noqa: PLR0913
             # produce and display a status message about the check
             check_status_message = checks.make_checks_status_message(check_status)
             output.console.print(check_status_message)
+            # keep track of the outcome for this check
+            check_status_list.append(check_status)
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         for search_output in match_generator_list:
@@ -546,6 +548,17 @@ def analyze(  # noqa: PLR0913
                         title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
                     ),
                 )
+    # confirm whether or not all of the checks passed
+    # and then display the appropriate diagnostic message
+    all_checks_passed = all(check_status_list)
+    if not all_checks_passed:
+        output.console.print(
+            "\n:sweat: At least one check did not pass."
+        )
+        sys.exit(constants.markers.Non_Zero_Exit)
+    output.console.print(
+        "\n:joy: All checks passed."
+    )
 
 
 @cli.command()
