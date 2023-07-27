@@ -49,9 +49,17 @@ def filter_matches(
     """Filter the list of matches based on the provided data type."""
     subset_match_list = []
     did_not_match_list = []
+    # iterate through all of the matches
     for match in match_list:
+        # if the current match is of the
+        # specified type, then keep it in
+        # the list of the matching matches
         if isinstance(match, data_type):
             subset_match_list.append(match)
+        # if the current match is not of the
+        # specified type, then keep it in
+        # the list of non-matching matches
         else:
             did_not_match_list.append(match)
+    # return both of the created lists
     return (subset_match_list, did_not_match_list)
