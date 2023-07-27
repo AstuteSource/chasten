@@ -7,6 +7,9 @@ from jsonschema.exceptions import ValidationError
 
 from chasten import constants
 
+# intuitive description:
+# a configuration file links to one or more checks files
+# see ./chasten in the root of the repository for the config.yml file
 JSON_SCHEMA_CONFIG = {
     "type": "object",
     "required": [],
@@ -25,6 +28,9 @@ JSON_SCHEMA_CONFIG = {
     },
 }
 
+# intutive description:
+# a checks file describes all of the details for one or more checks
+# see ./chasten in the root of the repository for the checks.yml file
 JSON_SCHEMA_CHECKS = {
     "type": "object",
     "properties": {
@@ -51,7 +57,7 @@ JSON_SCHEMA_CHECKS = {
                         ]
                     },
                 },
-                "required": ["name", "id", "pattern"],
+                "required": ["name", "id", "pattern", "code"],
                 "additionalProperties": False,
             },
         }
