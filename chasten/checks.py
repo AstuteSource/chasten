@@ -1,6 +1,9 @@
 """Extract and analyze details about specific checks."""
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 from chasten import constants
 
@@ -30,6 +33,8 @@ def create_attribute_label(attribute: Union[str, int, None], label: str) -> str:
 
 def join_attribute_labels(attribute_labels: List[str]) -> str:
     """Join all of the attribute labels in a comma-separated list."""
+    # start the joined attribute labels with the empty string,
+    # which is what it will be by default as well
     joined_attribute_labels = constants.markers.Empty_String
     # incrementally create the list of labelled attributes,
     # separating each one with a comma and a space and
@@ -43,3 +48,25 @@ def join_attribute_labels(attribute_labels: List[str]) -> str:
         # append the new attribute label to the running list
         joined_attribute_labels += attribute_label  # type: ignore
     return joined_attribute_labels
+
+
+def _is_in_interval(value, min_value, max_value):
+    """Help to see if the value is in the closed interval."""
+    return min(max_value, value) == value and max(min_value, value) == value
+
+
+def check_match_count(count: int, min_value: Union[int, None] = None, max_value: Union[int, None] = None) -> bool:
+    """Confirm that the count is between min_value and max_value."""
+    # if min_value is not None then count must be >= min_value. If max_value is
+    # not None then count must be <= max_value
+    if min_value is None and max_value is None:
+        return True
+    if min_value is not None and max_value is not None:
+        return _is_in_interval(count, min_value, max_value)
+    if min_value is not None:
+        if count <= min_value:
+            return True
+    if max_value is not None:
+        if count >= max_value:
+            return True
+    return False
