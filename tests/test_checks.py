@@ -2,7 +2,7 @@
 
 import hypothesis.strategies as st
 import pytest
-from hypothesis import given
+from hypothesis import HealthCheck, given, settings
 from hypothesis_jsonschema import from_schema
 
 from chasten.checks import (
@@ -73,6 +73,7 @@ def test_extract_min_max_hypothesis(check):
 
 @given(from_schema(JSON_SCHEMA_COUNT))
 @pytest.mark.fuzz
+@settings(suppress_health_check=[HealthCheck.too_slow])
 def test_integers(check):
     """Use Hypothesis and the JSON schema plugin to confirm validation works for all possible check configuratios."""
     min_count, max_count = extract_min_max(check)
