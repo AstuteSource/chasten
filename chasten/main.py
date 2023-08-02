@@ -3,7 +3,11 @@
 import sys
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -13,19 +17,17 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -525,21 +527,27 @@ def analyze(  # noqa: PLR0913, PLR0915
                 # create a deepcopy of the listing of lines so that
                 # the annotated version of the lines for this specific
                 # match does not appear in annotated version of other matches
+                output.console.print(position_end)
                 all_lines_for_marking = deepcopy(all_lines)
-                all_lines_for_marking[
-                    position_end
-                ] = f"*{all_lines_for_marking[position_end][constants.markers.Slice_One:]}"
+                output.console.print(all_lines_for_marking)
+                # all_lines_for_marking[
+                #     position_end - 1
+                # ] = f"{all_lines_for_marking[position_end - 1][constants.markers.Slice_One:]}"
                 lines = all_lines_for_marking[
-                    position_end
-                    - constants.markers.Code_Context : position_end
+                    max(0, position_end - constants.markers.Code_Context) : position_end
                     + constants.markers.Code_Context
                 ]
+                output.console.print(lines)
                 # create a rich panel to display the results
                 code_syntax = Syntax(
                     "\n".join(str(line) for line in lines),
                     constants.chasten.Programming_Language,
                     theme=constants.chasten.Theme_Colors,
                     background_color=constants.chasten.Theme_Background,
+                    line_numbers=True,
+                    start_line=(
+                        max(1, position_end - constants.markers.Code_Context + 1)
+                    ),
                 )
                 # display the results in a rich panel
                 output.opt_print_log(
