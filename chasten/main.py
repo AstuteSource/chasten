@@ -527,17 +527,11 @@ def analyze(  # noqa: PLR0913, PLR0915
                 # create a deepcopy of the listing of lines so that
                 # the annotated version of the lines for this specific
                 # match does not appear in annotated version of other matches
-                output.console.print(position_end)
                 all_lines_for_marking = deepcopy(all_lines)
-                output.console.print(all_lines_for_marking)
-                # all_lines_for_marking[
-                #     position_end - 1
-                # ] = f"{all_lines_for_marking[position_end - 1][constants.markers.Slice_One:]}"
                 lines = all_lines_for_marking[
                     max(0, position_end - constants.markers.Code_Context) : position_end
                     + constants.markers.Code_Context
                 ]
-                output.console.print(lines)
                 # create a rich panel to display the results
                 code_syntax = Syntax(
                     "\n".join(str(line) for line in lines),
