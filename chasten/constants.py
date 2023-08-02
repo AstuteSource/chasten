@@ -175,6 +175,7 @@ class Markers:
     Tab: str
     Underscore: str
     Xml: str
+    Zero: int
     Zero_Exit: int
 
 
@@ -199,6 +200,7 @@ markers = Markers(
     Tab="\t",
     Underscore="_",
     Xml="xml",
+    Zero=0,
     Zero_Exit=0,
 )
 
