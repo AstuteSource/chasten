@@ -35,6 +35,7 @@ pytest-sugar = "^0.9.7"
 types-pyyaml = "^6.0.12.10"
 types-jsonschema = "^4.17.0.9"
 hypothesis-jsonschema = "^0.22.1"
+pytest-clarity = "^1.0.1"
 
 [tool.pytest.ini_options]
 filterwarnings = [
@@ -85,7 +86,7 @@ developer-test = { cmd = "{developer-test-command}", help = "Run developer-creat
 developer-test-silent = { cmd = "{developer-test-silent-command}", help = "Run developer-created without output", use_vars = true }
 hypothesis = { cmd = "{hypothesis-test-command}", help = "Run the hypothesis-based test cases", use_vars = true}
 hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the hypothesis-based test cases", use_vars = true }
-test = { cmd = "pytest -x -s", help = "Run the pytest test suite" }
+test = { cmd = "pytest -x -s -vv", help = "Run the pytest test suite" }
 test-silent = { cmd = "pytest -x --show-capture=no", help = "Run the pytest test suite without showing output" }
 test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
 test-coverage-silent = { cmd = "{coverage-test-command-silent}", help = "Run coverage monitoring for tests without output", use_vars = true }
