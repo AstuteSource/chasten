@@ -538,6 +538,8 @@ def analyze(  # noqa: PLR0913, PLR0915
                 output.opt_print_log(verbose, label=":sparkles: Matching source code:")
                 # extract the direct line number for this match
                 position_end = search_output.position.lineno
+                # extract the column offset for this match
+                column_offset = search_output.position.col_offset
                 # get a pre-defined number of the lines both
                 # before and after the line that is the closest match;
                 # note that the use of "*" is an indicator of the
@@ -551,7 +553,13 @@ def analyze(  # noqa: PLR0913, PLR0915
                     max(0, position_end - constants.markers.Code_Context) : position_end
                     + constants.markers.Code_Context
                 ]
-                # create a rich panel to display the results
+                # create a rich panel to display the results:
+                # key features:
+                # --> descriptive label
+                # --> syntax highlighting
+                # --> line numbers
+                # --> highlight for the matching position
+                # --> suitable theme (could be customized)
                 code_syntax = Syntax(
                     "\n".join(str(line) for line in lines),
                     constants.chasten.Programming_Language,
@@ -561,6 +569,7 @@ def analyze(  # noqa: PLR0913, PLR0915
                     start_line=(
                         max(1, position_end - constants.markers.Code_Context + 1)
                     ),
+                    highlight_lines={position_end},
                 )
                 # display the results in a rich panel
                 output.opt_print_log(
@@ -568,7 +577,7 @@ def analyze(  # noqa: PLR0913, PLR0915
                     panel=Panel(
                         code_syntax,
                         expand=False,
-                        title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
+                        title=f"{search_output.path}:{position_end}:{column_offset}",
                     ),
                 )
     # confirm whether or not all of the checks passed
