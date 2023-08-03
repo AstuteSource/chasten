@@ -366,12 +366,23 @@ def analyze(  # noqa: PLR0913, PLR0915
         "--search-path",
         "-d",
         help="A path (i.e., directory or file) with Python source code(s).",
+        exists=True,
+        file_okay=True,
+        dir_okay=True,
+        readable=True,
+        resolve_path=True
     ),
     output_directory: Path = typer.Option(
-        filesystem.get_default_directory_list(),
+        None,
         "--save-directory",
-        "-d",
+        "-s",
         help="A directory for saving output file(s).",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        writable=True,
+        resolve_path=True
     ),
     config: Path = typer.Option(
         None,
@@ -391,12 +402,8 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-t",
         help="Specify the destination for debugging output.",
     ),
-    verbose: bool = typer.Option(
-        False, help="Enable verbose mode output."
-    ),
-    save: bool = typer.Option(
-        False, help="Enable saving of output file(s)."
-    ),
+    verbose: bool = typer.Option(False, help="Enable verbose mode output."),
+    save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
