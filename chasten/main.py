@@ -361,7 +361,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-e",
         help="Attribute name, value, and match confidence level for exclusion.",
     ),
-    directory: Path = typer.Option(
+    input_path: Path = typer.Option(
         filesystem.get_default_directory_list(),
         "--search-path",
         "-d",
@@ -396,7 +396,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         debug_level,
         debug_destination,
         project=project,
-        directory=directory,
+        directory=input_path,
     )
     # add extra space after the command to run the program
     output.console.print()
@@ -430,16 +430,16 @@ def analyze(  # noqa: PLR0913, PLR0915
     # the specified search path is not valid and thus it is
     # not possible to analyze the specific Python source code file
     if not filesystem.confirm_valid_directory(
-        directory
-    ) and not filesystem.confirm_valid_file(directory):
+        input_path
+    ) and not filesystem.confirm_valid_file(input_path):
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
     # create the list of directories
-    valid_directories = [directory]
+    valid_directories = [input_path]
     # output the list of directories subject to checking
-    output.console.print(f":sparkles: Analyzing Python source code in:\n{directory}")
+    output.console.print(f":sparkles: Analyzing Python source code in:\n{input_path}")
     # output the number of checks that will be performed
     output.console.print()
     output.console.print(
