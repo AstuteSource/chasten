@@ -428,7 +428,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     # the specified search directory is not valid and thus it is
     # not possible to analyze the Python source files in this directory
-    if not filesystem.confirm_valid_directory(directory):
+    if (not filesystem.confirm_valid_directory(
+        directory
+    ) and not filesystem.confirm_valid_file(directory)):
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
         )
