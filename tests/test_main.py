@@ -219,7 +219,7 @@ def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
     # note the error code of 2 indicates that it was
     # an error arising from the fact that typer could
     # not validate that test_oneFF is a existing directory
-    assert result.exit_code == 2
+    assert result.exit_code == 2  # noqa
     assert "Usage:" in result.output
 
 
