@@ -3,11 +3,7 @@
 import sys
 from copy import deepcopy
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -17,17 +13,19 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import checks
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import process
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    checks,
+    configuration,
+    constants,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    process,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -426,11 +424,14 @@ def analyze(  # noqa: PLR0913, PLR0915
     check_list = process.include_or_exclude_checks(  # type: ignore
         check_list, include=False, *check_exclude
     )
-    # the specified search directory is not valid and thus it is
+    # the specified search path is not valid and thus it is
     # not possible to analyze the Python source files in this directory
-    if (not filesystem.confirm_valid_directory(
+    # OR
+    # the specified search path is not valid and thus it is
+    # not possible to analyze the specific Python source code file
+    if not filesystem.confirm_valid_directory(
         directory
-    ) and not filesystem.confirm_valid_file(directory)):
+    ) and not filesystem.confirm_valid_file(directory):
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
         )
