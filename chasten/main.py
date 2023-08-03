@@ -365,7 +365,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         filesystem.get_default_directory_list(),
         "--search-path",
         "-d",
-        help="A directory with Python source code.",
+        help="A path (i.e., directory or file) with Python source code(s).",
     ),
     config: Path = typer.Option(
         None,
