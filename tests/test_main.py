@@ -213,8 +213,14 @@ def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
             "--verbose",
         ],
     )
-    assert result.exit_code == 1
-    assert "Cannot perform analysis due to configuration" in result.output
+    # running the program with an invalid --search-path
+    # should not work and thus a zero exit code is wrong
+    assert result.exit_code != 0
+    # note the error code of 2 indicates that it was
+    # an error arising from the fact that typer could
+    # not validate that test_oneFF is a existing directory
+    assert result.exit_code == 2
+    assert "Usage:" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
