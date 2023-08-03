@@ -370,7 +370,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         file_okay=True,
         dir_okay=True,
         readable=True,
-        resolve_path=True
+        resolve_path=True,
     ),
     output_directory: Path = typer.Option(
         None,
@@ -382,7 +382,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         dir_okay=True,
         readable=True,
         writable=True,
-        resolve_path=True
+        resolve_path=True,
     ),
     config: Path = typer.Option(
         None,
