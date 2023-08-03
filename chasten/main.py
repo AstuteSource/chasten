@@ -367,14 +367,17 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-d",
         help="A path (i.e., directory or file) with Python source code(s).",
     ),
+    output_directory: Path = typer.Option(
+        filesystem.get_default_directory_list(),
+        "--save-directory",
+        "-d",
+        help="A directory for saving output file(s).",
+    ),
     config: Path = typer.Option(
         None,
         "--config",
         "-c",
         help="A directory with configuration file(s).",
-    ),
-    verbose: bool = typer.Option(
-        False, "--verbose", "-v", help="Enable verbose mode output."
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
@@ -388,8 +391,14 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-t",
         help="Specify the destination for debugging output.",
     ),
+    verbose: bool = typer.Option(
+        False, help="Enable verbose mode output."
+    ),
+    save: bool = typer.Option(
+        False, help="Enable saving of output file(s)."
+    ),
 ) -> None:
-    """Analyze the AST of Python source code."""
+    """💫 Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
