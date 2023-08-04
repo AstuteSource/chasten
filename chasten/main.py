@@ -563,9 +563,13 @@ def analyze(  # noqa: PLR0913, PLR0915
             )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
-        current_result_source = None
+        current_result_source = results.Source(name=str(valid_directories))
+        if len(match_generator_list) == 0:
+            current_result_source.results.append(current_check_save)
         for search_output in match_generator_list:
             current_result_source = results.Source(name=str(search_output.path))
+            # if not isinstance(search_output, pyastgrepsearch.Match):
+            #     current_result_source.results.append(current_check_save)
             if isinstance(search_output, pyastgrepsearch.Match):
                 # display a label for matching output information
                 output.opt_print_log(verbose, blank=constants.markers.Empty_String)
@@ -619,6 +623,8 @@ def analyze(  # noqa: PLR0913, PLR0915
                     lineno=position_end, coloffset=column_offset
                 )
                 current_check_save.matches.append(current_match_for_current_check_save)
+                current_result_source.results.append(current_check_save)
+            else:
                 current_result_source.results.append(current_check_save)
         # filesystem.write_results(output_directory, project+"-source", current_result_source)
         chasten_results_save.sources.append(current_result_source)
