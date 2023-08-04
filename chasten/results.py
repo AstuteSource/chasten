@@ -32,8 +32,8 @@ class Check(BaseModel):
 
     id: str
     name: str
-    min: str
-    max: str
+    min: int
+    max: int
     pattern: str
     passed: bool
     matches: list[Match] = []
@@ -70,7 +70,7 @@ class Chasten(BaseModel):
     """Define a Pydantic model for a Chasten result."""
 
     configuration: Configuration
-    source: list[Source] = []
+    sources: list[Source] = []
 
 
 # define the component dictionary that will store the
