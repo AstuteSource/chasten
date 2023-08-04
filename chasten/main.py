@@ -3,11 +3,7 @@
 import sys
 from copy import deepcopy
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -17,18 +13,20 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import checks
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import process
-from chasten import results
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    checks,
+    configuration,
+    constants,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    process,
+    results,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -417,6 +415,13 @@ def analyze(  # noqa: PLR0913, PLR0915
         project=project,
         directory=input_path,
     )
+    # create the include and exclude criteria
+    include = results.CheckCriterion(
+        attribute=check_include[0], value=check_include[1], confidence=check_include[2]
+    )
+    exclude = results.CheckCriterion(
+        attribute=check_exclude[0], value=check_exclude[1], confidence=check_exclude[2]
+    )
     # create and store a configuration object for the result
     configuration = results.Configuration(
         projectname=project,
@@ -424,9 +429,12 @@ def analyze(  # noqa: PLR0913, PLR0915
         searchpath=input_path,
         debuglevel=debug_level,
         debugdestination=debug_destination,
+        checkinclude=include,
+        checkexclude=exclude,
     )
     results.components[results.ComponentTypes.Configuration] = configuration
     output.console.print(results.components)
+    filesystem.write_results(output_directory, project, configuration)
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
