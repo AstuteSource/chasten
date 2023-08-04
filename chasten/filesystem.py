@@ -172,7 +172,7 @@ def write_results(
 ) -> None:
     """Write the results of a Pydantic BaseModel to the specified directory."""
     results_file_uuid = uuid.uuid4().hex
-    complete_results_file_name = f"chasten-results-{projectname}-{results_file_uuid}.json"
+    complete_results_file_name = f"{constants.filesystem.Main_Results_File_Name}-{projectname}-{results_file_uuid}.{constants.filesystem.Results_Extension}"
     results_path_with_file = results_path / complete_results_file_name
     results_json = results_content.model_dump_json(indent=2)
     results_path_with_file.write_text(results_json)
