@@ -1,23 +1,11 @@
 """Store results from performing an analysis."""
 
-from enum import Enum
 from pathlib import Path
-from typing import Dict, Union
+from typing import Union
 
 from pydantic import BaseModel
 
 from chasten import debug
-
-
-class ComponentTypes(str, Enum):
-    """The predefined types of components."""
-
-    Chasten = "Chasten"
-    Check = "Check"
-    CheckInclude = "CheckInclude"
-    Configuration = "Configuration"
-    Match = "Match"
-    Source = "Source"
 
 
 class Match(BaseModel):
@@ -49,9 +37,9 @@ class Source(BaseModel):
 class CheckCriterion(BaseModel):
     """Define a Pydantic model for a CheckIncludeOrExclude."""
 
-    attribute: Union[None, str]
-    value: Union[None, str]
-    confidence: Union[None, int]
+    attribute: Union[None, str] = ""
+    value: Union[None, str] = ""
+    confidence: int = 0
 
 
 class Configuration(BaseModel):
@@ -71,10 +59,3 @@ class Chasten(BaseModel):
 
     configuration: Configuration
     sources: list[Source] = []
-
-
-# define the component dictionary that will store the
-# constituent parts of a complete result before all content exists
-components: Dict[
-    ComponentTypes, Union[Match, Check, Source, Configuration, Chasten, CheckCriterion]
-] = {}
