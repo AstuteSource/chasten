@@ -42,7 +42,7 @@ class Check(BaseModel):
 class Source(BaseModel):
     """Define a Pydantic model for a Source."""
 
-    name: list[str] = []
+    name: str
     results: list[Check] = []
 
 
