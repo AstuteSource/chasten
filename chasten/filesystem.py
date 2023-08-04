@@ -1,9 +1,11 @@
 """Check and access contents of the filesystem."""
 
 import shutil
+import uuid
 from pathlib import Path
 from typing import List, NoReturn, Optional, Union
 
+from pydantic import BaseModel
 from rich.tree import Tree
 
 from chasten import configuration, constants
@@ -163,3 +165,14 @@ def get_default_directory_list() -> List[Path]:
     """Return the default directory list that is the current working directory by itself."""
     default_directory_list = [Path(constants.filesystem.Current_Directory)]
     return default_directory_list
+
+
+def write_results(
+    results_path: Path, projectname: str, results_content: BaseModel
+) -> None:
+    """Write the results of a Pydantic BaseModel to the specified directory."""
+    results_file_uuid = uuid.uuid4().hex
+    complete_results_file_name = f"chasten-results-{projectname}-{results_file_uuid}.json"
+    results_path_with_file = results_path / complete_results_file_name
+    results_json = results_content.model_dump_json(indent=2)
+    results_path_with_file.write_text(results_json)
