@@ -570,10 +570,10 @@ def analyze(  # noqa: PLR0913, PLR0915
         )
         if len(match_generator_list) == 0:
             current_result_source.results.append(current_check_save)  # type: ignore
+        current_match_sources_dict: Dict[str, results.Source] = {}
         for search_output in match_generator_list:
             current_result_source = results.Source(name=str(search_output.path))
-            # if not isinstance(search_output, pyastgrepsearch.Match):
-            #     current_result_source.results.append(current_check_save)
+            current_match_sources_dict[str(search_output.path)] = current_result_source
             if isinstance(search_output, pyastgrepsearch.Match):
                 # display a label for matching output information
                 output.opt_print_log(verbose, blank=constants.markers.Empty_String)
@@ -630,7 +630,10 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_result_source.results.append(current_check_save)  # type: ignore
             else:
                 current_result_source.results.append(current_check_save)  # type: ignore
-        chasten_results_save.sources.append(current_result_source)
+        output.console.print(current_match_sources_dict)
+        output.console.print(list(current_match_sources_dict.values()))
+        # chasten_results_save.sources.append(current_result_source)
+        chasten_results_save.sources.extend(list(current_match_sources_dict.values()))
     filesystem.write_results(
         output_directory, project + "-chasten", chasten_results_save
     )
