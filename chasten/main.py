@@ -433,7 +433,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         checkexclude=exclude,
     )
     results.components[results.ComponentTypes.Configuration] = configuration
-    output.console.print(results.components)
+    # remove later
     filesystem.write_results(output_directory, project, configuration)
     # add extra space after the command to run the program
     output.console.print()
