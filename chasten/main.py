@@ -571,7 +571,8 @@ def analyze(  # noqa: PLR0913, PLR0915
             )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
-        current_result_source = results.Source(name=str(valid_directories))
+        # current_result_source = results.Source(name=str(valid_directories))
+        current_result_source = results.Source(name=str([str(vd) for vd in valid_directories]))
         if len(match_generator_list) == 0:
             current_result_source.results.append(current_check_save)
         for search_output in match_generator_list:
