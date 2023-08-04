@@ -77,14 +77,20 @@ class Filesystem:
     """Define the Filesystem dataclass for constant(s)."""
 
     Current_Directory: str
+    Dot: str
     Main_Configuration_File: str
     Main_Checks_File: str
+    Main_Results_File_Name: str
+    Results_Extension: str
 
 
 filesystem = Filesystem(
     Current_Directory=".",
+    Dot=".",
     Main_Configuration_File="config.yml",
     Main_Checks_File="checks.yml",
+    Main_Results_File_Name="chasten-results",
+    Results_Extension=".json",
 )
 
 
