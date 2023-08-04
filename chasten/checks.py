@@ -1,8 +1,13 @@
 """Extract and analyze details about specific checks."""
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
-from chasten import constants, util
+from chasten import constants
+from chasten import enumerations
+from chasten import util
 
 
 def extract_min_max(
@@ -92,3 +97,16 @@ def make_checks_status_message(check_status: bool) -> str:
     return (
         f":worried: Did the check pass? {util.get_human_readable_boolean(check_status)}"
     )
+
+
+def fix_check_criteria(
+    criteria: Tuple[enumerations.FilterableAttribute, str, int]
+) -> Tuple[str, str, int]:
+    """Remove null values from the criteria list."""
+    new_criteria = ()
+    for criterion in criteria:
+        if criterion is None:
+            new_criteria += ("",)
+        else:
+            new_criteria += (criterion,)
+    return new_criteria
