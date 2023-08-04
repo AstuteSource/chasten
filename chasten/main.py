@@ -3,11 +3,7 @@
 import sys
 from copy import deepcopy
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -17,18 +13,20 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import checks
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import process
-from chasten import results
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    checks,
+    configuration,
+    constants,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    process,
+    results,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -440,12 +438,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         checkinclude=include,
         checkexclude=exclude,
     )
-    # results.components[results.ComponentTypes.Configuration] = configuration
     chasten_results_save = results.Chasten(configuration=chasten_configuration)
-    # remove later
-    filesystem.write_results(
-        output_directory, project + "-configuration", chasten_configuration
-    )
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
@@ -562,19 +555,21 @@ def analyze(  # noqa: PLR0913, PLR0915
             check_status_list.append(check_status)
             # create the current check
             current_check_save = results.Check(
-                id=check_id,
-                name=check_name,
-                min=min_count,
-                max=max_count,
+                id=check_id,  # type: ignore
+                name=check_name,  # type: ignore
+                min=min_count,  # type: ignore
+                max=max_count,  # type: ignore
                 pattern=current_xpath_pattern,
                 passed=check_status,
             )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         # current_result_source = results.Source(name=str(valid_directories))
-        current_result_source = results.Source(name=str([str(vd) for vd in valid_directories]))
+        current_result_source = results.Source(
+            name=str([str(vd) for vd in valid_directories])
+        )
         if len(match_generator_list) == 0:
-            current_result_source.results.append(current_check_save)
+            current_result_source.results.append(current_check_save)  # type: ignore
         for search_output in match_generator_list:
             current_result_source = results.Source(name=str(search_output.path))
             # if not isinstance(search_output, pyastgrepsearch.Match):
@@ -631,11 +626,10 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_match_for_current_check_save = results.Match(
                     lineno=position_end, coloffset=column_offset
                 )
-                current_check_save.matches.append(current_match_for_current_check_save)
-                current_result_source.results.append(current_check_save)
+                current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
+                current_result_source.results.append(current_check_save)  # type: ignore
             else:
-                current_result_source.results.append(current_check_save)
-        # filesystem.write_results(output_directory, project+"-source", current_result_source)
+                current_result_source.results.append(current_check_save)  # type: ignore
         chasten_results_save.sources.append(current_result_source)
     filesystem.write_results(
         output_directory, project + "-chasten", chasten_results_save
