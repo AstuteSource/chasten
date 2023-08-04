@@ -481,7 +481,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     # output the number of checks that will be performed
     output.console.print()
     output.console.print(
-        f":tada: Running a total of {len(check_list)} matching check(s):"
+        f":tada: Running a total of {len(check_list)} check(s):"
     )
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
