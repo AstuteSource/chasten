@@ -9,15 +9,15 @@ from pydantic import BaseModel
 from chasten import debug
 
 
-# components: Dict[str, Union[Match, Check, Source, Configuration, Chasten]] = {}
 class ComponentTypes(str, Enum):
     """The predefined types of components."""
 
-    Match = "Match"
-    Check = "Check"
-    Source = "Source"
-    Configuration = "Configuration"
     Chasten = "Chasten"
+    Check = "Check"
+    CheckInclude = "CheckInclude"
+    Configuration = "Configuration"
+    Match = "Match"
+    Source = "Source"
 
 
 class Match(BaseModel):
@@ -46,6 +46,14 @@ class Source(BaseModel):
     results: list[Check] = []
 
 
+class CheckCriterion(BaseModel):
+    """Define a Pydantic model for a CheckIncludeOrExclude."""
+
+    attribute: Union[None, str]
+    value: Union[None, str]
+    confidence: Union[None, int]
+
+
 class Configuration(BaseModel):
     """Define a Pydantic model for a Configuration."""
 
@@ -54,6 +62,8 @@ class Configuration(BaseModel):
     searchpath: Path
     debuglevel: debug.DebugLevel
     debugdestination: debug.DebugDestination
+    checkinclude: Union[None, CheckCriterion] = None
+    checkexclude: Union[None, CheckCriterion] = None
 
 
 class Chasten(BaseModel):
@@ -65,4 +75,6 @@ class Chasten(BaseModel):
 
 # define the component dictionary that will store the
 # constituent parts of a complete result before all content exists
-components: Dict[ComponentTypes, Union[Match, Check, Source, Configuration, Chasten]] = {}
+components: Dict[
+    ComponentTypes, Union[Match, Check, Source, Configuration, Chasten, CheckCriterion]
+] = {}
