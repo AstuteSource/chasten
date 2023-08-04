@@ -423,7 +423,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         attribute=check_exclude[0], value=check_exclude[1], confidence=check_exclude[2]
     )
     # create and store a configuration object for the result
-    configuration = results.Configuration(
+    chasten_configuration = results.Configuration(
         projectname=project,
         configdirectory=config,
         searchpath=input_path,
@@ -432,9 +432,10 @@ def analyze(  # noqa: PLR0913, PLR0915
         checkinclude=include,
         checkexclude=exclude,
     )
-    results.components[results.ComponentTypes.Configuration] = configuration
+    # results.components[results.ComponentTypes.Configuration] = configuration
+    chasten_results_save = results.Chasten(configuration=chasten_configuration)
     # remove later
-    filesystem.write_results(output_directory, project+"-configuration", configuration)
+    filesystem.write_results(output_directory, project+"-configuration", chasten_configuration)
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
@@ -553,10 +554,10 @@ def analyze(  # noqa: PLR0913, PLR0915
             check_status_list.append(check_status)
             # create the current check
             current_check_save = results.Check(
-                id=check_id_label,
-                name=check_name_label,
-                min=min_label,
-                max=max_label,
+                id=check_id,
+                name=check_name,
+                min=min_count,
+                max=max_count,
                 pattern=current_xpath_pattern,
                 passed=check_status,
             )
@@ -620,6 +621,8 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_check_save.matches.append(current_match_for_current_check_save)
                 current_result_source.results.append(current_check_save)
         filesystem.write_results(output_directory, project+"-source", current_result_source)
+        chasten_results_save.sources.append(current_result_source)
+    filesystem.write_results(output_directory, project+"-chasten", chasten_results_save)
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
