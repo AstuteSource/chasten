@@ -434,7 +434,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     results.components[results.ComponentTypes.Configuration] = configuration
     # remove later
-    filesystem.write_results(output_directory, project, configuration)
+    filesystem.write_results(output_directory, project+"-configuration", configuration)
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
@@ -540,6 +540,7 @@ def analyze(  # noqa: PLR0913, PLR0915
             f":sparkles: Found a total of {len(match_generator_list)} matches"
         )
         # perform an enforceable check if it is warranted for this check
+        current_check_save = None
         if checks.is_checkable(min_count, max_count):
             # determine whether or not the number of found matches is within mix and max
             check_status = checks.check_match_count(
@@ -550,9 +551,20 @@ def analyze(  # noqa: PLR0913, PLR0915
             output.console.print(check_status_message)
             # keep track of the outcome for this check
             check_status_list.append(check_status)
+            # create the current check
+            current_check_save = results.Check(
+                id=check_id_label,
+                name=check_name_label,
+                min=min_label,
+                max=max_label,
+                pattern=current_xpath_pattern,
+                passed=check_status,
+            )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
+        current_result_source = None
         for search_output in match_generator_list:
+            current_result_source = results.Source(name=str(search_output.path))
             if isinstance(search_output, pyastgrepsearch.Match):
                 # display a label for matching output information
                 output.opt_print_log(verbose, blank=constants.markers.Empty_String)
@@ -601,6 +613,13 @@ def analyze(  # noqa: PLR0913, PLR0915
                         title=f"{search_output.path}:{position_end}:{column_offset}",
                     ),
                 )
+                # create a match and attach it to the current Check for saving
+                current_match_for_current_check_save = results.Match(
+                    lineno=position_end, coloffset=column_offset
+                )
+                current_check_save.matches.append(current_match_for_current_check_save)
+                current_result_source.results.append(current_check_save)
+        filesystem.write_results(output_directory, project+"-source", current_result_source)
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
