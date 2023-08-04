@@ -3,7 +3,11 @@
 import sys
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -13,20 +17,18 @@ from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    results,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import results
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -416,11 +418,17 @@ def analyze(  # noqa: PLR0913, PLR0915
         directory=input_path,
     )
     # create the include and exclude criteria
+    revised_check_include = checks.fix_check_criteria(check_include)
     include = results.CheckCriterion(
-        attribute=check_include[0], value=check_include[1], confidence=check_include[2]
+        attribute=revised_check_include[0],
+        value=revised_check_include[1],
+        confidence=revised_check_include[2],
     )
+    revised_check_exclude = checks.fix_check_criteria(check_exclude)
     exclude = results.CheckCriterion(
-        attribute=check_exclude[0], value=check_exclude[1], confidence=check_exclude[2]
+        attribute=revised_check_exclude[0],
+        value=revised_check_exclude[1],
+        confidence=revised_check_exclude[2],
     )
     # create and store a configuration object for the result
     chasten_configuration = results.Configuration(
@@ -435,7 +443,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     # results.components[results.ComponentTypes.Configuration] = configuration
     chasten_results_save = results.Chasten(configuration=chasten_configuration)
     # remove later
-    filesystem.write_results(output_directory, project+"-configuration", chasten_configuration)
+    filesystem.write_results(
+        output_directory, project + "-configuration", chasten_configuration
+    )
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
@@ -480,9 +490,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print(f":sparkles: Analyzing Python source code in:\n{input_path}")
     # output the number of checks that will be performed
     output.console.print()
-    output.console.print(
-        f":tada: Running a total of {len(check_list)} check(s):"
-    )
+    output.console.print(f":tada: Running a total of {len(check_list)} check(s):")
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
     # iterate through and perform each of the checks
@@ -628,7 +636,9 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_result_source.results.append(current_check_save)
         # filesystem.write_results(output_directory, project+"-source", current_result_source)
         chasten_results_save.sources.append(current_result_source)
-    filesystem.write_results(output_directory, project+"-chasten", chasten_results_save)
+    filesystem.write_results(
+        output_directory, project + "-chasten", chasten_results_save
+    )
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
