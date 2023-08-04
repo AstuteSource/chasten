@@ -90,7 +90,7 @@ filesystem = Filesystem(
     Main_Configuration_File="config.yml",
     Main_Checks_File="checks.yml",
     Main_Results_File_Name="chasten-results",
-    Results_Extension=".json",
+    Results_Extension="json",
 )
 
 
