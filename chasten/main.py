@@ -620,7 +620,7 @@ def analyze(  # noqa: PLR0913, PLR0915
                 )
                 current_check_save.matches.append(current_match_for_current_check_save)
                 current_result_source.results.append(current_check_save)
-        filesystem.write_results(output_directory, project+"-source", current_result_source)
+        # filesystem.write_results(output_directory, project+"-source", current_result_source)
         chasten_results_save.sources.append(current_result_source)
     filesystem.write_results(output_directory, project+"-chasten", chasten_results_save)
     # confirm whether or not all of the checks passed
