@@ -13,7 +13,8 @@ class ConfigureTask(str, Enum):
 class FilterableAttribute(str, Enum):
     """Define the names of attributes that are subject to filtering."""
 
-    NAME = "name"
     CODE = "code"
     ID = "id"
+    NONE = ""
+    NAME = "name"
     PATTERN = "pattern"
