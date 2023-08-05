@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Tuple, Union
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from thefuzz import fuzz  # type: ignore
 
-from chasten import constants, enumerations
+from chasten import constants, enumerations, output
 
 
 def include_or_exclude_checks(
@@ -63,3 +63,27 @@ def filter_matches(
             did_not_match_list.append(match)
     # return both of the created lists
     return (subset_match_list, did_not_match_list)
+
+
+def organize_matches(match_list: List[pyastgrepsearch.Match]) -> Dict[str, List[pyastgrepsearch.Match]]:
+    """Organize the matches on a per-file basis to support simplified processing."""
+    output.console.print("Organizing!")
+    match_dict: Dict[str, List[pyastgrepsearch.Match]] = {}
+    for current_match in match_list:
+        # extract the name of the file for the current match
+        current_match_file_name = str(current_match.path)
+        # already storing matches for this file
+        if current_match_file_name in match_dict:
+            # extract the existing list of matches for this file
+            current_match_file_list = match_dict[current_match_file_name]
+            current_match_file_list.append(current_match)
+        # not already storing matches for this file
+        else:
+            # create an empty list for storing the matches
+            current_match_list: List[pyastgrepsearch.Match] = []
+            # add the current match to the list
+            current_match_list.append(current_match)
+            # associate this new list with the current file name
+            match_dict[current_match_file_name] = current_match_list
+    output.console.print(match_dict)
+    return match_dict
