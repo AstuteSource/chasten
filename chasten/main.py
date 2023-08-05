@@ -490,38 +490,17 @@ def reanalyze(  # noqa: PLR0913, PLR0915
     for current_check in check_list:
         # extract the pattern for the current check
         current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
-        # display the XPATH expression for the current check
-        output.console.print("\n:tada: Performing check:")
-        xpath_syntax = Syntax(
-            current_xpath_pattern,
-            constants.markers.Xml,
-            theme=constants.chasten.Theme_Colors,
-        )
+        print("Pattern " + str(current_xpath_pattern))
         # extract the minimum and maximum values for the checks, if they exist
         # note that this function will return None for a min or a max if
         # that attribute does not exist inside of the current_check; importantly,
         # having a count or a min or a max is all optional in a checks file
         (min_count, max_count) = checks.extract_min_max(current_check)
-        min_label = checks.create_attribute_label(min_count, constants.checks.Check_Min)
-        max_label = checks.create_attribute_label(max_count, constants.checks.Check_Max)
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
-        check_id_label = checks.create_attribute_label(check_id, constants.checks.Check_Id)  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         check_name_label = checks.create_attribute_label(check_name, constants.checks.Check_Name)  # type: ignore
-        # create the combined attribute label that displays all details for the check
-        combined_attribute_label = checks.join_attribute_labels(
-            [check_id_label, check_name_label, min_label, max_label]
-        )
-        # display the check with additional details about its configuration
-        output.console.print(
-            Panel(
-                xpath_syntax,
-                expand=False,
-                title=f"{combined_attribute_label}",
-            )
-        )
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep
         match_generator = pyastgrepsearch.search_python_files(
@@ -536,10 +515,9 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         (match_generator_list, _) = process.filter_matches(
             match_generator_list, pyastgrepsearch.Match
         )
-        output.console.print()
-        output.console.print(
-            f":sparkles: Found a total of {len(match_generator_list)} matches"
-        )
+        # organize the matches according to the file to which they
+        # correspond so that processing of matches takes place per-file
+        match_dict = process.organize_matches(match_generator_list)
         # perform an enforceable check if it is warranted for this check
         current_check_save = None
         if checks.is_checkable(min_count, max_count):
@@ -547,9 +525,6 @@ def reanalyze(  # noqa: PLR0913, PLR0915
             check_status = checks.check_match_count(
                 len(match_generator_list), min_count, max_count
             )
-            # produce and display a status message about the check
-            check_status_message = checks.make_checks_status_message(check_status)
-            output.console.print(check_status_message)
             # keep track of the outcome for this check
             check_status_list.append(check_status)
             # create the current check
@@ -561,6 +536,8 @@ def reanalyze(  # noqa: PLR0913, PLR0915
                 pattern=current_xpath_pattern,
                 passed=check_status,
             )
+            print("Current Check Save:")
+            output.console.print(current_check_save)
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         current_result_source = results.Source(
@@ -570,56 +547,16 @@ def reanalyze(  # noqa: PLR0913, PLR0915
             current_result_source.results.append(current_check_save)  # type: ignore
         current_match_sources_dict: Dict[str, results.Source] = {}
         for search_output in match_generator_list:
+            print("Current search output from match generator list")
+            output.console.print(search_output.path)
             current_result_source = results.Source(name=str(search_output.path))
             current_match_sources_dict[str(search_output.path)] = current_result_source
             if isinstance(search_output, pyastgrepsearch.Match):
                 # display a label for matching output information
-                output.opt_print_log(verbose, blank=constants.markers.Empty_String)
-                output.opt_print_log(verbose, label=":sparkles: Matching source code:")
                 # extract the direct line number for this match
                 position_end = search_output.position.lineno
                 # extract the column offset for this match
                 column_offset = search_output.position.col_offset
-                # get a pre-defined number of the lines both
-                # before and after the line that is the closest match;
-                # note that the use of "*" is an indicator of the
-                # specific line that is the focus of the search
-                all_lines = search_output.file_lines
-                # create a deepcopy of the listing of lines so that
-                # the annotated version of the lines for this specific
-                # match does not appear in annotated version of other matches
-                all_lines_for_marking = deepcopy(all_lines)
-                lines = all_lines_for_marking[
-                    max(0, position_end - constants.markers.Code_Context) : position_end
-                    + constants.markers.Code_Context
-                ]
-                # create a rich panel to display the results:
-                # key features:
-                # --> descriptive label
-                # --> syntax highlighting
-                # --> line numbers
-                # --> highlight for the matching position
-                # --> suitable theme (could be customized)
-                code_syntax = Syntax(
-                    "\n".join(str(line) for line in lines),
-                    constants.chasten.Programming_Language,
-                    theme=constants.chasten.Theme_Colors,
-                    background_color=constants.chasten.Theme_Background,
-                    line_numbers=True,
-                    start_line=(
-                        max(1, position_end - constants.markers.Code_Context + 1)
-                    ),
-                    highlight_lines={position_end},
-                )
-                # display the results in a rich panel
-                output.opt_print_log(
-                    verbose,
-                    panel=Panel(
-                        code_syntax,
-                        expand=False,
-                        title=f"{search_output.path}:{position_end}:{column_offset}",
-                    ),
-                )
                 # create a match and attach it to the current Check for saving
                 current_match_for_current_check_save = results.Match(
                     lineno=position_end, coloffset=column_offset
@@ -628,9 +565,7 @@ def reanalyze(  # noqa: PLR0913, PLR0915
                 current_result_source.results.append(current_check_save)  # type: ignore
             else:
                 current_result_source.results.append(current_check_save)  # type: ignore
-        output.console.print(current_match_sources_dict)
-        # output.console.print(list(current_match_sources_dict.values()))
-        # chasten_results_save.sources.append(current_result_source)
+        # output.console.print(current_match_sources_dict)
         chasten_results_save.sources.extend(list(current_match_sources_dict.values()))
     filesystem.write_results(
         output_directory,
