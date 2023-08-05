@@ -2,13 +2,18 @@
 
 import shutil
 import uuid
+from datetime import datetime
 from pathlib import Path
-from typing import List, NoReturn, Optional, Union
+from typing import List
+from typing import NoReturn
+from typing import Optional
+from typing import Union
 
 from pydantic import BaseModel
 from rich.tree import Tree
 
-from chasten import configuration, constants
+from chasten import configuration
+from chasten import constants
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
@@ -171,8 +176,14 @@ def write_results(
     results_path: Path, projectname: str, results_content: BaseModel
 ) -> None:
     """Write the results of a Pydantic BaseModel to the specified directory."""
+    # create a unique hexadecimal code that will ensure that
+    # this file name is unique when it is being saved
     results_file_uuid = uuid.uuid4().hex
-    complete_results_file_name = f"{constants.filesystem.Main_Results_File_Name}-{projectname}-{results_file_uuid}.{constants.filesystem.Results_Extension}"
+    # get the current date and time
+    current_datetime = datetime.now()
+    # convert the datetime object to a string without dashes
+    formatted_datetime = current_datetime.strftime("%Y%m%d%H%M%S")
+    complete_results_file_name = f"{constants.filesystem.Main_Results_File_Name}-{projectname}-{formatted_datetime}-{results_file_uuid}.{constants.filesystem.Results_Extension}"
     results_path_with_file = results_path / complete_results_file_name
     results_json = results_content.model_dump_json(indent=2)
     results_path_with_file.write_text(results_json)
