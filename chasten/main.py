@@ -527,6 +527,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         match_generator = pyastgrepsearch.search_python_files(
             paths=valid_directories,
             expression=current_xpath_pattern,
+            xpath2=True
         )
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
@@ -630,8 +631,8 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_result_source.results.append(current_check_save)  # type: ignore
             else:
                 current_result_source.results.append(current_check_save)  # type: ignore
-        output.console.print(current_match_sources_dict)
-        output.console.print(list(current_match_sources_dict.values()))
+        # output.console.print(current_match_sources_dict)
+        # output.console.print(list(current_match_sources_dict.values()))
         # chasten_results_save.sources.append(current_result_source)
         chasten_results_save.sources.extend(list(current_match_sources_dict.values()))
     filesystem.write_results(
