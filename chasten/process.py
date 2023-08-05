@@ -67,7 +67,6 @@ def filter_matches(
 
 def organize_matches(match_list: List[pyastgrepsearch.Match]) -> Dict[str, List[pyastgrepsearch.Match]]:
     """Organize the matches on a per-file basis to support simplified processing."""
-    output.console.print("Organizing!")
     match_dict: Dict[str, List[pyastgrepsearch.Match]] = {}
     for current_match in match_list:
         # extract the name of the file for the current match
