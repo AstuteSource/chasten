@@ -500,7 +500,6 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
-        check_name_label = checks.create_attribute_label(check_name, constants.checks.Check_Name)  # type: ignore
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep
         match_generator = pyastgrepsearch.search_python_files(
@@ -527,6 +526,18 @@ def reanalyze(  # noqa: PLR0913, PLR0915
             )
             # keep track of the outcome for this check
             check_status_list.append(check_status)
+        # this is not an enforceable check and thus the tool always
+        # records that the checked passed as a default
+        else:
+            check_status = True
+        # for each potential match, log and, if verbose model is enabled,
+        # display details about each of the matches
+        current_result_source = results.Source(
+            name=str([str(vd) for vd in valid_directories])
+        )
+        if len(match_generator_list) == 0:
+            current_result_source.results.append(current_check_save)  # type: ignore
+        for file_name, matches_list in match_dict.items():
             # create the current check
             current_check_save = results.Check(
                 id=check_id,  # type: ignore
@@ -536,37 +547,23 @@ def reanalyze(  # noqa: PLR0913, PLR0915
                 pattern=current_xpath_pattern,
                 passed=check_status,
             )
-            print("Current Check Save:")
-            output.console.print(current_check_save)
-        # for each potential match, log and, if verbose model is enabled,
-        # display details about each of the matches
-        current_result_source = results.Source(
-            name=str([str(vd) for vd in valid_directories])
-        )
-        if len(match_generator_list) == 0:
-            current_result_source.results.append(current_check_save)  # type: ignore
-        current_match_sources_dict: Dict[str, results.Source] = {}
-        for search_output in match_generator_list:
-            print("Current search output from match generator list")
-            output.console.print(search_output.path)
-            current_result_source = results.Source(name=str(search_output.path))
-            current_match_sources_dict[str(search_output.path)] = current_result_source
-            if isinstance(search_output, pyastgrepsearch.Match):
-                # display a label for matching output information
-                # extract the direct line number for this match
-                position_end = search_output.position.lineno
-                # extract the column offset for this match
-                column_offset = search_output.position.col_offset
-                # create a match and attach it to the current Check for saving
-                current_match_for_current_check_save = results.Match(
-                    lineno=position_end, coloffset=column_offset
-                )
-                current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
-                current_result_source.results.append(current_check_save)  # type: ignore
-            else:
-                current_result_source.results.append(current_check_save)  # type: ignore
-        # output.console.print(current_match_sources_dict)
-        chasten_results_save.sources.extend(list(current_match_sources_dict.values()))
+            # create a source that is solely for this file name
+            current_result_source = results.Source(name=file_name)
+            # put the current check into the list of checks in the current source
+            current_result_source.results.append(current_check_save)
+            for current_match in matches_list:
+                if isinstance(current_match, pyastgrepsearch.Match):
+                    # display a label for matching output information
+                    # extract the direct line number for this match
+                    position_end = current_match.position.lineno
+                    # extract the column offset for this match
+                    column_offset = current_match.position.col_offset
+                    # create a match and attach it to the current Check for saving
+                    current_match_for_current_check_save = results.Match(
+                        lineno=position_end, coloffset=column_offset
+                    )
+                    current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
+            chasten_results_save.sources.append(current_result_source)
     filesystem.write_results(
         output_directory,
         project
