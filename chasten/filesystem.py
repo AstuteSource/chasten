@@ -183,7 +183,14 @@ def write_results(
     current_datetime = datetime.now()
     # convert the datetime object to a string without dashes
     formatted_datetime = current_datetime.strftime("%Y%m%d%H%M%S")
+    # create a file name so that it includes:
+    # a) the name of the project
+    # b) the date on which analysis was completed
+    # c) a unique identifier to handle cased when
+    #    two result files are created at "same time"
     complete_results_file_name = f"{constants.filesystem.Main_Results_File_Name}-{projectname}-{formatted_datetime}-{results_file_uuid}.{constants.filesystem.Results_Extension}"
+    # create the file and then write the text,
+    # using indentation to ensure that JSON file is readable
     results_path_with_file = results_path / complete_results_file_name
     results_json = results_content.model_dump_json(indent=2)
     results_path_with_file.write_text(results_json)
