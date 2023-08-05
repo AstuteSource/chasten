@@ -428,7 +428,7 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         value=revised_check_exclude[1],
         confidence=revised_check_exclude[2],
     )
-    # create and store a configuration object for the result
+    # create a configuration that is the same for all results
     chasten_configuration = results.Configuration(
         projectname=project,
         configdirectory=config,
@@ -438,6 +438,8 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         checkinclude=include,
         checkexclude=exclude,
     )
+    # connect the configuration to the top-level chasten object for results saving
+    # note: this is the final object that contains all of the data
     chasten_results_save = results.Chasten(configuration=chasten_configuration)
     # add extra space after the command to run the program
     output.console.print()
@@ -490,7 +492,6 @@ def reanalyze(  # noqa: PLR0913, PLR0915
     for current_check in check_list:
         # extract the pattern for the current check
         current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
-        print("Pattern " + str(current_xpath_pattern))
         # extract the minimum and maximum values for the checks, if they exist
         # note that this function will return None for a min or a max if
         # that attribute does not exist inside of the current_check; importantly,
@@ -501,7 +502,8 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         # search for the XML contents of an AST that match the provided
-        # XPATH query using the search_python_file in search module of pyastgrep
+        # XPATH query using the search_python_file in search module of pyastgrep;
+        # this looks for matches across all path(s) in the specified source path
         match_generator = pyastgrepsearch.search_python_files(
             paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         )
@@ -535,8 +537,18 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         current_result_source = results.Source(
             name=str([str(vd) for vd in valid_directories])
         )
+        # there were no matches and thus the current_check_save of None
+        # should be recorded inside of the source of the results
         if len(match_generator_list) == 0:
             current_result_source.results.append(current_check_save)  # type: ignore
+        # iteratively analyze:
+        # a) A specific file name
+        # b) All of the matches for that file name
+        # Note: the goal is to only process matches for a
+        # specific file, ensuring that matches for different files
+        # are not mixed together, which would contaminate the results
+        # Note: this is needed because using pyastgrepsearch will
+        # return results for all of the files that matched the check
         for file_name, matches_list in match_dict.items():
             # create the current check
             current_check_save = results.Check(
@@ -551,27 +563,32 @@ def reanalyze(  # noqa: PLR0913, PLR0915
             current_result_source = results.Source(name=file_name)
             # put the current check into the list of checks in the current source
             current_result_source.results.append(current_check_save)
+            # iterate through all of the matches that are specifically
+            # connected to this source that is connected to a specific file name
             for current_match in matches_list:
                 if isinstance(current_match, pyastgrepsearch.Match):
-                    # display a label for matching output information
                     # extract the direct line number for this match
                     position_end = current_match.position.lineno
                     # extract the column offset for this match
                     column_offset = current_match.position.col_offset
-                    # create a match and attach it to the current Check for saving
+                    # create a match specifically for this file
                     current_match_for_current_check_save = results.Match(
                         lineno=position_end, coloffset=column_offset
                     )
+                    # add the match to the listing of matches for the current check
                     current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
+            # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
-    filesystem.write_results(
-        output_directory,
-        project
-        + constants.filesystem.Dash
-        + constants.filesystem.Main_Results_File_Name
-        + constants.filesystem.Dash,
-        chasten_results_save,
-    )
+    # save all of the results from this analysis
+    if save:
+        filesystem.write_results(
+            output_directory,
+            project
+            + constants.filesystem.Dash
+            + constants.filesystem.Main_Results_File_Name
+            + constants.filesystem.Dash,
+            chasten_results_save,
+        )
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
