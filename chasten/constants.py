@@ -77,6 +77,7 @@ class Filesystem:
     """Define the Filesystem dataclass for constant(s)."""
 
     Current_Directory: str
+    Dash: str
     Dot: str
     Main_Configuration_File: str
     Main_Checks_File: str
@@ -86,6 +87,7 @@ class Filesystem:
 
 filesystem = Filesystem(
     Current_Directory=".",
+    Dash="-",
     Dot=".",
     Main_Configuration_File="config.yml",
     Main_Checks_File="checks.yml",
