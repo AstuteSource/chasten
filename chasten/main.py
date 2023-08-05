@@ -31,6 +31,7 @@ from chasten import (
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
 
+small_bullet_unicode = "\u2022"
 
 # ---
 # Region: helper functions
@@ -485,7 +486,8 @@ def reanalyze(  # noqa: PLR0913, PLR0915
     output.console.print(f":sparkles: Analyzing Python source code in:\n{input_path}")
     # output the number of checks that will be performed
     output.console.print()
-    output.console.print(f":tada: Running a total of {len(check_list)} check(s):")
+    output.console.print(f":tada: Performing {len(check_list)} check(s):")
+    output.console.print()
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
     # iterate through and perform each of the checks
@@ -501,6 +503,9 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
+        output.console.print(
+            f"  {small_bullet_unicode} id: '{check_id}', name: '{check_name}', pattern: '{current_xpath_pattern}'"
+        )
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
@@ -565,6 +570,9 @@ def reanalyze(  # noqa: PLR0913, PLR0915
             current_result_source.results.append(current_check_save)
             # iterate through all of the matches that are specifically
             # connected to this source that is connected to a specific file name
+            output.console.print(
+                f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
+            )
             for current_match in matches_list:
                 if isinstance(current_match, pyastgrepsearch.Match):
                     # extract the direct line number for this match
