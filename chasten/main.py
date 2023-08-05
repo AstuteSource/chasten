@@ -503,9 +503,6 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
-        output.console.print(
-            f"  {small_bullet_unicode} id: '{check_id}', name: '{check_name}', pattern: '{current_xpath_pattern}'"
-        )
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
@@ -537,6 +534,12 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         # records that the checked passed as a default
         else:
             check_status = True
+        # display minimal diagnostic output
+        check_status_symbol = util.get_symbol_boolean(check_status)
+        output.console.print(
+            f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'" +
+            f", pattern: '{current_xpath_pattern}', min={min_count}, max={max_count}"
+        )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         current_result_source = results.Source(
@@ -568,11 +571,12 @@ def reanalyze(  # noqa: PLR0913, PLR0915
             current_result_source = results.Source(name=file_name)
             # put the current check into the list of checks in the current source
             current_result_source.results.append(current_check_save)
-            # iterate through all of the matches that are specifically
-            # connected to this source that is connected to a specific file name
+            # display minimal diagnostic output
             output.console.print(
                 f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
             )
+            # iterate through all of the matches that are specifically
+            # connected to this source that is connected to a specific file name
             for current_match in matches_list:
                 if isinstance(current_match, pyastgrepsearch.Match):
                     # extract the direct line number for this match
