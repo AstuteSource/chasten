@@ -583,10 +583,7 @@ def reanalyze(  # noqa: PLR0913, PLR0915
     if save:
         filesystem.write_results(
             output_directory,
-            project
-            + constants.filesystem.Dash
-            + constants.filesystem.Main_Results_File_Name
-            + constants.filesystem.Dash,
+            project,
             chasten_results_save,
         )
     # confirm whether or not all of the checks passed
