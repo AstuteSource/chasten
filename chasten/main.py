@@ -525,9 +525,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep
         match_generator = pyastgrepsearch.search_python_files(
-            paths=valid_directories,
-            expression=current_xpath_pattern,
-            xpath2=True
+            paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         )
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
@@ -636,7 +634,12 @@ def analyze(  # noqa: PLR0913, PLR0915
         # chasten_results_save.sources.append(current_result_source)
         chasten_results_save.sources.extend(list(current_match_sources_dict.values()))
     filesystem.write_results(
-        output_directory, project + "-chasten", chasten_results_save
+        output_directory,
+        project
+        + constants.filesystem.Dash
+        + constants.filesystem.Main_Results_File_Name
+        + constants.filesystem.Dash,
+        chasten_results_save,
     )
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
