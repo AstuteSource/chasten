@@ -85,5 +85,4 @@ def organize_matches(match_list: List[pyastgrepsearch.Match]) -> Dict[str, List[
             current_match_list.append(current_match)
             # associate this new list with the current file name
             match_dict[current_match_file_name] = current_match_list
-    output.console.print(match_dict)
     return match_dict
