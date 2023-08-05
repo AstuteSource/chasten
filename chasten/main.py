@@ -581,7 +581,6 @@ def reanalyze(  # noqa: PLR0913, PLR0915
     output.console.print("\n:joy: All checks passed.")
 
 
-
 @cli.command()
 def analyze(  # noqa: PLR0913, PLR0915
     project: str = typer.Option(
