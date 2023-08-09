@@ -36,7 +36,6 @@ class Match(BaseModel):
 
     lineno: int
     coloffset: int
-    _match: Union[pyastgrepsearch.Match, None] = None
 
 
 class Check(BaseModel):
@@ -49,6 +48,7 @@ class Check(BaseModel):
     pattern: str
     passed: bool
     matches: list[Match] = []
+    _matches: list[pyastgrepsearch.Match] = []
 
 
 class Source(BaseModel):
