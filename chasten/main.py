@@ -592,14 +592,10 @@ def analyze(  # noqa: PLR0913, PLR0915
                     current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
-    output.print_analysis_details(chasten_results_save)
+    # display all of the analysis results if verbose output is requested
+    output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
-    if save:
-        filesystem.write_results(
-            output_directory,
-            project,
-            chasten_results_save,
-        )
+    filesystem.write_results(output_directory, project, chasten_results_save, save)
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
