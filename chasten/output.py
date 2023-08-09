@@ -9,13 +9,11 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    debug,
-    results,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import results
 
 # declare a default logger
 logger: logging.Logger = logging.getLogger()
@@ -114,7 +112,7 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
     # is not saved to the JSON file by default, as evidenced by the underscore
     if not verbose:
         return None
-    opt_print_log(verbose, label="\n:tada: Results from the analysis!")
+    opt_print_log(verbose, label="\n:tada: Results from the analysis:")
     # iterate through the the list of sources inside of the resulting analysis
     for current_source in chasten.sources:
         # extract the current check from this source
@@ -152,7 +150,14 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
                 title=f"{combined_attribute_label}",
             )
         )
-        if current_check.matches:  # type: ignore
+        if len(current_check._matches) > 0:  # type: ignore
+            # display the details about the number of matches and the name of the source's file
+            opt_print_log(verbose, blank=constants.markers.Empty_String)
+            opt_print_log(
+                verbose,
+                label=f":tada: Found a total of {len(current_check._matches)} matches for '{check_name}' in {current_source.name}",
+            )
+            # iterate through each of the matches and display all of their details
             for current_match in current_check._matches:  # type: ignore
                 if isinstance(current_match, pyastgrepsearch.Match):  # type: ignore
                     # display a label for matching output information
@@ -172,7 +177,9 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
                     # match does not appear in annotated version of other matches
                     all_lines_for_marking = deepcopy(all_lines)
                     lines = all_lines_for_marking[
-                        max(0, position_end - constants.markers.Code_Context) : position_end
+                        max(
+                            0, position_end - constants.markers.Code_Context
+                        ) : position_end
                         + constants.markers.Code_Context
                     ]
                     # create a rich panel to display the results:
