@@ -1,11 +1,17 @@
 """Analyze the abstract syntax tree, its XML-based representation, and/or the search results."""
 
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from thefuzz import fuzz  # type: ignore
 
-from chasten import constants, enumerations, output
+from chasten import constants
+from chasten import enumerations
+from chasten import output
 
 
 def include_or_exclude_checks(
@@ -65,9 +71,15 @@ def filter_matches(
     return (subset_match_list, did_not_match_list)
 
 
-def organize_matches(match_list: List[pyastgrepsearch.Match]) -> Dict[str, List[pyastgrepsearch.Match]]:
+def organize_matches(
+    match_list: List[pyastgrepsearch.Match],
+) -> Dict[str, List[pyastgrepsearch.Match]]:
     """Organize the matches on a per-file basis to support simplified processing."""
     match_dict: Dict[str, List[pyastgrepsearch.Match]] = {}
+    # iterate through each of the matches in the list, with
+    # the goal of creating a dictionary organized so that
+    # --> the key is the name of a file under analysis
+    # --> the value is a list of all of the matches for that file
     for current_match in match_list:
         # extract the name of the file for the current match
         current_match_file_name = str(current_match.path)
