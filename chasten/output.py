@@ -10,6 +10,7 @@ from rich.panel import Panel
 from rich.syntax import Syntax
 
 from chasten import (
+    checks,
     configuration,
     constants,
     debug,
@@ -111,17 +112,53 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
     # is an instance of pyastgrepsearch.Match and contains the entire details
     # about the specific match, including the entire source code. This object
     # is not saved to the JSON file by default, as evidenced by the underscore
+    if not verbose:
+        return None
+    opt_print_log(verbose, label="\n:tada: Results from the analysis!")
     # iterate through the the list of sources inside of the resulting analysis
     for current_source in chasten.sources:
         # extract the current check from this source
-        current_check = current_source.check
-        if current_check.matches:
-            for current_match in current_check.matches:
+        current_check: results.Check = current_source.check  # type: ignore
+        current_xpath_pattern = current_check.pattern
+        console.print("\n:tada: Performing check:")
+        xpath_syntax = Syntax(
+            current_xpath_pattern,
+            constants.markers.Xml,
+            theme=constants.chasten.Theme_Colors,
+        )
+        # extract the minimum and maximum values for the checks, if they exist
+        # note that this function will return None for a min or a max if
+        # that attribute does not exist inside of the current_check; importantly,
+        # having a count or a min or a max is all optional in a checks file
+        min_count = current_check.min
+        max_count = current_check.max
+        min_label = checks.create_attribute_label(min_count, constants.checks.Check_Min)
+        max_label = checks.create_attribute_label(max_count, constants.checks.Check_Max)
+        # extract details about the check to display in the header
+        # of the syntax box for this specific check
+        check_id = current_check.id
+        check_id_label = checks.create_attribute_label(check_id, constants.checks.Check_Id)  # type: ignore
+        check_name = current_check.name
+        check_name_label = checks.create_attribute_label(check_name, constants.checks.Check_Name)  # type: ignore
+        # create the combined attribute label that displays all details for the check
+        combined_attribute_label = checks.join_attribute_labels(
+            [check_id_label, check_name_label, min_label, max_label]
+        )
+        # display the check with additional details about its configuration
+        console.print(
+            Panel(
+                xpath_syntax,
+                expand=False,
+                title=f"{combined_attribute_label}",
+            )
+        )
+        if current_check.matches:  # type: ignore
+            for current_match in current_check.matches:  # type: ignore
                 # extract the internal match called _match;
                 # note again that this is a pyastgrepsearch.Match object
                 internal_match = current_match._match
                 # console.print(internal_match)
-            if isinstance(internal_match, pyastgrepsearch.Match):
+            if isinstance(internal_match, pyastgrepsearch.Match):  # type: ignore
                 # display a label for matching output information
                 opt_print_log(verbose, blank=constants.markers.Empty_String)
                 opt_print_log(verbose, label=":sparkles: Matching source code:")
