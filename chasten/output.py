@@ -1,11 +1,20 @@
 """Perform logging and/or console output."""
 
 import logging
+from copy import deepcopy
 from typing import Any
 
+from pyastgrep import search as pyastgrepsearch  # type: ignore
 from rich.console import Console
+from rich.panel import Panel
+from rich.syntax import Syntax
 
-from chasten import configuration, constants, debug
+from chasten import (
+    configuration,
+    constants,
+    debug,
+    results,
+)
 
 # declare a default logger
 logger: logging.Logger = logging.getLogger()
@@ -92,3 +101,71 @@ def print_footer() -> None:
     """Display concluding details in the footer."""
     global console  # noqa: disable=PLW0603
     console.print()
+
+
+def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> None:
+    """Print all of the verbose debugging details for the results of an analysis."""
+    # 1) Note: see the BaseModel definitions in results.py for more details
+    # about the objects and their relationships
+    # 2) Note: the _match object that is inside of a Match BaseModel subclass
+    # is an instance of pyastgrepsearch.Match and contains the entire details
+    # about the specific match, including the entire source code. This object
+    # is not saved to the JSON file by default, as evidenced by the underscore
+    # iterate through the the list of sources inside of the resulting analysis
+    for current_source in chasten.sources:
+        # extract the current check from this source
+        current_check = current_source.check
+        if current_check.matches:
+            for current_match in current_check.matches:
+                # extract the internal match called _match;
+                # note again that this is a pyastgrepsearch.Match object
+                internal_match = current_match._match
+                # console.print(internal_match)
+            if isinstance(internal_match, pyastgrepsearch.Match):
+                # display a label for matching output information
+                opt_print_log(verbose, blank=constants.markers.Empty_String)
+                opt_print_log(verbose, label=":sparkles: Matching source code:")
+                # extract the direct line number for this match
+                position_end = internal_match.position.lineno
+                # extract the column offset for this match
+                column_offset = internal_match.position.col_offset
+                # get a pre-defined number of the lines both
+                # before and after the line that is the closest match;
+                # note that the use of "*" is an indicator of the
+                # specific line that is the focus of the search
+                all_lines = internal_match.file_lines
+                # create a deepcopy of the listing of lines so that
+                # the annotated version of the lines for this specific
+                # match does not appear in annotated version of other matches
+                all_lines_for_marking = deepcopy(all_lines)
+                lines = all_lines_for_marking[
+                    max(0, position_end - constants.markers.Code_Context) : position_end
+                    + constants.markers.Code_Context
+                ]
+                # create a rich panel to display the results:
+                # key features:
+                # --> descriptive label
+                # --> syntax highlighting
+                # --> line numbers
+                # --> highlight for the matching position
+                # --> suitable theme (could be customized)
+                code_syntax = Syntax(
+                    "\n".join(str(line) for line in lines),
+                    constants.chasten.Programming_Language,
+                    theme=constants.chasten.Theme_Colors,
+                    background_color=constants.chasten.Theme_Background,
+                    line_numbers=True,
+                    start_line=(
+                        max(1, position_end - constants.markers.Code_Context + 1)
+                    ),
+                    highlight_lines={position_end},
+                )
+                # display the results in a rich panel
+                opt_print_log(
+                    verbose,
+                    panel=Panel(
+                        code_syntax,
+                        expand=False,
+                        title=f"{internal_match.path}:{position_end}:{column_offset}",
+                    ),
+                )
