@@ -43,8 +43,8 @@ class Check(BaseModel):
 
     id: str
     name: str
-    min: int
-    max: int
+    min: Union[None, int] = 0
+    max: Union[None, int] = 0
     pattern: str
     passed: bool
     matches: list[Match] = []
