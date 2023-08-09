@@ -587,7 +587,7 @@ def analyze(  # noqa: PLR0913, PLR0915
                     )
                     # save the entire current_match that is an instance of
                     # pyastgrepsearch.Match for verbose debugging output as needed
-                    current_match_for_current_check_save._match = current_match
+                    current_check_save._matches.append(current_match)
                     # add the match to the listing of matches for the current check
                     current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
             # add the current source to main object that contains a list of source
