@@ -31,7 +31,7 @@ class Source(BaseModel):
     """Define a Pydantic model for a Source."""
 
     name: str
-    results: list[Check] = []
+    check: Union[None, Check] = None
 
 
 class CheckCriterion(BaseModel):

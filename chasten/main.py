@@ -543,12 +543,12 @@ def reanalyze(  # noqa: PLR0913, PLR0915
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         current_result_source = results.Source(
-            name=str([str(vd) for vd in valid_directories])
+            name=str(str(vd) for vd in valid_directories)
         )
         # there were no matches and thus the current_check_save of None
         # should be recorded inside of the source of the results
         if len(match_generator_list) == 0:
-            current_result_source.results.append(current_check_save)  # type: ignore
+            current_result_source.check = current_check_save
         # iteratively analyze:
         # a) A specific file name
         # b) All of the matches for that file name
@@ -570,7 +570,7 @@ def reanalyze(  # noqa: PLR0913, PLR0915
             # create a source that is solely for this file name
             current_result_source = results.Source(name=file_name)
             # put the current check into the list of checks in the current source
-            current_result_source.results.append(current_check_save)
+            current_result_source.check = current_check_save
             # display minimal diagnostic output
             output.console.print(
                 f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
@@ -828,9 +828,12 @@ def analyze(  # noqa: PLR0913, PLR0915
         current_result_source = results.Source(
             name=str([str(vd) for vd in valid_directories])
         )
+        # there were no matches and thus the default check
+        # configuration should be saved for this specific check
         if len(match_generator_list) == 0:
-            current_result_source.results.append(current_check_save)  # type: ignore
+            current_result_source.check = current_check_save
         current_match_sources_dict: Dict[str, results.Source] = {}
+        # iterate through each of the matches
         for search_output in match_generator_list:
             current_result_source = results.Source(name=str(search_output.path))
             current_match_sources_dict[str(search_output.path)] = current_result_source
@@ -894,14 +897,15 @@ def analyze(  # noqa: PLR0913, PLR0915
         # output.console.print(list(current_match_sources_dict.values()))
         # chasten_results_save.sources.append(current_result_source)
         chasten_results_save.sources.extend(list(current_match_sources_dict.values()))
-    filesystem.write_results(
-        output_directory,
-        project
-        + constants.filesystem.Dash
-        + constants.filesystem.Main_Results_File_Name
-        + constants.filesystem.Dash,
-        chasten_results_save,
-    )
+    if save:
+        filesystem.write_results(
+            output_directory,
+            project
+            + constants.filesystem.Dash
+            + constants.filesystem.Main_Results_File_Name
+            + constants.filesystem.Dash,
+            chasten_results_save,
+        )
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
