@@ -1,13 +1,8 @@
 """Extract and analyze details about specific checks."""
 
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Dict, List, Tuple, Union
 
-from chasten import constants
-from chasten import enumerations
-from chasten import util
+from chasten import constants, enumerations, util
 
 
 def extract_min_max(
