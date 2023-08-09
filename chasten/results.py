@@ -1,11 +1,34 @@
 """Store results from performing an analysis."""
 
 from pathlib import Path
-from typing import Union
+from typing import ClassVar, Union
 
-from pydantic import BaseModel
+from pyastgrep import search as pyastgrepsearch  # type: ignore
+from pydantic import BaseModel, Field
 
 from chasten import debug
+
+# Note: the nesting of the class definitions is from the
+# bottom of this file to the top because the top-level
+# object can only refer to others that already exist
+
+# Nesting structure:
+
+# Chasten:
+# --> Configuration --> CheckCriterion
+# --> Source
+#     --> name
+#     --> check
+#         --> Check
+#             --> id
+#             --> name
+#             --> min
+#             --> max
+#             --> pattern
+#             --> passed
+#         --> matches
+#             --> lineno
+#             --> coloffset
 
 
 class Match(BaseModel):
@@ -13,6 +36,7 @@ class Match(BaseModel):
 
     lineno: int
     coloffset: int
+    _match: Union[pyastgrepsearch.Match, None] = None
 
 
 class Check(BaseModel):
