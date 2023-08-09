@@ -120,7 +120,7 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
         # extract the current check from this source
         current_check: results.Check = current_source.check  # type: ignore
         current_xpath_pattern = current_check.pattern
-        console.print("\n:tada: Performing check:")
+        console.print("\n:tada: Check:")
         xpath_syntax = Syntax(
             current_xpath_pattern,
             constants.markers.Xml,
@@ -153,56 +153,52 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
             )
         )
         if current_check.matches:  # type: ignore
-            for current_match in current_check.matches:  # type: ignore
-                # extract the internal match called _match;
-                # note again that this is a pyastgrepsearch.Match object
-                internal_match = current_match._match
-                # console.print(internal_match)
-            if isinstance(internal_match, pyastgrepsearch.Match):  # type: ignore
-                # display a label for matching output information
-                opt_print_log(verbose, blank=constants.markers.Empty_String)
-                opt_print_log(verbose, label=":sparkles: Matching source code:")
-                # extract the direct line number for this match
-                position_end = internal_match.position.lineno
-                # extract the column offset for this match
-                column_offset = internal_match.position.col_offset
-                # get a pre-defined number of the lines both
-                # before and after the line that is the closest match;
-                # note that the use of "*" is an indicator of the
-                # specific line that is the focus of the search
-                all_lines = internal_match.file_lines
-                # create a deepcopy of the listing of lines so that
-                # the annotated version of the lines for this specific
-                # match does not appear in annotated version of other matches
-                all_lines_for_marking = deepcopy(all_lines)
-                lines = all_lines_for_marking[
-                    max(0, position_end - constants.markers.Code_Context) : position_end
-                    + constants.markers.Code_Context
-                ]
-                # create a rich panel to display the results:
-                # key features:
-                # --> descriptive label
-                # --> syntax highlighting
-                # --> line numbers
-                # --> highlight for the matching position
-                # --> suitable theme (could be customized)
-                code_syntax = Syntax(
-                    "\n".join(str(line) for line in lines),
-                    constants.chasten.Programming_Language,
-                    theme=constants.chasten.Theme_Colors,
-                    background_color=constants.chasten.Theme_Background,
-                    line_numbers=True,
-                    start_line=(
-                        max(1, position_end - constants.markers.Code_Context + 1)
-                    ),
-                    highlight_lines={position_end},
-                )
-                # display the results in a rich panel
-                opt_print_log(
-                    verbose,
-                    panel=Panel(
-                        code_syntax,
-                        expand=False,
-                        title=f"{internal_match.path}:{position_end}:{column_offset}",
-                    ),
-                )
+            for current_match in current_check._matches:  # type: ignore
+                if isinstance(current_match, pyastgrepsearch.Match):  # type: ignore
+                    # display a label for matching output information
+                    opt_print_log(verbose, blank=constants.markers.Empty_String)
+                    opt_print_log(verbose, label=":sparkles: Matching source code:")
+                    # extract the direct line number for this match
+                    position_end = current_match.position.lineno
+                    # extract the column offset for this match
+                    column_offset = current_match.position.col_offset
+                    # get a pre-defined number of the lines both
+                    # before and after the line that is the closest match;
+                    # note that the use of "*" is an indicator of the
+                    # specific line that is the focus of the search
+                    all_lines = current_match.file_lines
+                    # create a deepcopy of the listing of lines so that
+                    # the annotated version of the lines for this specific
+                    # match does not appear in annotated version of other matches
+                    all_lines_for_marking = deepcopy(all_lines)
+                    lines = all_lines_for_marking[
+                        max(0, position_end - constants.markers.Code_Context) : position_end
+                        + constants.markers.Code_Context
+                    ]
+                    # create a rich panel to display the results:
+                    # key features:
+                    # --> descriptive label
+                    # --> syntax highlighting
+                    # --> line numbers
+                    # --> highlight for the matching position
+                    # --> suitable theme (could be customized)
+                    code_syntax = Syntax(
+                        "\n".join(str(line) for line in lines),
+                        constants.chasten.Programming_Language,
+                        theme=constants.chasten.Theme_Colors,
+                        background_color=constants.chasten.Theme_Background,
+                        line_numbers=True,
+                        start_line=(
+                            max(1, position_end - constants.markers.Code_Context + 1)
+                        ),
+                        highlight_lines={position_end},
+                    )
+                    # display the results in a rich panel
+                    opt_print_log(
+                        verbose,
+                        panel=Panel(
+                            code_syntax,
+                            expand=False,
+                            title=f"{current_match.path}:{position_end}:{column_offset}",
+                        ),
+                    )
