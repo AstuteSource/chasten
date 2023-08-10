@@ -2,7 +2,11 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -10,20 +14,18 @@ from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    results,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import results
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -251,7 +253,7 @@ def validate_configuration_files(
 
 @cli.command()
 def interact(ctx: typer.Context) -> None:
-    """Interactively configure and run."""
+    """🚀 Interactively configure and run."""
     # construct a Trogon object; this will create a
     # terminal-user interface that will allow the
     # person using chasten to pick a mode and then
@@ -266,25 +268,31 @@ def configure(  # noqa: PLR0913
     task: enumerations.ConfigureTask = typer.Argument(
         enumerations.ConfigureTask.VALIDATE.value
     ),
-    force: bool = typer.Option(
-        False,
-        "--force",
-        "-f",
-        help="Create configuration directory and files even if they exist",
-    ),
     config: Path = typer.Option(
         None,
         "--config",
         "-c",
         help="A directory with configuration file(s).",
     ),
-    verbose: bool = typer.Option(False),
-    debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
-    debug_destination: debug.DebugDestination = typer.Option(
-        debug.DebugDestination.CONSOLE.value, "--debug-dest"
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
     ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    force: bool = typer.Option(
+        False,
+        help="Create configuration directory and files even if they exist",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """Manage tool configuration."""
+    """🪂 Manage tool configuration."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -414,17 +422,17 @@ def analyze(  # noqa: PLR0913, PLR0915
         directory=input_path,
     )
     # create the include and exclude criteria
-    revised_check_include = checks.fix_check_criteria(check_include)
+    # revised_check_include = checks.fix_check_criteria(check_include)
     include = results.CheckCriterion(
-        attribute=revised_check_include[0],
-        value=revised_check_include[1],
-        confidence=revised_check_include[2],
+        attribute=str(checks.fix_check_criterion(check_include[0])),
+        value=str(checks.fix_check_criterion(check_include[1])),
+        confidence=int(checks.fix_check_criterion(check_include[2])),
     )
-    revised_check_exclude = checks.fix_check_criteria(check_exclude)
+    # revised_check_exclude = checks.fix_check_criteria(check_exclude)
     exclude = results.CheckCriterion(
-        attribute=revised_check_exclude[0],
-        value=revised_check_exclude[1],
-        confidence=revised_check_exclude[2],
+        attribute=str(checks.fix_check_criterion(check_exclude[0])),
+        value=str(checks.fix_check_criterion(check_exclude[1])),
+        confidence=int(checks.fix_check_criterion(check_exclude[2])),
     )
     # create a configuration that is the same for all results
     chasten_configuration = results.Configuration(
@@ -607,7 +615,7 @@ def analyze(  # noqa: PLR0913, PLR0915
 
 @cli.command()
 def log() -> None:
-    """Start the logging server."""
+    """🦚 Start the logging server."""
     # display the header
     output.print_header()
     # display details about the server
