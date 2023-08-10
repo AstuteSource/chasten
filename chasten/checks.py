@@ -94,14 +94,20 @@ def make_checks_status_message(check_status: bool) -> str:
     )
 
 
-def fix_check_criteria(
-    criteria: Tuple[enumerations.FilterableAttribute, str, int]
-) -> Tuple[str, str, int]:
-    """Remove null values from the criteria list."""
-    new_criteria = ()
-    for criterion in criteria:
-        if criterion is None:
-            new_criteria += ("",)
+def fix_check_criterion(
+    criterion: Union[enumerations.FilterableAttribute, str, int]
+) -> Union[str, int]:
+    """Remove null values from a criterion."""
+    # the converted criterion's default is an empty string
+    new_criterion: Union[str, int] = ""
+    # if the criterion is not None, then it should either be
+    # the value in the enumeration or the value of a string or int
+    if criterion is not None:
+        # the criterion is an enum and thus the value must be extracted
+        if type(criterion) is enumerations.FilterableAttribute:
+            new_criterion = criterion.value
+        # the criterion is not an enum and thus it must be
+        # an int or a string that can be stored directly
         else:
-            new_criteria += (criterion,)
-    return new_criteria
+            new_criterion = criterion
+    return new_criterion
