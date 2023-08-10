@@ -4,16 +4,12 @@ import shutil
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List
-from typing import NoReturn
-from typing import Optional
-from typing import Union
+from typing import List, NoReturn, Optional, Union
 
 from pydantic import BaseModel
 from rich.tree import Tree
 
-from chasten import configuration
-from chasten import constants
+from chasten import configuration, constants
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
