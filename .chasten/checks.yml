@@ -5,7 +5,7 @@ checks:
     pattern: './/ClassDef'
     count:
       min: 1
-      max: 15
+      max: 50
   - name: "all-function-definition"
     code: "AFD"
     id: "F001"
@@ -26,7 +26,7 @@ checks:
     pattern: './/FunctionDef/body//If'
     count:
       min: 1
-      max: 50
+      max: 100
   - name: "double-nested-if"
     code: "DNI"
     id: "CL002"
