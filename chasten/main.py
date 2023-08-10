@@ -541,7 +541,9 @@ def analyze(  # noqa: PLR0913, PLR0915
         check_status_symbol = util.get_symbol_boolean(check_status)
         # escape the open bracket symbol that may be in an XPATH expression
         # and will prevent it from displaying correctly
-        current_xpath_pattern_escape = current_xpath_pattern.replace('[', '\[')
+        current_xpath_pattern_escape = current_xpath_pattern.replace(
+            "[", "\\["
+        )  #
         # display minimal diagnostic output
         output.console.print(
             f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'"
