@@ -1,17 +1,11 @@
 """Analyze the abstract syntax tree, its XML-based representation, and/or the search results."""
 
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from thefuzz import fuzz  # type: ignore
 
-from chasten import constants
-from chasten import enumerations
-from chasten import output
+from chasten import constants, enumerations
 
 
 def include_or_exclude_checks(
