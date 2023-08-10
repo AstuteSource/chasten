@@ -537,11 +537,16 @@ def analyze(  # noqa: PLR0913, PLR0915
         # records that the checked passed as a default
         else:
             check_status = True
-        # display minimal diagnostic output
+        # convert the status of the check to a visible symbol for display
         check_status_symbol = util.get_symbol_boolean(check_status)
+        # escape the open bracket symbol that may be in an XPATH expression
+        # and will prevent it from displaying correctly
+        current_xpath_pattern_escape = current_xpath_pattern.replace('[', '\[')
+        # display minimal diagnostic output
         output.console.print(
             f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'"
-            + f", pattern: '{current_xpath_pattern}', min={min_count}, max={max_count}"
+            + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}"
+            + f", min={min_count}, max={max_count}"
         )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
