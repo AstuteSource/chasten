@@ -1,10 +1,10 @@
 """Store results from performing an analysis."""
 
 from pathlib import Path
-from typing import ClassVar, Union
+from typing import Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from chasten import debug
 
@@ -26,9 +26,17 @@ from chasten import debug
 #             --> max
 #             --> pattern
 #             --> passed
-#         --> matches
-#             --> lineno
-#             --> coloffset
+#             --> _matches
+#                 --> pyastgrepsearch.Match [*]
+#             --> matches
+#                 --> Match
+#                     --> lineno
+#                     --> coloffset
+#
+# [*] Designates a "private" attribute that is not a part
+# of the Pydantic BaseModel and is not saved to the JSON.
+# This is used to record results so that the tool can
+# display them if the --verbose flag is active.
 
 
 class Match(BaseModel):
