@@ -9,11 +9,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 
-from chasten import checks
-from chasten import configuration
-from chasten import constants
-from chasten import debug
-from chasten import results
+from chasten import checks, configuration, constants, debug, results
 
 # declare a default logger
 logger: logging.Logger = logging.getLogger()
