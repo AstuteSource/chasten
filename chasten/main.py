@@ -546,7 +546,6 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print(
             f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'"
             + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}"
-            + f", min={min_count}, max={max_count}"
         )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
