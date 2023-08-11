@@ -78,7 +78,7 @@ hypothesis-test-command = "pytest -x -s -m 'fuzz'"
 hypothesis-test-silent-command = "pytest -x -m 'fuzz' --show-capture=no"
 
 [tool.taskipy.tasks]
-all = "task black && task mypy && task ruff && task test-silent"
+all = "task black && task mypy && task ruff && task test"
 lint = "task black && task mypy && task ruff"
 black = { cmd = "black chasten tests --check", help = "Run the black checks for source code format" }
 fiximports = { cmd = "isort chasten tests", help = "Run isort to fix source code imports" }
@@ -92,7 +92,7 @@ hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the 
 test = { cmd = "pytest -x -s -vv -n auto", help = "Run the pytest test suite using order randomization and test distribution" }
 test-not-randomly = { cmd = "pytest -x -s -vv -p no:randomly", help = "Run the pytest test suite without order randomization" }
 test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist", help = "Run the pytest test suite without order randomization" }
-test-silent = { cmd = "pytest -x --show-capture=no", help = "Run the pytest test suite without showing output" }
+test-silent = { cmd = "pytest -x --show-capture=no -n auto", help = "Run the pytest test suite without showing output" }
 test-silent-not-randomly = { cmd = "pytest -x --show-capture=no -p no:randomly", help = "Run the pytest test suite without showing output and order randomization" }
 test-silent-not-xdist = { cmd = "pytest -x --show-capture=no -p no:xdist", help = "Run the pytest test suite without showing output and test distribution" }
 test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
