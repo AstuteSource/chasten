@@ -1,6 +1,10 @@
 # Basic workflow
 name: build
 
+# Use more columns for terminal output
+env:
+  COLUMNS: 120
+
 # Controls when the action will run
 # Workflow begins with push or PR events
 # Focuses on the master branch only
