@@ -37,6 +37,7 @@ hypothesis-jsonschema = "^0.22.1"
 pytest-clarity = "^1.0.1"
 pytest-randomly = "^3.13.0"
 pytest-pretty = "^1.2.0"
+pytest-xdist = "^3.3.1"
 
 [tool.pytest.ini_options]
 filterwarnings = [
@@ -87,10 +88,12 @@ developer-test = { cmd = "{developer-test-command}", help = "Run developer-creat
 developer-test-silent = { cmd = "{developer-test-silent-command}", help = "Run developer-created without output", use_vars = true }
 hypothesis = { cmd = "{hypothesis-test-command}", help = "Run the hypothesis-based test cases", use_vars = true}
 hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the hypothesis-based test cases", use_vars = true }
-test = { cmd = "pytest -x -s -vv", help = "Run the pytest test suite" }
+test = { cmd = "pytest -x -s -vv -n auto", help = "Run the pytest test suite using order randomization and test distribution" }
 test-not-randomly = { cmd = "pytest -x -s -vv -p no:randomly", help = "Run the pytest test suite without order randomization" }
+test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist", help = "Run the pytest test suite without order randomization" }
 test-silent = { cmd = "pytest -x --show-capture=no", help = "Run the pytest test suite without showing output" }
-test-silent-not-randomly = { cmd = "pytest -x --show-capture=no -p no:randomly", help = "Run the pytest test suite without showing output" }
+test-silent-not-randomly = { cmd = "pytest -x --show-capture=no -p no:randomly", help = "Run the pytest test suite without showing output and order randomization" }
+test-silent-not-xdist = { cmd = "pytest -x --show-capture=no -p no:xdist", help = "Run the pytest test suite without showing output and test distribution" }
 test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
 test-coverage-silent = { cmd = "{coverage-test-command-silent}", help = "Run coverage monitoring for tests without output", use_vars = true }
 
