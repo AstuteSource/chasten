@@ -486,7 +486,8 @@ def analyze(  # noqa: PLR0913, PLR0915
     # create the list of directories
     valid_directories = [input_path]
     # output the list of directories subject to checking
-    output.console.print(f":sparkles: Analyzing Python source code in:\n{input_path}")
+    output.console.print()
+    output.console.print(f":sparkles: Analyzing Python source code in: {input_path}")
     # output the number of checks that will be performed
     output.console.print()
     output.console.print(f":tada: Performing {len(check_list)} check(s):")
