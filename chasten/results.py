@@ -62,7 +62,7 @@ class Check(BaseModel):
 class Source(BaseModel):
     """Define a Pydantic model for a Source."""
 
-    name: str
+    filename: str
     check: Union[None, Check] = None
 
 
