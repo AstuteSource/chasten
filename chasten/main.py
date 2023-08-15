@@ -551,7 +551,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         current_result_source = results.Source(
-            name=str(str(vd) for vd in valid_directories)
+            filename=str(str(vd) for vd in valid_directories)
         )
         # there were no matches and thus the current_check_save of None
         # should be recorded inside of the source of the results
@@ -576,7 +576,7 @@ def analyze(  # noqa: PLR0913, PLR0915
                 passed=check_status,
             )
             # create a source that is solely for this file name
-            current_result_source = results.Source(name=file_name)
+            current_result_source = results.Source(filename=file_name)
             # put the current check into the list of checks in the current source
             current_result_source.check = current_check_save
             # display minimal diagnostic output
