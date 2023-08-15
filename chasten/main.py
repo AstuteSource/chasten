@@ -420,13 +420,11 @@ def analyze(  # noqa: PLR0913, PLR0915
         directory=input_path,
     )
     # create the include and exclude criteria
-    # revised_check_include = checks.fix_check_criteria(check_include)
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
         value=str(checks.fix_check_criterion(check_include[1])),
         confidence=int(checks.fix_check_criterion(check_include[2])),
     )
-    # revised_check_exclude = checks.fix_check_criteria(check_exclude)
     exclude = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_exclude[0])),
         value=str(checks.fix_check_criterion(check_exclude[1])),
