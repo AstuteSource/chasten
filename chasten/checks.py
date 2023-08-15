@@ -107,7 +107,7 @@ def fix_check_criterion(
         if type(criterion) is enumerations.FilterableAttribute:
             new_criterion = criterion.value
         # the criterion is not an enum and thus it must be
-        # an int or a string that can be stored direc  # noqatly
+        # an int or a string that can be stored directly
         else:
             new_criterion = criterion  # type: ignore
     return new_criterion
