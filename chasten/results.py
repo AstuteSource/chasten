@@ -16,17 +16,17 @@ from chasten import debug
 
 # Chasten
 # --> Configuration
-    # --> chastenversion
-    # --> projectname
-    # --> configdirectory
-    # --> searchpath
-    # --> debuglevel
-    # --> debugdestination
-    # --> checkinclude --> CheckCriterion
-    # --> checkexclude --> CheckCriterion
-            # --> attribute
-            # --> value
-            # --> confidence
+#     --> chastenversion
+#     --> projectname
+#     --> configdirectory
+#     --> searchpath
+#     --> debuglevel
+#     --> debugdestination
+#     --> checkinclude --> CheckCriterion
+#     --> checkexclude --> CheckCriterion
+#           --> attribute
+#           --> value
+#           --> confidence
 # --> Source
 #     --> filename
 #     --> check
