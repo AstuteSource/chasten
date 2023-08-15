@@ -1,5 +1,7 @@
 """Utilities for use within chasten."""
 
+import importlib.metadata
+
 from chasten import constants
 
 checkmark_unicode = "\u2713"
@@ -20,3 +22,22 @@ def get_symbol_boolean(answer: bool) -> str:
     if answer:
         return f"[green]{checkmark_unicode}[/green]"
     return f"[red]{xmark_unicode}[/red]"
+
+
+def get_chasten_version() -> str:
+    """Use importlib to extract the version of the package."""
+    # attempt to determine the current version of the entire package,
+    # bearing in mind that this program appears on PyPI with the name "chasten";
+    # this will then return the version string specified with the version attribute
+    # in the [tool.poetry] section of the pyproject.toml file
+    try:
+        version_string_of_foo = importlib.metadata.version(
+            constants.chasten.Application_Name
+        )
+    # note that using the version function does not work when chasten is run
+    # through a 'poetry shell' and/or a 'poetry run' command because at that stage
+    # there is not a working package that importlib.metadata can access with a version;
+    # in this situation the function should return the default value of 0.0.0
+    except importlib.metadata.PackageNotFoundError:
+        version_string_of_foo = "0.0.0"
+    return version_string_of_foo
