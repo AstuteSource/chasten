@@ -151,7 +151,7 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
             opt_print_log(verbose, blank=constants.markers.Empty_String)
             opt_print_log(
                 verbose,
-                label=f":tada: Found a total of {len(current_check._matches)} matches for '{check_name}' in {current_source.name}",
+                label=f":tada: Found a total of {len(current_check._matches)} matches for '{check_name}' in {current_source.filename}",
             )
             # iterate through each of the matches and display all of their details
             for current_match in current_check._matches:  # type: ignore
