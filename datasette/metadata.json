@@ -1,0 +1,23 @@
+{
+    "databases": {
+       "chasten": {
+           "queries": {
+               "all-chasten": {
+                   "sql": "SELECT
+  sources.name,
+  sources.check_id,
+  sources.check_name,
+  sources.check_pattern,
+  sources.check_min,
+  sources.check_max,
+  sources.check_passed,
+  sources_check_matches.lineno,
+  sources_check_matches.coloffset
+FROM
+  sources
+  JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources;"
+               }
+           }
+       }
+    }
+}
