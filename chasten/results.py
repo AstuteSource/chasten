@@ -14,8 +14,19 @@ from chasten import debug
 
 # Nesting structure:
 
-# Chasten:
-# --> Configuration --> CheckCriterion
+# Chasten
+# --> Configuration
+    # --> chastenversion
+    # --> projectname
+    # --> configdirectory
+    # --> searchpath
+    # --> debuglevel
+    # --> debugdestination
+    # --> checkinclude --> CheckCriterion
+    # --> checkexclude --> CheckCriterion
+            # --> attribute
+            # --> value
+            # --> confidence
 # --> Source
 #     --> filename
 #     --> check
@@ -77,6 +88,7 @@ class CheckCriterion(BaseModel):
 class Configuration(BaseModel):
     """Define a Pydantic model for a Configuration."""
 
+    chastenversion: str
     projectname: str
     configdirectory: Path
     searchpath: Path
