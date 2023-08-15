@@ -1,7 +1,6 @@
 """Chasten checks the AST of a Python program."""
 
 import sys
-import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
