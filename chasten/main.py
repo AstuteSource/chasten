@@ -419,6 +419,8 @@ def analyze(  # noqa: PLR0913, PLR0915
         project=project,
         directory=input_path,
     )
+    # extract the current version of the program
+    chasten_version = util.get_chasten_version()
     # create the include and exclude criteria
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
@@ -432,6 +434,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     # create a configuration that is the same for all results
     chasten_configuration = results.Configuration(
+        chastenversion=chasten_version,
         projectname=project,
         configdirectory=config,
         searchpath=input_path,
