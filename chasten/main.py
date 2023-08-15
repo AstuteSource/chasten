@@ -1,6 +1,7 @@
 """Chasten checks the AST of a Python program."""
 
 import sys
+import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
@@ -337,7 +338,7 @@ def configure(  # noqa: PLR0913
             )
         # cannot re-create the configuration directory, so display
         # a message and suggest the use of --force the next time;
-        # exit early and signal an error
+        # exit early and signal an error with a non-zero exist code
         except FileExistsError:
             if not force:
                 output.console.print(
@@ -630,3 +631,8 @@ def log() -> None:
     # before running any sub-command
     # of the chasten tool
     server.start_syslog_server()
+    # db = "chasten.db"
+    # metadata = "metadata.json"
+    # cmd = ["datasette", db, "-m", metadata]
+    # proc = subprocess.Popen(cmd)
+    # proc.wait()
