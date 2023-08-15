@@ -17,7 +17,7 @@ from chasten import debug
 # Chasten:
 # --> Configuration --> CheckCriterion
 # --> Source
-#     --> name
+#     --> filename
 #     --> check
 #         --> Check
 #             --> id
