@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from pydantic import BaseModel
@@ -57,6 +57,8 @@ class Match(BaseModel):
 
     lineno: int
     coloffset: int
+    linematch: str = ""
+    filelines: List[str] = []
 
 
 class Check(BaseModel):
