@@ -6,6 +6,7 @@ from chasten import constants
 
 checkmark_unicode = "\u2713"
 xmark_unicode = "\u2717"
+default_chasten_semver = "0.0.0"
 
 
 def get_human_readable_boolean(answer: bool) -> str:
@@ -39,5 +40,5 @@ def get_chasten_version() -> str:
     # there is not a working package that importlib.metadata can access with a version;
     # in this situation the function should return the default value of 0.0.0
     except importlib.metadata.PackageNotFoundError:
-        version_string_of_foo = "0.0.0"
+        version_string_of_foo = default_chasten_semver
     return version_string_of_foo
