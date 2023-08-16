@@ -610,7 +610,9 @@ def analyze(  # noqa: PLR0913, PLR0915
                     current_match_for_current_check_save = results.Match(
                         lineno=position_end,
                         coloffset=column_offset,
-                        linematch=current_match.file_lines[position_end - 1].lstrip(constants.markers.Space),
+                        linematch=current_match.file_lines[position_end - 1].lstrip(
+                            constants.markers.Space
+                        ),
                     )
                     # save the entire current_match that is an instance of
                     # pyastgrepsearch.Match for verbose debugging output as needed
@@ -622,7 +624,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
-    filesystem.write_chasten_results(output_directory, project, chasten_results_save, save)
+    filesystem.write_chasten_results(
+        output_directory, project, chasten_results_save, save
+    )
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
@@ -687,7 +691,6 @@ def convert(  # noqa: PLR0913
     json_dicts = filesystem.get_json_results(json_path)
     combined_json_dict = process.combine_dicts(json_dicts)
     filesystem.write_dict_results(combined_json_dict, output_directory, project)
-
 
 
 @cli.command()
