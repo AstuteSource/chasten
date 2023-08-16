@@ -2,7 +2,11 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -10,20 +14,18 @@ from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    results,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import results
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -622,7 +624,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
-    filesystem.write_results(output_directory, project, chasten_results_save, save)
+    filesystem.write_chasten_results(output_directory, project, chasten_results_save, save)
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
@@ -633,9 +635,24 @@ def analyze(  # noqa: PLR0913, PLR0915
 
 
 @cli.command()
-def convert(
+def convert(  # noqa: PLR0913
     json_path: List[Path] = typer.Argument(
         help="Directories, files, or globs for chasten's JSON result file(s).",
+    ),
+    project: str = typer.Option(
+        ..., "--project-name", "-p", help="Name of the project."
+    ),
+    output_directory: Path = typer.Option(
+        None,
+        "--save-directory",
+        "-s",
+        help="A directory for saving converted file(s).",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        writable=True,
+        resolve_path=True,
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
@@ -661,13 +678,17 @@ def convert(
         verbose,
         debug_level,
         debug_destination,
+        project=project,
+        output_directory=output_directory,
         json_paths=json_path,
         force=force,
     )
     # output the list of directories subject to checking
     output.console.print()
     output.console.print(f":sparkles: Converting data file(s) in: {json_path}")
-    filesystem.get_json_results(json_path)
+    json_dicts = filesystem.get_json_results(json_path)
+    combined_json_dict = process.combine_dicts(json_dicts)
+    filesystem.write_dict_results(combined_json_dict, output_directory, project)
 
 
 
