@@ -82,6 +82,7 @@ class Filesystem:
     Main_Configuration_File: str
     Main_Checks_File: str
     Main_Results_File_Name: str
+    Main_Results_Combined_File_Name: str
     Results_Extension: str
 
 
@@ -92,6 +93,7 @@ filesystem = Filesystem(
     Main_Configuration_File="config.yml",
     Main_Checks_File="checks.yml",
     Main_Results_File_Name="chasten-results",
+    Main_Results_Combined_File_Name="chasten-combined-results",
     Results_Extension="json",
 )
 
