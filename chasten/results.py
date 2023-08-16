@@ -1,5 +1,7 @@
 """Store results from performing an analysis."""
 
+import uuid
+from datetime import datetime
 from pathlib import Path
 from typing import Union
 
@@ -89,11 +91,13 @@ class Configuration(BaseModel):
     """Define a Pydantic model for a Configuration."""
 
     chastenversion: str
+    debuglevel: debug.DebugLevel
+    debugdestination: debug.DebugDestination
     projectname: str
     configdirectory: Path
     searchpath: Path
-    debuglevel: debug.DebugLevel
-    debugdestination: debug.DebugDestination
+    fileuuid: str = str(uuid.uuid4().hex)
+    datetime: str = str(datetime.now().strftime("%Y%m%d%H%M%S"))
     checkinclude: Union[None, CheckCriterion] = None
     checkexclude: Union[None, CheckCriterion] = None
 
