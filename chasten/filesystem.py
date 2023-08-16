@@ -6,10 +6,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, NoReturn, Optional, Union
 
-from pydantic import BaseModel
 from rich.tree import Tree
 
-from chasten import configuration, constants
+from chasten import configuration, constants, results
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
@@ -169,17 +168,15 @@ def get_default_directory_list() -> List[Path]:
 
 
 def write_results(
-    results_path: Path, projectname: str, results_content: BaseModel, save: bool = False
+    results_path: Path, projectname: str, results_content: results.Chasten, save: bool = False
 ) -> None:
-    """Write the results of a Pydantic BaseModel to the specified directory."""
+    """Write the results of a a Chasten subclass of Pydantic BaseModel to the specified directory."""
     if save:
-        # create a unique hexadecimal code that will ensure that
+        # extract the unique hexadecimal code that will ensure that
         # this file name is unique when it is being saved
-        results_file_uuid = uuid.uuid4().hex
-        # get the current date and time
-        current_datetime = datetime.now()
-        # convert the datetime object to a string without dashes
-        formatted_datetime = current_datetime.strftime("%Y%m%d%H%M%S")
+        results_file_uuid = results_content.configuration.fileuuid
+        # extract the current date and time when results were created
+        formatted_datetime = results_content.configuration.datetime
         # create a file name so that it includes:
         # a) the name of the project
         # b) the date on which analysis was completed
@@ -190,4 +187,5 @@ def write_results(
         # using indentation to ensure that JSON file is readable
         results_path_with_file = results_path / complete_results_file_name
         results_json = results_content.model_dump_json(indent=2)
+        # use the built-in method with pathlib Path to write the JSON contents
         results_path_with_file.write_text(results_json)
