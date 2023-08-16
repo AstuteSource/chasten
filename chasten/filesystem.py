@@ -9,7 +9,7 @@ from typing import Any, Dict, List, NoReturn, Optional, Union
 
 from rich.tree import Tree
 
-from chasten import configuration, constants, output, results
+from chasten import configuration, constants, results
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
