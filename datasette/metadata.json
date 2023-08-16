@@ -4,15 +4,17 @@
            "queries": {
                "all-chasten": {
                    "sql": "SELECT
-  sources.name,
+  sources.filename,
   sources.check_id,
   sources.check_name,
+  sources.check_description,
   sources.check_pattern,
   sources.check_min,
   sources.check_max,
   sources.check_passed,
   sources_check_matches.lineno,
-  sources_check_matches.coloffset
+  sources_check_matches.coloffset,
+  sources_check_matches.linematch
 FROM
   sources
   JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources;"
