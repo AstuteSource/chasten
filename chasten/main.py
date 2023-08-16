@@ -634,7 +634,7 @@ def analyze(  # noqa: PLR0913, PLR0915
 
 @cli.command()
 def convert(
-    json_path: List[str] = typer.Argument(
+    json_path: List[Path] = typer.Argument(
         help="Directories, files, or globs for chasten's JSON result file(s).",
     ),
     debug_level: debug.DebugLevel = typer.Option(
