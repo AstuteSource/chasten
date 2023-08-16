@@ -4,6 +4,9 @@
            "queries": {
                "all-chasten": {
                    "sql": "SELECT
+  main.configuration_projectname as projectname,
+  main.configuration_chastenversion as chastenversion,
+  main.configuration_datetime as datetime,
   sources.filename,
   sources.check_id,
   sources.check_name,
@@ -17,7 +20,8 @@
   sources_check_matches.linematch
 FROM
   sources
-  JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources;"
+  JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources
+  JOIN main ON sources._link_main = main._link;"
                }
            }
        }
