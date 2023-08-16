@@ -58,7 +58,6 @@ class Match(BaseModel):
     lineno: int
     coloffset: int
     linematch: str = ""
-    filelines: List[str] = []
 
 
 class Check(BaseModel):
@@ -66,6 +65,7 @@ class Check(BaseModel):
 
     id: str
     name: str
+    description: str = ""
     min: Union[None, int] = 0
     max: Union[None, int] = 0
     pattern: str
@@ -78,6 +78,7 @@ class Source(BaseModel):
     """Define a Pydantic model for a Source."""
 
     filename: str
+    filelines: List[str] = []
     check: Union[None, Check] = None
 
 
