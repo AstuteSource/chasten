@@ -16,6 +16,15 @@ def extract_min_max(
     return (min_count, max_count)
 
 
+def extract_description(check: Dict[str, Union[str, Dict[str, int]]]) -> str:
+    """Extract the description that may optionally be stored in a check."""
+    # the attribute is not None and thus the function
+    # should create the labelled attribute out of it
+    if "description" in check:
+        return str(check["description"])
+    return ""
+
+
 def create_attribute_label(attribute: Union[str, int, None], label: str) -> str:
     """Create an attribute label string for display as long as it is not null."""
     # define an empty attribute string, which is
