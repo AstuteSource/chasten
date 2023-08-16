@@ -691,9 +691,17 @@ def convert(  # noqa: PLR0913
     # output the list of directories subject to checking
     output.console.print()
     output.console.print(f":sparkles: Converting data file(s) in: {json_path}")
+    # extract all of the JSON dictionaries from the specified files
     json_dicts = filesystem.get_json_results(json_path)
+    # combine all of the dictionaries into a single string
     combined_json_dict = process.combine_dicts(json_dicts)
-    filesystem.write_dict_results(combined_json_dict, output_directory, project)
+    # write the combined JSON file string to the filesystem
+    combined_json_file_name = filesystem.write_dict_results(
+        combined_json_dict, output_directory, project
+    )
+    # output the name of the saved file if saving successfully took place
+    if combined_json_file_name:
+        output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
 
 
 @cli.command()
