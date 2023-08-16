@@ -592,10 +592,15 @@ def analyze(  # noqa: PLR0913, PLR0915
                     position_end = current_match.position.lineno
                     # extract the column offset for this match
                     column_offset = current_match.position.col_offset
-                    # create a match specifically for this file
+                    # create a match specifically for this file;
+                    # note that the AST starts line numbering at 1 and
+                    # this means that storing the matching line requires
+                    # the indexing of file_lines with position_end - 1
                     current_match_for_current_check_save = results.Match(
                         lineno=position_end,
                         coloffset=column_offset,
+                        linematch=current_match.file_lines[position_end - 1],
+                        filelines=current_match.file_lines,
                     )
                     # save the entire current_match that is an instance of
                     # pyastgrepsearch.Match for verbose debugging output as needed
