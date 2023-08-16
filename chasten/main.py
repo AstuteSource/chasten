@@ -624,9 +624,12 @@ def analyze(  # noqa: PLR0913, PLR0915
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
-    filesystem.write_chasten_results(
+    saved_file_name = filesystem.write_chasten_results(
         output_directory, project, chasten_results_save, save
     )
+    # output the name of the saved file if saving successfully took place
+    if saved_file_name:
+        output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
