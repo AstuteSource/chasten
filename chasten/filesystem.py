@@ -171,7 +171,7 @@ def write_results(
     results_content: results.Chasten,
     save: bool = False,
 ) -> None:
-    """Write the results of a a Chasten subclass of Pydantic BaseModel to the specified directory."""
+    """Write the results of a Chasten subclass of Pydantic BaseModel to the specified directory."""
     if save:
         # extract the unique hexadecimal code that will ensure that
         # this file name is unique when it is being saved
