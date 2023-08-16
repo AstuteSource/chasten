@@ -1,5 +1,6 @@
 """Analyze the abstract syntax tree, its XML-based representation, and/or the search results."""
 
+import json
 from typing import Any, Dict, List, Tuple, Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
@@ -91,3 +92,14 @@ def organize_matches(
             # associate this new list with the current file name
             match_dict[current_match_file_name] = current_match_list
     return match_dict
+
+
+def combine_dicts(dict_list: List[Dict[Any, Any]]) -> str:
+    """Combine all dictionaries in the list into a single dictionary."""
+    all_combined_dicts = ""
+    for current_dict in dict_list:
+        if all_combined_dicts != "":
+            all_combined_dicts = all_combined_dicts + ",\n" + json.dumps(current_dict, indent=2)
+        else:
+            all_combined_dicts = json.dumps(current_dict, indent=2)
+    return all_combined_dicts
