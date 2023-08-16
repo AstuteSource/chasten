@@ -95,11 +95,15 @@ def organize_matches(
 
 
 def combine_dicts(dict_list: List[Dict[Any, Any]]) -> str:
-    """Combine all dictionaries in the list into a single dictionary."""
-    all_combined_dicts = ""
-    for current_dict in dict_list:
-        if all_combined_dicts != "":
-            all_combined_dicts = all_combined_dicts + ",\n" + json.dumps(current_dict, indent=2)
-        else:
-            all_combined_dicts = json.dumps(current_dict, indent=2)
-    return all_combined_dicts
+    """Combine all dictionaries in the list into a single list of dictionaries as a string."""
+    # combine all of the dictionaries in the list into
+    # a single string that is a list of each JSON-based
+    # dictionary represented as a string; this leads to:
+    # [
+    #   { nested JSON for file 1 },
+    #   { nested JSON for file 2 },
+    #   ...
+    #   { nested JSON for file n }
+    # ]
+    # which is a list of valid JSON objects
+    return json.dumps(dict_list, indent=2)
