@@ -1,12 +1,15 @@
 """Check and access contents of the filesystem."""
 
+import json
 import shutil
+import uuid
+from datetime import datetime
 from pathlib import Path
-from typing import List, NoReturn, Optional, Union
+from typing import Any, Dict, List, NoReturn, Optional, Union
 
 from rich.tree import Tree
 
-from chasten import configuration, constants, results
+from chasten import configuration, constants, output, results
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
@@ -165,7 +168,7 @@ def get_default_directory_list() -> List[Path]:
     return default_directory_list
 
 
-def write_results(
+def write_chasten_results(
     results_path: Path,
     projectname: str,
     results_content: results.Chasten,
@@ -190,3 +193,42 @@ def write_results(
         results_json = results_content.model_dump_json(indent=2)
         # use the built-in method with pathlib Path to write the JSON contents
         results_path_with_file.write_text(results_json)
+
+
+def write_dict_results(
+    results_json: str,
+    results_path: Path,
+    projectname: str,
+) -> None:
+    """Write a JSON file with results to the specified directory."""
+    # generate a unique hexadecimal code that will ensure that
+    # this file name is unique when it is being saved
+    results_file_uuid = uuid.uuid4().hex
+    # create a formatted datetime
+    formatted_datetime = str(datetime.now().strftime("%Y%m%d%H%M%S"))
+    # create a file name so that it includes:
+    # a) the name of the project
+    # b) the date on which analysis was completed
+    # c) a unique identifier to handle cased when
+    #    two result files are created at "same time"
+    # d) Clear indiciator in the name that this is a combined result
+    complete_results_file_name = f"{constants.filesystem.Main_Results_Combined_File_Name}-{projectname}-{formatted_datetime}-{results_file_uuid}.{constants.filesystem.Results_Extension}"
+    # create the file and then write the text,
+    # using indentation to ensure that JSON file is readable
+    results_path_with_file = results_path / complete_results_file_name
+    # use the built-in method from pathlib Path to write the JSON contents
+    results_path_with_file.write_text(results_json)
+
+
+def get_json_results(json_paths: List[Path]) -> List[Dict[Any, Any]]:
+    """Get a list of dictionaries, one the contents of each JSON file path."""
+    # create an empty list of dictionaries
+    json_dicts_list: List[Dict[Any, Any]] = []
+    # iterate through each of the provided paths to a JSON file
+    for json_path in json_paths:
+        # turn the contents of the current JSON file into a dictionary
+        json_dict = json.loads(json_path.read_text())
+        # add the current dictionary to the list of dictionaries
+        json_dicts_list.append(json_dict)
+    # return the list of JSON dictionaries
+    return json_dicts_list
