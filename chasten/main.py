@@ -290,7 +290,7 @@ def configure(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🪂 Manage tool configuration."""
+    """🪂 Manage chasten's configuration."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -630,6 +630,45 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
+
+
+@cli.command()
+def convert(
+    json_path: List[str] = typer.Argument(
+        help="Directories, files, or globs for chasten's JSON result file(s).",
+    ),
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
+    ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    force: bool = typer.Option(
+        False,
+        help="Create converted results files even if they exist",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
+) -> None:
+    """🚧 Convert files to different formats."""
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(
+        verbose,
+        debug_level,
+        debug_destination,
+        json_paths=json_path,
+        force=force,
+    )
+    # output the list of directories subject to checking
+    output.console.print()
+    output.console.print(f":sparkles: Converting data file(s) in: {json_path}")
+    filesystem.get_json_results(json_path)
+
 
 
 @cli.command()
