@@ -100,6 +100,7 @@ def print_footer() -> None:
 
 def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> None:
     """Print all of the verbose debugging details for the results of an analysis."""
+    global console  # noqa: disable=PLW0603
     # 1) Note: see the BaseModel definitions in results.py for more details
     # about the objects and their relationships
     # 2) Note: the _match object that is inside of a Match BaseModel subclass
