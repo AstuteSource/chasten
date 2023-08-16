@@ -604,11 +604,13 @@ def analyze(  # noqa: PLR0913, PLR0915
                     # create a match specifically for this file;
                     # note that the AST starts line numbering at 1 and
                     # this means that storing the matching line requires
-                    # the indexing of file_lines with position_end - 1
+                    # the indexing of file_lines with position_end - 1;
+                    # note also that linematch is the result of using
+                    # lstrip to remove any blank spaces before the code
                     current_match_for_current_check_save = results.Match(
                         lineno=position_end,
                         coloffset=column_offset,
-                        linematch=current_match.file_lines[position_end - 1],
+                        linematch=current_match.file_lines[position_end - 1].lstrip(constants.markers.Space),
                     )
                     # save the entire current_match that is an instance of
                     # pyastgrepsearch.Match for verbose debugging output as needed
