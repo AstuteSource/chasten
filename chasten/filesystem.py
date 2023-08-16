@@ -173,7 +173,7 @@ def write_chasten_results(
     projectname: str,
     results_content: results.Chasten,
     save: bool = False,
-) -> None:
+) -> str:
     """Write the results of a Chasten subclass of Pydantic BaseModel to the specified directory."""
     if save:
         # extract the unique hexadecimal code that will ensure that
@@ -193,6 +193,11 @@ def write_chasten_results(
         results_json = results_content.model_dump_json(indent=2)
         # use the built-in method with pathlib Path to write the JSON contents
         results_path_with_file.write_text(results_json)
+        # return the name of the created file for diagnostic purposes
+        return complete_results_file_name
+    # saving was not enabled and thus this function cannot
+    # return the name of the file that was created during saving
+    return constants.markers.Empty_String
 
 
 def write_dict_results(
