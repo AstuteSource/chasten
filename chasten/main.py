@@ -508,6 +508,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
+        check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
@@ -571,6 +572,7 @@ def analyze(  # noqa: PLR0913, PLR0915
             current_check_save = results.Check(
                 id=check_id,  # type: ignore
                 name=check_name,  # type: ignore
+                description=check_description,  # type: ignore
                 min=min_count,  # type: ignore
                 max=max_count,  # type: ignore
                 pattern=current_xpath_pattern,
@@ -584,10 +586,17 @@ def analyze(  # noqa: PLR0913, PLR0915
             output.console.print(
                 f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
             )
+            # extract the lines of source code for this file; note that all of
+            # these matches are organized for the same file and thus it is
+            # acceptable to extract the lines of the file from the first match
+            # a long as there are matches available for analysis
+            if len(matches_list) > 0:
+                current_result_source.filelines = matches_list[0].file_lines
             # iterate through all of the matches that are specifically
             # connected to this source that is connected to a specific file name
             for current_match in matches_list:
                 if isinstance(current_match, pyastgrepsearch.Match):
+                    current_result_source.filelines = current_match.file_lines
                     # extract the direct line number for this match
                     position_end = current_match.position.lineno
                     # extract the column offset for this match
@@ -600,7 +609,6 @@ def analyze(  # noqa: PLR0913, PLR0915
                         lineno=position_end,
                         coloffset=column_offset,
                         linematch=current_match.file_lines[position_end - 1],
-                        filelines=current_match.file_lines,
                     )
                     # save the entire current_match that is an instance of
                     # pyastgrepsearch.Match for verbose debugging output as needed
