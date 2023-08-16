@@ -168,7 +168,10 @@ def get_default_directory_list() -> List[Path]:
 
 
 def write_results(
-    results_path: Path, projectname: str, results_content: results.Chasten, save: bool = False
+    results_path: Path,
+    projectname: str,
+    results_content: results.Chasten,
+    save: bool = False,
 ) -> None:
     """Write the results of a a Chasten subclass of Pydantic BaseModel to the specified directory."""
     if save:
