@@ -1,8 +1,6 @@
 """Check and access contents of the filesystem."""
 
 import shutil
-import uuid
-from datetime import datetime
 from pathlib import Path
 from typing import List, NoReturn, Optional, Union
 
