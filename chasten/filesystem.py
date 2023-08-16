@@ -204,7 +204,7 @@ def write_dict_results(
     results_json: str,
     results_path: Path,
     projectname: str,
-) -> None:
+) -> str:
     """Write a JSON file with results to the specified directory."""
     # generate a unique hexadecimal code that will ensure that
     # this file name is unique when it is being saved
@@ -223,6 +223,8 @@ def write_dict_results(
     results_path_with_file = results_path / complete_results_file_name
     # use the built-in method from pathlib Path to write the JSON contents
     results_path_with_file.write_text(results_json)
+    # return the name of the file that contains the JSON dictionary contents
+    return complete_results_file_name
 
 
 def get_json_results(json_paths: List[Path]) -> List[Dict[Any, Any]]:
