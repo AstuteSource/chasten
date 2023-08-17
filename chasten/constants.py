@@ -109,8 +109,8 @@ filesystem = Filesystem(
     Main_Configuration_File="config.yml",
     Main_Checks_File="checks.yml",
     Main_Results_File_Name="chasten-results",
-    Main_Results_Combined_File_Name="chasten-combined-results",
-    Main_Results_Flattened_Directory_Name="chasten-flattened-csvs",
+    Main_Results_Combined_File_Name="chasten-integrated-results",
+    Main_Results_Flattened_Directory_Name="chasten-flattened-csvs-sqlite-db",
     Results_Extension="json",
 )
 
