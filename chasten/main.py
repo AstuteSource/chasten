@@ -854,11 +854,14 @@ def datasette_publish(  # noqa: PLR0913
     output.console.print(
         f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
     )
-    # start the datasette server that will run indefinitely;
-    # shutting down the datasette server with a CTRL-C will
-    # also shut down this command in chasten
+    # publish the datasette instance using fly.io;
+    # this passes control to datasette and then to
+    # the fly program that must be installed
     database.start_local_datasette_server(
-        database_path=database_path, datasette_port=port, datasette_metadata=metadata, publish=True
+        database_path=database_path,
+        datasette_port=port,
+        datasette_metadata=metadata,
+        publish=True,
     )
 
 
