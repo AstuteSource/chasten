@@ -7,8 +7,7 @@ from pathlib import Path
 
 from sqlite_utils import Database
 
-from chasten import constants
-from chasten import output
+from chasten import constants, output
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
