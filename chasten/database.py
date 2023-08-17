@@ -11,8 +11,8 @@ from chasten import constants, output
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
-  main.configuration_projectname as projectname,
   main.configuration_chastenversion as chastenversion,
+  main.configuration_projectname as projectname,
   main.configuration_datetime as datetime,
   sources.filename,
   sources.check_id,
@@ -84,7 +84,10 @@ def enable_full_text_search(chasten_database_name: str) -> None:
 
 
 def start_local_datasette_server(
-    database_path: Path, datasette_port: int, datasette_metadata: Path
+    database_path: Path,
+    datasette_metadata: Path,
+    datasette_port: int = 8001,
+    publish: bool = False,
 ) -> None:
     """Start a local datasette server."""
     # define the name of the executable needed to run the server
@@ -123,21 +126,49 @@ def start_local_datasette_server(
         ":sparkles: Debugging output from the local datasette instance:"
     )
     output.console.print()
-    # the metadata parameter should not be passed to the datasette
-    # program if it was not specified as an option
-    if metadata is not None:
-        cmd = [
-            str(full_executable_name),
-            str(database_path),
-            "-m",
-            str(metadata),
-            "-p",
-            str(datasette_port),
-        ]
-    else:
-        cmd = [str(full_executable_name), str(database_path), "-p", str(datasette_port)]
-    # run the datasette server as a subprocess of chasten;
-    # note that the only way to stop the server is to press CTRL-C;
-    # there is debugging output in the console to indicate this option.
-    proc = subprocess.Popen(cmd)
-    proc.wait()
+    # run the localhost server
+    if not publish:
+        # the metadata parameter should not be passed to the datasette
+        # program if it was not specified as an option
+        if metadata is not None:
+            cmd = [
+                str(full_executable_name),
+                str(database_path),
+                "-m",
+                str(metadata),
+                "-p",
+                str(datasette_port),
+            ]
+        else:
+            cmd = [str(full_executable_name), str(database_path), "-p", str(datasette_port)]
+        # run the datasette server as a subprocess of chasten;
+        # note that the only way to stop the server is to press CTRL-C;
+        # there is debugging output in the console to indicate this option.
+        proc = subprocess.Popen(cmd)
+        proc.wait()
+    elif publish:
+        # the metadata parameter should not be passed to the datasette
+        # program if it was not specified as an option
+        if metadata is not None:
+            cmd = [
+                str(full_executable_name),
+                "publish",
+                "fly",
+                str(database_path),
+                "--app=chasten",
+                "-m",
+                str(metadata),
+            ]
+        else:
+            cmd = [
+                str(full_executable_name),
+                "publish",
+                "fly",
+                str(database_path),
+                "--app=chasten",
+            ]
+        # run the datasette server as a subprocess of chasten;
+        # note that the only way to stop the server is to press CTRL-C;
+        # there is debugging output in the console to indicate this option.
+        proc = subprocess.Popen(cmd)
+        proc.wait()
