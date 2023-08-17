@@ -719,9 +719,6 @@ def convert(  # noqa: PLR0913
 @cli.command()
 def datasette_serve(  # noqa: PLR0913
     database_path: Path = typer.Argument(
-        # ...,
-        # "--database",
-        # "-d",
         help="SQLite3 database file storing chasten's results.",
         exists=True,
         file_okay=True,
@@ -789,6 +786,79 @@ def datasette_serve(  # noqa: PLR0913
     # also shut down this command in chasten
     database.start_local_datasette_server(
         database_path=database_path, datasette_port=port, datasette_metadata=metadata
+    )
+
+
+@cli.command()
+def datasette_publish(  # noqa: PLR0913
+    database_path: Path = typer.Argument(
+        help="SQLite3 database file storing chasten's results.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    port: int = typer.Option(
+        8001,
+        "--port",
+        "-p",
+        help="Port on which to run a datasette instance",
+    ),
+    metadata: Path = typer.Option(
+        None,
+        "--metadata",
+        "-m",
+        help="Meta-data file storing database configuration.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
+    ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
+) -> None:
+    """🏃 Start the datasette server."""
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(
+        verbose,
+        debug_level,
+        debug_destination,
+        database=database_path,
+        datasette_port=port,
+        metadata=metadata,
+    )
+    # output diagnostic information about the datasette instance
+    output.console.print()
+    output.console.print(":sparkles: Starting a local datasette instance:")
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
+    )
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
+    )
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
+    )
+    # start the datasette server that will run indefinitely;
+    # shutting down the datasette server with a CTRL-C will
+    # also shut down this command in chasten
+    database.start_local_datasette_server(
+        database_path=database_path, datasette_port=port, datasette_metadata=metadata, publish=True
     )
 
 
