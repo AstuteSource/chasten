@@ -105,7 +105,6 @@ def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(tmpdir):
         main.cli,
         [
             "analyze",
-            # "--project-name",
             project_name,
             "--search-path",
             test_one,
@@ -130,7 +129,6 @@ def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd):
             "analyze",
             "--search-path",
             cwd,
-            # "--project-name",
             project_name,
             "--config",
             configuration_directory,
@@ -177,7 +175,6 @@ def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
         main.cli,
         [
             "analyze",
-            # "--project-name",
             project_name,
             "--search-path",
             test_one,
@@ -204,7 +201,6 @@ def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
         main.cli,
         [
             "analyze",
-            # "--project-name",
             project_name,
             "--search-path",
             test_one_incorrect_name,
@@ -236,7 +232,6 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
         main.cli,
         [
             "analyze",
-            # "--project-name",
             project_name,
             "--search-path",
             test_one,
@@ -307,7 +302,6 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
         main.cli,
         [
             "analyze",
-            # "--project-name",
             project_name,
             "--config",
             configuration_directory,
