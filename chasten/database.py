@@ -7,8 +7,7 @@ from pathlib import Path
 
 from sqlite_utils import Database
 
-from chasten import constants
-from chasten import output
+from chasten import constants, output
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
@@ -120,12 +119,21 @@ def start_local_datasette_server(
             f"{constants.markers.Indent}{small_bullet_unicode} Cannot find: '{output.shorten_file_name(full_executable_name, 120)}'"
         )
     output.console.print()
-    output.console.print(":sparkles: Debugging output from the local datasette instance:")
+    output.console.print(
+        ":sparkles: Debugging output from the local datasette instance:"
+    )
     output.console.print()
     # the metadata parameter should not be passed to the datasette
     # program if it was not specified as an option
     if metadata is not None:
-        cmd = [full_executable_name, database_path, "-m", metadata, "-p", str(datasette_port)]
+        cmd = [
+            full_executable_name,
+            database_path,
+            "-m",
+            metadata,
+            "-p",
+            str(datasette_port),
+        ]
     else:
         cmd = [full_executable_name, database_path, "-p", str(datasette_port)]
     # run the datasette server as a subprocess of chasten;
