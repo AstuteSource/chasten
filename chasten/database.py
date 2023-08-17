@@ -88,7 +88,7 @@ def display_datasette_details(
     virtual_env_location: str,
     executable_path: str,
     full_executable_name: str,
-    publish: bool
+    publish: bool,
 ) -> None:
     """Display details about the current datasette configuration."""
     # output diagnostic information about the datasette instance; note
@@ -149,7 +149,9 @@ def start_local_datasette_server(
         label = ":sparkles: Details for datasette publishing:"
     else:
         label = ":sparkles: Details for datasette startup:"
-    display_datasette_details(label, virtual_env_location, str(executable_path), full_executable_name, publish)
+    display_datasette_details(
+        label, virtual_env_location, str(executable_path), full_executable_name, publish
+    )
     # run the localhost server
     if not publish:
         # the metadata parameter should not be passed to the datasette
