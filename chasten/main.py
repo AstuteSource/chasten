@@ -759,7 +759,7 @@ def datasette_serve(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🏃 Start the datasette server."""
+    """🏃 Start a local datasette server."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -832,7 +832,7 @@ def datasette_publish(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🏃 Start the datasette server."""
+    """🌎 Publish a datasette to fly.io."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -844,7 +844,7 @@ def datasette_publish(  # noqa: PLR0913
     )
     # output diagnostic information about the datasette instance
     output.console.print()
-    output.console.print(":sparkles: Starting a local datasette instance:")
+    output.console.print(":sparkles: Publishing a datasette to fly.io:")
     output.console.print(
         f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
     )
