@@ -29,7 +29,9 @@ SELECT
 FROM
   sources
   JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources
-  JOIN main ON sources._link_main = main._link;
+  JOIN main ON sources._link_main = main._link
+ORDER BY
+  datetime desc;
 """
 
 # create a small bullet for display in the output
