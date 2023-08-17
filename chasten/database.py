@@ -1,4 +1,4 @@
-"""Configure aspects of the SQLite database containing analysis results."""
+"""Mange the SQLite database containing results from chasten analyses."""
 
 from sqlite_utils import Database
 
