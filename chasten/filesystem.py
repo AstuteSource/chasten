@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, NoReturn, Optional, Union
 
-import flatterer
+import flatterer  # type: ignore
 from rich.tree import Tree
 
 from chasten import configuration, constants, results
