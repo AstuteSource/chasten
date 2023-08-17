@@ -1,5 +1,7 @@
 """Chasten checks the AST of a Python program."""
 
+import subprocess
+import shutil
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
@@ -705,7 +707,8 @@ def convert(  # noqa: PLR0913
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
-    combined_flattened_directory = filesystem.write_flattened_csv_results(
+    # create the SQLite3 database and then configure the database for use in datasett
+    combined_flattened_directory = filesystem.write_flattened_csv_and_database(
         combined_json_file_name,
         output_directory,
         project,
@@ -715,6 +718,65 @@ def convert(  # noqa: PLR0913
         output.console.print(
             f"\n:sparkles: Created the directory '{combined_flattened_directory}'"
         )
+
+
+@cli.command()
+def datasette_serve(
+    database: Path = typer.Option(
+        ...,
+        "--database",
+        "-d",
+        help="SQLite3 database file storing chasten's results.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    metadata: Path = typer.Option(
+        None,
+        "--metadata",
+        "-m",
+        help="Meta-data file storing database configuration.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
+    ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+) -> None:
+    """🏃 Start the datasette server."""
+    # display the header
+    output.print_header()
+    # start the datasette server that will run indefinitely;
+    # shutting down the datasette server with a CTRL-C will
+    # also shut down this command in chasten
+    executable_name = "datasette"
+    virtual_env_location = sys.prefix
+    print(f"The virtual environment is located at: {virtual_env_location}")
+    full_executable_name = virtual_env_location + "/bin/" + executable_name
+    executable_path = shutil.which(full_executable_name)
+    if executable_path is not None:
+        print(f"The path of {executable_name} is: {executable_path}")
+    else:
+        print(f"{executable_name} not found in PATH.")
+    cmd = [full_executable_name, database, "-m", metadata]
+    proc = subprocess.Popen(cmd)
+    proc.wait()
 
 
 @cli.command()
