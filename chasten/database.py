@@ -1,6 +1,14 @@
 """Mange the SQLite database containing results from chasten analyses."""
 
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
 from sqlite_utils import Database
+
+from chasten import constants
+from chasten import output
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
@@ -23,6 +31,9 @@ FROM
   JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources
   JOIN main ON sources._link_main = main._link;
 """
+
+# create a small bullet for display in the output
+small_bullet_unicode = constants.markers.Small_Bullet_Unicode
 
 
 def create_chasten_view(chasten_database_name: str) -> None:
@@ -69,3 +80,47 @@ def enable_full_text_search(chasten_database_name: str) -> None:
     )
     # note that sqlite-utils does not support the enabling of
     # full-text search on the view called chasten_complete
+
+
+def start_local_datasette_server(
+    database_path: Path, datasette_port: int, datasette_metadata: Path
+) -> None:
+    """Start a local datasette server."""
+    # define the name of the executable needed to run the server
+    executable_name = constants.datasette.Datasette_Executable
+    # define the name of the file that contains datasette metadata
+    metadata = str(datasette_metadata)
+    # identify the location at which the virtual environment exists;
+    # note that this is the location where executable dependencies of
+    # chasten will exist in a bin directory. For instance, the "datasette"
+    # executable that is a dependency of chasten can be found by starting
+    # the search from this location for the virtual environment.
+    virtual_env_location = sys.prefix
+    full_executable_name = virtual_env_location + "/bin/" + executable_name
+    executable_path = shutil.which(full_executable_name)
+    # output diagnostic information about the datasette instance; note
+    # that the output must appear here and not from the calling function
+    # because once the datasette instance starts the chasten tool can
+    # no longer produce output in the console
+    output.console.print()
+    output.console.print(":sparkles: Details about datasette startup:")
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Venv: '{output.shorten_file_name(str(virtual_env_location), 120)}'"
+    )
+    if executable_path:
+        output.console.print(
+            f"{constants.markers.Indent}{small_bullet_unicode} Program: '{output.shorten_file_name(executable_path, 120)}'"
+        )
+    else:
+        output.console.print(
+            f"{constants.markers.Indent}{small_bullet_unicode} Cannot find: '{output.shorten_file_name(full_executable_name, 120)}'"
+        )
+    output.console.print()
+    output.console.print(":sparkles: Debugging output from the local datasette instance:")
+    output.console.print()
+    # run the datasette server as a subprocess of chasten;
+    # note that the only way to stop the server is to press CTRL-C;
+    # there is debugging output in the console to indicate this option
+    cmd = [full_executable_name, database_path, "-m", metadata, "-p", str(datasette_port)]
+    proc = subprocess.Popen(cmd)
+    proc.wait()
