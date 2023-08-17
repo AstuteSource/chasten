@@ -181,7 +181,7 @@ def write_chasten_results(
         # this file name is unique when it is being saved
         results_file_uuid = results_content.configuration.fileuuid
         # extract the current date and time when results were created
-        formatted_datetime = results_content.configuration.datetime
+        formatted_datetime = results_content.configuration._datetime
         # create a file name so that it includes:
         # a) the name of the project
         # b) the date on which analysis was completed
