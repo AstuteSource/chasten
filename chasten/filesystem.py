@@ -10,7 +10,7 @@ from typing import Any, Dict, List, NoReturn, Optional, Union
 import flatterer  # type: ignore
 from rich.tree import Tree
 
-from chasten import configuration, constants, results
+from chasten import configuration, constants, database, results
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration
@@ -270,6 +270,8 @@ def write_flattened_csv_results(
         sqlite=True,
         sqlite_path=database_file_name_str,
     )
+    # enable full-text search in the SQLite3 database
+    database.enable_full_text_search(database_file_name_str)
     # return the name of the directory that contains the flattened CSV files
     return flattened_output_directory_str
 
