@@ -670,7 +670,7 @@ def analyze(  # noqa: PLR0913, PLR0915
 
 
 @cli.command()
-def convert(  # noqa: PLR0913
+def integrate(  # noqa: PLR0913
     project: str = typer.Argument(help="Name of the project."),
     json_path: List[Path] = typer.Argument(
         help="Directories, files, or globs for chasten's JSON result file(s).",
@@ -705,7 +705,7 @@ def convert(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🚧 Convert files to different formats."""
+    """🚧 Integrate files and make a database."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
