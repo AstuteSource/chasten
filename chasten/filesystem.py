@@ -257,7 +257,9 @@ def write_flattened_csv_and_database(
     flattened_output_directory_str = str(flattened_output_directory)
     # the SQLite3 database file exists in the directory that will
     # store all of the flattened results in the csv/ directory
-    database_file_name = flattened_output_directory / constants.datasette.Chasten_Database
+    database_file_name = (
+        flattened_output_directory / constants.datasette.Chasten_Database
+    )
     database_file_name_str = str(database_file_name)
     # perform the flattening, creating a directory called csv/ that
     # contains all of the CSV files and a SQLite3 database called chasten.db
