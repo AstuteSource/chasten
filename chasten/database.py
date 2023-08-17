@@ -88,8 +88,10 @@ def start_local_datasette_server(
     """Start a local datasette server."""
     # define the name of the executable needed to run the server
     executable_name = constants.datasette.Datasette_Executable
-    # define the name of the file that contains datasette metadata
-    metadata = str(datasette_metadata)
+    # define the name of the file that contains datasette metadata;
+    # note that by default the metadata could be None and thus it
+    # will not be passed as a -m argument to the datasette program
+    metadata = datasette_metadata
     # identify the location at which the virtual environment exists;
     # note that this is the location where executable dependencies of
     # chasten will exist in a bin directory. For instance, the "datasette"
@@ -118,9 +120,14 @@ def start_local_datasette_server(
     output.console.print()
     output.console.print(":sparkles: Debugging output from the local datasette instance:")
     output.console.print()
+    # the metadata parameter should not be passed to the datasette
+    # program if it was not specified as an option
+    if metadata is not None:
+        cmd = [full_executable_name, database_path, "-m", metadata, "-p", str(datasette_port)]
+    else:
+        cmd = [full_executable_name, database_path, "-p", str(datasette_port)]
     # run the datasette server as a subprocess of chasten;
     # note that the only way to stop the server is to press CTRL-C;
-    # there is debugging output in the console to indicate this option
-    cmd = [full_executable_name, database_path, "-m", metadata, "-p", str(datasette_port)]
+    # there is debugging output in the console to indicate this option.
     proc = subprocess.Popen(cmd)
     proc.wait()
