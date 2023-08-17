@@ -28,7 +28,7 @@ def test_filesystem_constants():
 def test_fuzz_init(directory, configfile, checksfile, extra, yes, no):  # noqa: PLR0913
     """Use Hypothesis to confirm that initial value is set correctly."""
     fs = constants.Filesystem(
-        directory, configfile, checksfile, extra, extra, extra, extra, extra
+        directory, configfile, checksfile, extra, extra, extra, extra, extra, extra
     )
     assert fs.Current_Directory == directory
     hr = constants.Humanreadable(yes, no)
@@ -61,10 +61,10 @@ def test_fuzz_immutable(fs, hr):
 def test_fuzz_distinct(dir1, dir2, filename, extra):
     """Use Hypothesis to confirm equality when the inputs names are the same."""
     fs1 = constants.Filesystem(
-        dir1, filename, filename, extra, extra, extra, extra, extra
+        dir1, filename, filename, extra, extra, extra, extra, extra, extra
     )
     fs2 = constants.Filesystem(
-        dir2, filename, filename, extra, extra, extra, extra, extra
+        dir2, filename, filename, extra, extra, extra, extra, extra, extra
     )
     if dir1 != dir2:
         assert fs1 != fs2
@@ -80,9 +80,9 @@ def test_fuzz_dataclass_equality(directory, filename, extra):
     dir2 = directory
     assert dir1 == dir2
     fs1 = constants.Filesystem(
-        dir1, filename, filename, extra, extra, extra, extra, extra
+        dir1, filename, filename, extra, extra, extra, extra, extra, extra
     )
     fs2 = constants.Filesystem(
-        dir2, filename, filename, extra, extra, extra, extra, extra
+        dir2, filename, filename, extra, extra, extra, extra, extra, extra
     )
     assert fs1 == fs2
