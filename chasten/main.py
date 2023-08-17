@@ -2,7 +2,11 @@
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -10,21 +14,19 @@ from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    database,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    results,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import database
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import results
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -32,8 +34,9 @@ cli = typer.Typer()
 # create a small bullet for display in the output
 small_bullet_unicode = constants.markers.Small_Bullet_Unicode
 
+
 # ---
-# Region: helper functions
+# Region: Helper functions {{{
 # ---
 
 
@@ -246,8 +249,42 @@ def validate_configuration_files(
     return (False, {})
 
 
+def display_serve_or_publish_details(
+    label: str, database_path: Path, metadata: Path, port: int, publish: bool = False
+) -> None:
+    """Display diagnostic details at startup of serve or publish commands."""
+    # output diagnostic information about the datasette instance
+    output.console.print()
+    output.console.print(label)
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
+    )
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
+    )
+    # do not display a port if the task is publishing to fly.io
+    # because that step does not support port specification
+    if not publish:
+        output.console.print(
+            f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
+        )
+    # start the datasette server that will run indefinitely;
+    # shutting down the datasette server with a CTRL-C will
+    # also shut down this command in chasten
+    database.start_local_datasette_server(
+        database_path=database_path,
+        datasette_port=port,
+        datasette_metadata=metadata,
+        publish=publish,
+    )
+
+
 # ---
-# Region: command-line interface functions
+# End region: Helper functions }}}
+# ---
+
+# ---
+# Start region: Command-line interface functions {{{
 # ---
 
 
@@ -770,17 +807,22 @@ def datasette_serve(  # noqa: PLR0913
         metadata=metadata,
     )
     # output diagnostic information about the datasette instance
-    output.console.print()
-    output.console.print(":sparkles: Starting a local datasette instance:")
-    output.console.print(
-        f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
-    )
-    output.console.print(
-        f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
-    )
-    output.console.print(
-        f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
-    )
+
+    label = ":sparkles: Starting a local datasette instance:"
+    display_serve_or_publish_details(label, database_path, metadata, port, publish=False)
+
+    # output.console.print()
+    # output.console.print(":sparkles: Starting a local datasette instance:")
+    # output.console.print(
+    #     f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
+    # )
+    # output.console.print(
+    #     f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
+    # )
+    # output.console.print(
+    #     f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
+    # )
+
     # start the datasette server that will run indefinitely;
     # shutting down the datasette server with a CTRL-C will
     # also shut down this command in chasten
@@ -799,12 +841,6 @@ def datasette_publish(  # noqa: PLR0913
         readable=True,
         writable=True,
         resolve_path=True,
-    ),
-    port: int = typer.Option(
-        8001,
-        "--port",
-        "-p",
-        help="Port on which to run a datasette instance",
     ),
     metadata: Path = typer.Option(
         None,
@@ -839,27 +875,26 @@ def datasette_publish(  # noqa: PLR0913
         debug_level,
         debug_destination,
         database=database_path,
-        datasette_port=port,
         metadata=metadata,
     )
-    # output diagnostic information about the datasette instance
-    output.console.print()
-    output.console.print(":sparkles: Publishing a datasette to fly.io:")
-    output.console.print(
-        f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
-    )
-    output.console.print(
-        f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
-    )
-    output.console.print(
-        f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
-    )
+    label = ":sparkles: Publishing a datasette to fly.io:"
+    display_serve_or_publish_details(label, database_path, metadata, port, publish=True)
+
+    # # output diagnostic information about the datasette instance
+    # output.console.print()
+    # output.console.print(":sparkles: Publishing a datasette to fly.io:")
+    # output.console.print(
+    #     f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
+    # )
+    # output.console.print(
+    #     f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
+    # )
+
     # publish the datasette instance using fly.io;
     # this passes control to datasette and then to
     # the fly program that must be installed
     database.start_local_datasette_server(
         database_path=database_path,
-        datasette_port=port,
         datasette_metadata=metadata,
         publish=True,
     )
@@ -879,8 +914,8 @@ def log() -> None:
     # before running any sub-command
     # of the chasten tool
     server.start_syslog_server()
-    # db = "chasten.db"
-    # metadata = "metadata.json"
-    # cmd = ["datasette", db, "-m", metadata]
-    # proc = subprocess.Popen(cmd)
-    # proc.wait()
+
+
+# ---
+# End region: Command-line interface functions }}}
+# ---
