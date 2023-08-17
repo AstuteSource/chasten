@@ -27,6 +27,12 @@ FROM
 def create_chasten_view(chasten_database_name: str) -> None:
     """Create a view that combines results in the database tables."""
     database = Database(chasten_database_name)
+    # create a "virtual table" (i.e., a view) that is the result
+    # of running the pre-defined query; note that this query
+    # organizes all of chasten's results into a single table.
+    # When using datasette each of the columns in this view
+    # are "facetable" which means that they can be enabled or disabled
+    # inside of the web-based user interface
     database.create_view("chasten_complete", CHASTEN_SQL_SELECT_QUERY)
 
 
@@ -60,3 +66,5 @@ def enable_full_text_search(chasten_database_name: str) -> None:
             "linematch",
         ]
     )
+    # note that sqlite-utils does not support the enabling of
+    # full-text search on the view called chasten_complete
