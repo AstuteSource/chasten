@@ -70,7 +70,7 @@ def test_create_directory_tree(tmpdir):
     # confirm that the output is a rich tree object
     assert isinstance(tree, Tree)
     # confirm the directory name in root node
-    assert tree.label == f":open_file_folder: {tmp_dir.as_posix()}"
+    assert tree.label == f":open_file_folder: {tmp_dir.name}"
     # confirm that the child nodes contain the expected dirs and files
     dirs = [node.label for node in tree.children if ":open_file_folder:" in node.label]  # type: ignore
     files = [node.label for node in tree.children if ":page_facing_up:" in node.label]  # type: ignore
@@ -90,7 +90,7 @@ def test_fuzz_create_directory_tree(directory):
     # confirm that it is a rich tree object
     assert isinstance(tree, Tree)
     # confirm that it has the fully-qualified name as the main label
-    assert tree.label == f":open_file_folder: {directory.as_posix()}"
+    assert tree.label == f":open_file_folder: {directory.name}"
     dirs = []
     files = []
     # build up a list of all of the directories and files
