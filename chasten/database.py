@@ -47,3 +47,11 @@ def enable_full_text_search(chasten_database_name: str) -> None:
             "check_pattern",
         ]
     )
+    # enable full-text search on the sources database table
+    database["sources_check_matches"].enable_fts(
+        [
+            "lineno",
+            "coloffset",
+            "linematch",
+        ]
+    )
