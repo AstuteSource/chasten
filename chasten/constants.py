@@ -71,6 +71,21 @@ checks = Checks(
 )
 
 
+# datasette constant
+@dataclass(frozen=True)
+class Datasette:
+    """Define the Datasette dataclass for constant(s)."""
+
+    Chasten_Database: str
+    Datasette_Executable: str
+
+
+datasette = Datasette(
+    Chasten_Database="chasten.db",
+    Datasette_Executable="datasette",
+)
+
+
 # filesystem constant
 @dataclass(frozen=True)
 class Filesystem:
@@ -183,6 +198,7 @@ class Markers:
     Nothing: str
     Single_Quote: str
     Slice_One: int
+    Small_Bullet_Unicode: str
     Space: str
     Tab: str
     Underscore: str
@@ -208,6 +224,7 @@ markers = Markers(
     Nothing="",
     Single_Quote="'",
     Slice_One=1,
+    Small_Bullet_Unicode = "\u2022",
     Space=" ",
     Tab="\t",
     Underscore="_",
