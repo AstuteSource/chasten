@@ -24,6 +24,7 @@ FROM
   JOIN main ON sources._link_main = main._link;
 """
 
+
 def create_chasten_view(chasten_database_name: str) -> None:
     """Create a view that combines results in the database tables."""
     database = Database(chasten_database_name)
