@@ -1,12 +1,8 @@
-"""Chasten checks the AST of a Python program."""
+"""💫 Chasten checks the AST of a Python program."""
 
 import sys
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
@@ -14,24 +10,27 @@ from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import checks
-from chasten import configuration
-from chasten import constants
-from chasten import database
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import process
-from chasten import results
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    checks,
+    configuration,
+    constants,
+    database,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    process,
+    results,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
 
-small_bullet_unicode = "\u2022"
+# create a small bullet for display in the output
+small_bullet_unicode = constants.markers.Small_Bullet_Unicode
 
 # ---
 # Region: helper functions
@@ -354,9 +353,7 @@ def configure(  # noqa: PLR0913
 
 @cli.command()
 def analyze(  # noqa: PLR0913, PLR0915
-    project: str = typer.Option(
-        ..., "--project-name", "-p", help="Name of the project."
-    ),
+    project: str = typer.Argument(help="Name of the project."),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -644,11 +641,9 @@ def analyze(  # noqa: PLR0913, PLR0915
 
 @cli.command()
 def convert(  # noqa: PLR0913
+    project: str = typer.Argument(help="Name of the project."),
     json_path: List[Path] = typer.Argument(
         help="Directories, files, or globs for chasten's JSON result file(s).",
-    ),
-    project: str = typer.Option(
-        ..., "--project-name", "-p", help="Name of the project."
     ),
     output_directory: Path = typer.Option(
         None,
@@ -722,11 +717,11 @@ def convert(  # noqa: PLR0913
 
 
 @cli.command()
-def datasette_serve(
-    database_path: Path = typer.Option(
-        ...,
-        "--database",
-        "-d",
+def datasette_serve(  # noqa: PLR0913
+    database_path: Path = typer.Argument(
+        # ...,
+        # "--database",
+        # "-d",
         help="SQLite3 database file storing chasten's results.",
         exists=True,
         file_okay=True,
@@ -777,13 +772,18 @@ def datasette_serve(
         datasette_port=port,
         metadata=metadata,
     )
-    # output the list of directories subject to checking
+    # output diagnostic information about the datasette instance
     output.console.print()
-    output.console.print(":sparkles: Starting a datasette instance:")
+    output.console.print(":sparkles: Starting a local datasette instance:")
     output.console.print(
-        f"{constants.markers.Indent}{small_bullet_unicode} '{output.shorten_file_name(str(database_path), 120)}'"
+        f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
     )
-    output.console.print()
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
+    )
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
+    )
     # start the datasette server that will run indefinitely;
     # shutting down the datasette server with a CTRL-C will
     # also shut down this command in chasten
