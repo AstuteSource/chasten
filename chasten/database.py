@@ -127,15 +127,15 @@ def start_local_datasette_server(
     # program if it was not specified as an option
     if metadata is not None:
         cmd = [
-            full_executable_name,
-            database_path,
+            str(full_executable_name),
+            str(database_path),
             "-m",
-            metadata,
+            str(metadata),
             "-p",
             str(datasette_port),
         ]
     else:
-        cmd = [full_executable_name, database_path, "-p", str(datasette_port)]
+        cmd = [str(full_executable_name), str(database_path), "-p", str(datasette_port)]
     # run the datasette server as a subprocess of chasten;
     # note that the only way to stop the server is to press CTRL-C;
     # there is debugging output in the console to indicate this option.
