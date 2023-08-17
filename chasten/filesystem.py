@@ -270,6 +270,8 @@ def write_flattened_csv_results(
         sqlite=True,
         sqlite_path=database_file_name_str,
     )
+    # create a view that combines all of the data
+    database.create_chasten_view(database_file_name_str)
     # enable full-text search in the SQLite3 database
     database.enable_full_text_search(database_file_name_str)
     # return the name of the directory that contains the flattened CSV files
