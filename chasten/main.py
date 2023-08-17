@@ -1,10 +1,12 @@
 """Chasten checks the AST of a Python program."""
 
-import subprocess
-import shutil
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import typer
 import yaml
@@ -12,20 +14,19 @@ from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    results,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import database
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import results
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
@@ -722,7 +723,7 @@ def convert(  # noqa: PLR0913
 
 @cli.command()
 def datasette_serve(
-    database: Path = typer.Option(
+    database_path: Path = typer.Option(
         ...,
         "--database",
         "-d",
@@ -733,6 +734,12 @@ def datasette_serve(
         readable=True,
         writable=True,
         resolve_path=True,
+    ),
+    port: int = typer.Option(
+        8001,
+        "--port",
+        "-p",
+        help="Port on which to run a datasette instance",
     ),
     metadata: Path = typer.Option(
         None,
@@ -758,25 +765,31 @@ def datasette_serve(
         "-t",
         help="Specify the destination for debugging output.",
     ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
     """🏃 Start the datasette server."""
-    # display the header
-    output.print_header()
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(
+        verbose,
+        debug_level,
+        debug_destination,
+        database=database_path,
+        datasette_port=port,
+        metadata=metadata,
+    )
+    # output the list of directories subject to checking
+    output.console.print()
+    output.console.print(":sparkles: Starting a datasette instance:")
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} '{output.shorten_file_name(str(database_path), 120)}'"
+    )
+    output.console.print()
     # start the datasette server that will run indefinitely;
     # shutting down the datasette server with a CTRL-C will
     # also shut down this command in chasten
-    executable_name = "datasette"
-    virtual_env_location = sys.prefix
-    print(f"The virtual environment is located at: {virtual_env_location}")
-    full_executable_name = virtual_env_location + "/bin/" + executable_name
-    executable_path = shutil.which(full_executable_name)
-    if executable_path is not None:
-        print(f"The path of {executable_name} is: {executable_path}")
-    else:
-        print(f"{executable_name} not found in PATH.")
-    cmd = [full_executable_name, database, "-m", metadata]
-    proc = subprocess.Popen(cmd)
-    proc.wait()
+    database.start_local_datasette_server(
+        database_path=database_path, datasette_port=port, datasette_metadata=metadata
+    )
 
 
 @cli.command()
