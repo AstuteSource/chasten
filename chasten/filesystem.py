@@ -239,7 +239,10 @@ def write_flattened_csv_results(
     results_file_uuid = uuid.uuid4().hex
     # create a formatted datetime
     formatted_datetime = str(datetime.now().strftime("%Y%m%d%H%M%S"))
+    # create a string-based name for the JSON file that contains
+    # the combined results, suitable for input to the flatten function
     combined_results_json_file = results_path / Path(combined_results_json)
+    combined_results_json_file_str = str(combined_results_json_file)
     # create a final part of the directory name so that it includes:
     # a) the name of the project
     # b) the date on which analysis was completed
@@ -252,15 +255,20 @@ def write_flattened_csv_results(
     )
     # the flatten function expects a string-based directory name
     flattened_output_directory_str = str(flattened_output_directory)
-    # perform the flattening, creating a directory called csv that
+    # the SQLite3 database file exists in the directory that will
+    # store all of the flattened results in the csv/ directory
+    database_file_name = flattened_output_directory / "chasten.db"
+    database_file_name_str = str(database_file_name)
+    # perform the flattening, creating a directory called csv/ that
     # contains all of the CSV files and a SQLite3 database called chasten.db
-    # that contains all of the contents of the CSV files
+    # that contains all of the contents of the CSV files; this chasten.db
+    # file is ready for browsing through the use of a tool like datasette
     flatterer.flatten(
-        str(combined_results_json_file),
+        combined_results_json_file_str,
         flattened_output_directory_str,
         csv=True,
         sqlite=True,
-        sqlite_path="chasten.db"
+        sqlite_path=database_file_name_str
     )
     # return the name of the directory that contains the flattened CSV files
     return flattened_output_directory_str
