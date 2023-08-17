@@ -24,6 +24,11 @@ FROM
   JOIN main ON sources._link_main = main._link;
 """
 
+def create_chasten_view(chasten_database_name: str) -> None:
+    """Create a view that combines results in the database tables."""
+    database = Database(chasten_database_name)
+    database.create_view("chasten_complete", CHASTEN_SQL_SELECT_QUERY)
+
 
 def enable_full_text_search(chasten_database_name: str) -> None:
     """Enable full-text search in the specific SQLite3 database."""
