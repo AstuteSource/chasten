@@ -112,7 +112,7 @@ def display_datasette_details(
     output.console.print()
     if publish:
         output.console.print(
-            ":sparkles: Debugging output from publishing datasette to fly:"
+            ":sparkles: Debugging output from publishing datasette to fly.io:"
         )
     else:
         output.console.print(
@@ -151,8 +151,6 @@ def start_local_datasette_server(
     else:
         label = ":sparkles: Details for datasette startup:"
     display_datasette_details(label, virtual_env_location, str(executable_path), full_executable_name, publish)
-
-
     # run the localhost server
     if not publish:
         # the metadata parameter should not be passed to the datasette
@@ -178,6 +176,7 @@ def start_local_datasette_server(
         # there is debugging output in the console to indicate this option.
         proc = subprocess.Popen(cmd)
         proc.wait()
+    # publish the datasette instance to fly.io
     elif publish:
         # the metadata parameter should not be passed to the datasette
         # program if it was not specified as an option
