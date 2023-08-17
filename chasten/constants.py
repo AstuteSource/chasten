@@ -83,6 +83,7 @@ class Filesystem:
     Main_Checks_File: str
     Main_Results_File_Name: str
     Main_Results_Combined_File_Name: str
+    Main_Results_Flattened_Directory_Name: str
     Results_Extension: str
 
 
@@ -94,6 +95,7 @@ filesystem = Filesystem(
     Main_Checks_File="checks.yml",
     Main_Results_File_Name="chasten-results",
     Main_Results_Combined_File_Name="chasten-combined-results",
+    Main_Results_Flattened_Directory_Name="chasten-flattened-csvs",
     Results_Extension="json",
 )
 
