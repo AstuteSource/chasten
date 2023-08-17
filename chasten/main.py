@@ -685,12 +685,14 @@ def convert(  # noqa: PLR0913
         debug_destination,
         project=project,
         output_directory=output_directory,
-        json_paths=json_path,
+        json_path=json_path,
         force=force,
     )
     # output the list of directories subject to checking
     output.console.print()
-    output.console.print(f":sparkles: Converting data file(s) in: {json_path}")
+    output.console.print(":sparkles: Converting data file(s) in:")
+    output.console.print()
+    output.print_list_contents(json_path)
     # extract all of the JSON dictionaries from the specified files
     json_dicts = filesystem.get_json_results(json_path)
     # combine all of the dictionaries into a single string
