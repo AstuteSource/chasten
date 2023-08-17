@@ -676,7 +676,7 @@ def integrate(  # noqa: PLR0913
         help="Directories, files, or globs for chasten's JSON result file(s).",
     ),
     output_directory: Path = typer.Option(
-        None,
+        ...,
         "--save-directory",
         "-s",
         help="A directory for saving converted file(s).",
