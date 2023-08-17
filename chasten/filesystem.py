@@ -122,23 +122,45 @@ def create_configuration_file(
     chasten_user_config_main_file.write_text(file_contents)
 
 
-def create_directory_tree_visualization(directory: Path) -> Tree:
+def create_directory_tree_visualization(path: Path, tree: Tree = None) -> Tree:  # type: ignore
     """Create a directory tree visualization using the Rich tree."""
-    # display the fully-qualified name of provided directory
-    tree = Tree(f":open_file_folder: {directory.as_posix()}")
-    # iterate through all directories and file in specified directory
-    for p in directory.iterdir():
-        # display a folder icon when dealing with a directory
-        if p.is_dir():
-            style = ":open_file_folder:"
-        # display a file icon when dealing with a file
-        else:
-            style = ":page_facing_up:"
-        # create the current object and add it to tree
-        label = f"{style} {p.name}"
-        tree.add(label)
-    # return the completely created tree
+    # create the root of the tree
+    if tree is None:
+        tree = Tree(f":open_file_folder: {path.name}")
+    # add the new file node to the tree
+    else:
+        tree = tree.add(f":open_file_folder: {path.name}")
+    # recursively process the directory
+    if path.is_dir():
+        for item in path.iterdir():
+            if item.is_dir():
+                create_directory_tree_visualization(item, tree)
+            else:
+                tree.add(f":page_facing_up: {item.name}")
     return tree
+
+
+# def create_directory_tree_visualization(directory: Path, tree: Tree = None) -> Tree:
+#     """Create a directory tree visualization using the Rich tree."""
+#     # display the fully-qualified name of provided directory
+#     if tree is None:
+#         tree = Tree(f":open_file_folder: {directory.as_posix()}")
+#         print("Createdd tree")
+#     else:
+#         tree = tree.add()
+#     # iterate through all directories and file in specified directory
+#     for p in directory.iterdir():
+#         # display a folder icon when dealing with a directory
+#         if p.is_dir():
+#             style = ":open_file_folder:"
+#         # display a file icon when dealing with a file
+#         else:
+#             style = ":page_facing_up:"
+#         # create the current object and add it to tree
+#         label = f"{style} {p.name}"
+#         tree.add(label)
+#     # return the completely created tree
+#     return tree
 
 
 def confirm_valid_file(file: Path) -> bool:
