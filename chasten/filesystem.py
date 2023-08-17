@@ -124,10 +124,12 @@ def create_configuration_file(
 
 def create_directory_tree_visualization(path: Path, tree: Tree = None) -> Tree:  # type: ignore
     """Create a directory tree visualization using the Rich tree."""
-    # create the root of the tree
+    # create the root of the tree if it
+    # has not already been created
     if tree is None:
         tree = Tree(f":open_file_folder: {path.name}")
-    # add the new file node to the tree
+    # add the new file node to the tree since
+    # the tree has already been created
     else:
         tree = tree.add(f":open_file_folder: {path.name}")
     # recursively process the directory
@@ -137,30 +139,8 @@ def create_directory_tree_visualization(path: Path, tree: Tree = None) -> Tree: 
                 create_directory_tree_visualization(item, tree)
             else:
                 tree.add(f":page_facing_up: {item.name}")
+    # return the tree now containing all nodes
     return tree
-
-
-# def create_directory_tree_visualization(directory: Path, tree: Tree = None) -> Tree:
-#     """Create a directory tree visualization using the Rich tree."""
-#     # display the fully-qualified name of provided directory
-#     if tree is None:
-#         tree = Tree(f":open_file_folder: {directory.as_posix()}")
-#         print("Createdd tree")
-#     else:
-#         tree = tree.add()
-#     # iterate through all directories and file in specified directory
-#     for p in directory.iterdir():
-#         # display a folder icon when dealing with a directory
-#         if p.is_dir():
-#             style = ":open_file_folder:"
-#         # display a file icon when dealing with a file
-#         else:
-#             style = ":page_facing_up:"
-#         # create the current object and add it to tree
-#         label = f"{style} {p.name}"
-#         tree.add(label)
-#     # return the completely created tree
-#     return tree
 
 
 def confirm_valid_file(file: Path) -> bool:
