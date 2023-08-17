@@ -2,7 +2,8 @@
 
 import logging
 from copy import deepcopy
-from typing import Any
+from pathlib import Path
+from typing import Any, Dict, List
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from rich.console import Console
@@ -16,6 +17,9 @@ logger: logging.Logger = logging.getLogger()
 
 # create a default console
 console = Console()
+
+# define a small bullet for display
+small_bullet_unicode = "\u2022"
 
 
 def setup(
@@ -88,7 +92,7 @@ def print_test_finish() -> None:
     """Display details about the test run."""
     global console  # noqa: disable=PLW0603
     console.print()
-    console.print(":sparkles: Finish running test suite for the specified program")
+    console.print(":sparkles: Finished running test suite for the specified program")
     console.print()
 
 
@@ -96,6 +100,56 @@ def print_footer() -> None:
     """Display concluding details in the footer."""
     global console  # noqa: disable=PLW0603
     console.print()
+
+
+def group_files_by_directory(file_paths: List[Path]) -> Dict[Path, List[str]]:
+    """Organize the files in a list according to their base directory."""
+    # create an empty dictionary
+    grouped_files: Dict[Path, List[str]] = {}
+    # iterate through each of the full paths
+    # and extract the containing directory
+    # from the name of the file that is contained
+    for file_path in file_paths:
+        # extract the parent (i.e., containing)
+        # directory for the current file path
+        directory = file_path.parent
+        # extract the name of the file, excluding
+        # the containing directory
+        file_name = file_path.name
+        # update the dictionary that uses:
+        # --> a Path key for the containing directory
+        # --> a list of strings for the contained files
+        if directory not in grouped_files:
+            grouped_files[directory] = []
+        grouped_files[directory].append(file_name)
+    # return the dictionary of files organized by directory
+    return grouped_files
+
+
+def shorten_file_name(file_name: str, max_length: int) -> str:
+    """Elide part of a file name if it is longer than the maximum length."""
+    # remove content from the start of the filename if it is too long
+    if len(file_name) > max_length:
+        return "... " + file_name[-(max_length - 3) :]
+    return file_name
+
+
+def print_list_contents(container: List[Path]) -> None:
+    """Display the contents of the list in an easy-to-read fashion."""
+    global console  # noqa: disable=PLW0603
+    # group all of the files by the directory that contains them;
+    # note that this is important because the contain can contain
+    # paths that specify files in different directories
+    grouped_files = group_files_by_directory(container)
+    # iterate through each of the directories and
+    # --> display the name of the directory
+    # --> display the name of each file stored in this directory
+    for directory, files in grouped_files.items():
+        console.print(f"{small_bullet_unicode} Directory: '{directory}'")
+        for file_name in files:
+            console.print(
+                f"  {small_bullet_unicode} '{shorten_file_name(file_name, 120)}'"
+            )
 
 
 def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> None:
