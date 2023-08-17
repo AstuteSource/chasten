@@ -268,7 +268,7 @@ def write_flattened_csv_results(
         flattened_output_directory_str,
         csv=True,
         sqlite=True,
-        sqlite_path=database_file_name_str
+        sqlite_path=database_file_name_str,
     )
     # return the name of the directory that contains the flattened CSV files
     return flattened_output_directory_str
