@@ -100,7 +100,8 @@ class Configuration(BaseModel):
     configdirectory: Path
     searchpath: Path
     fileuuid: str = str(uuid.uuid4().hex)
-    datetime: str = str(datetime.now().strftime("%Y%m%d%H%M%S"))
+    _datetime: str = str(datetime.now().strftime("%Y%m%d%H%M%S"))
+    datetime: str = str(datetime.now())
     checkinclude: Union[None, CheckCriterion] = None
     checkexclude: Union[None, CheckCriterion] = None
 
