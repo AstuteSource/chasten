@@ -228,12 +228,12 @@ def write_dict_results(
     return complete_results_file_name
 
 
-def write_flattened_csv_results(
+def write_flattened_csv_and_database(
     combined_results_json: str,
     results_path: Path,
     projectname: str,
 ) -> str:
-    """Write flattened CSV files with results to the specified directory."""
+    """Write flattened CSV files with results to the specified directory and create the database."""
     # generate a unique hexadecimal code that will ensure that
     # this file name is unique when it is being saved
     results_file_uuid = uuid.uuid4().hex
