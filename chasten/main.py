@@ -718,7 +718,7 @@ def integrate(  # noqa: PLR0913
     )
     # output the list of directories subject to checking
     output.console.print()
-    output.console.print(":sparkles: Converting data file(s) in:")
+    output.console.print(":sparkles: Combining data file(s) in:")
     output.console.print()
     output.print_list_contents(json_path)
     # extract all of the JSON dictionaries from the specified files
@@ -742,8 +742,13 @@ def integrate(  # noqa: PLR0913
     # output the name of the saved file if saving successfully took place
     if combined_flattened_directory:
         output.console.print(
-            f"\n:sparkles: Created the directory '{combined_flattened_directory}'"
+            f"\n:sparkles: Created this directory structure in {Path(combined_flattened_directory).parent}:"
         )
+        combined_directory_tree = filesystem.create_directory_tree_visualization(
+            Path(combined_flattened_directory)
+        )
+        output.console.print()
+        output.console.print(combined_directory_tree)
 
 
 @cli.command()
