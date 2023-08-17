@@ -704,6 +704,17 @@ def convert(  # noqa: PLR0913
     # output the name of the saved file if saving successfully took place
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
+    # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
+    combined_flattened_directory = filesystem.write_flattened_csv_results(
+        combined_json_file_name,
+        output_directory,
+        project,
+    )
+    # output the name of the saved file if saving successfully took place
+    if combined_flattened_directory:
+        output.console.print(
+            f"\n:sparkles: Created the directory '{combined_flattened_directory}'"
+        )
 
 
 @cli.command()
