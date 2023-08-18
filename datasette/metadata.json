@@ -1,29 +1,46 @@
 {
-    "databases": {
-       "chasten": {
-           "queries": {
-               "all-chasten": {
-                   "sql": "SELECT
-  main.configuration_projectname as projectname,
-  main.configuration_chastenversion as chastenversion,
-  main.configuration_datetime as datetime,
-  sources.filename,
-  sources.check_id,
-  sources.check_name,
-  sources.check_description,
-  sources.check_pattern,
-  sources.check_min,
-  sources.check_max,
-  sources.check_passed,
-  sources_check_matches.lineno,
-  sources_check_matches.coloffset,
-  sources_check_matches.linematch
-FROM
-  sources
-  JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources
-  JOIN main ON sources._link_main = main._link;"
-               }
-           }
-       }
+  "databases": {
+    "chasten": {
+      "queries": {
+        "all-chasten": {
+          "sql": "SELECT
+          main.configuration_projectname as projectname,
+          main.configuration_chastenversion as chastenversion,
+          main.configuration_datetime as datetime,
+          sources.filename,
+          sources.check_id,
+          sources.check_name,
+          sources.check_description,
+          sources.check_pattern,
+          sources.check_min,
+          sources.check_max,
+          sources.check_passed,
+          sources_check_matches.lineno,
+          sources_check_matches.coloffset,
+          sources_check_matches.linematch
+          FROM
+          sources
+          JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources
+          JOIN main ON sources._link_main = main._link;"
+        },
+      }
+    },
+    ".coverage": {
+      "queries": {
+        "unique-tests": {
+          "sql": "
+          SELECT
+          CASE
+          WHEN instr(context, '[') > 0
+          THEN substr(context, 1, instr(context, '[') - 1)
+          ELSE
+          context
+          END AS stripped_text
+          FROM
+          context;"
+        },
+      }
     }
+
+  }
 }
