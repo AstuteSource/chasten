@@ -6,7 +6,7 @@ from pathlib import Path
 
 from sqlite_utils import Database
 
-from chasten import constants, filesystem, output
+from chasten import constants, enumerations, filesystem, output
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
@@ -85,11 +85,12 @@ def enable_full_text_search(chasten_database_name: str) -> None:
     # full-text search on the view called chasten_complete
 
 
-def display_datasette_details(
+def display_datasette_details(  # noqa: PLR0913
     label: str,
     virtual_env_location: str,
     executable_path: str,
     full_executable_name: str,
+    datasette_platform: str,
     publish: bool,
 ) -> None:
     """Display details about the current datasette configuration."""
@@ -111,9 +112,11 @@ def display_datasette_details(
             f"{constants.markers.Indent}{small_bullet_unicode} Cannot find: '{output.shorten_file_name(full_executable_name, 120)}'"
         )
     output.console.print()
+    # output a "final" prompt about either the publication platform of a reminder
+    # that the remainder of the output comes from running a local datasette instance
     if publish:
         output.console.print(
-            ":sparkles: Debugging output from publishing datasette to fly.io:"
+            f":sparkles: Debugging output from publishing datasette to '{datasette_platform}':"
         )
     else:
         output.console.print(
@@ -122,9 +125,10 @@ def display_datasette_details(
     output.console.print()
 
 
-def start_datasette_server(
+def start_datasette_server(  # # noqa: PLR0912
     database_path: Path,
     datasette_metadata: Path,
+    datasette_platform: str = enumerations.DatasettePublicationPlatform.FLY.value,
     datasette_port: int = 8001,
     publish: bool = False,
 ) -> None:
@@ -154,7 +158,12 @@ def start_datasette_server(
     else:
         label = ":sparkles: Details for datasette startup:"
     display_datasette_details(
-        label, virtual_env_location, str(executable_path), full_executable_name, publish
+        label,
+        virtual_env_location,
+        str(executable_path),
+        full_executable_name,
+        str(datasette_platform),  # type: ignore
+        publish,
     )
     # since it was not possible to find the executable for datasette, display and
     # error message and then exit this function since no further steps are possible
@@ -189,36 +198,58 @@ def start_datasette_server(
         # there is debugging output in the console to indicate this option.
         proc = subprocess.Popen(cmd)
         proc.wait()
-    # publish the datasette instance to fly.io
+    # publish the datasette instance to the chosen datasette platform
     elif publish:
-        (found_fly_executable, _) = filesystem.can_find_executable(constants.chasten.Executable_Fly)
-        # was not able to find the fly executable (which the person using this
+        # get information about the datasette executable, confirming that
+        # it is available in the virtual environment created by chasten
+        (
+            found_publish_platform_executable,
+            publish_platform_executable,
+        ) = filesystem.can_find_executable(datasette_platform)
+        # was not able to find the fly or vercel executable (the person using this
         # program has to install separately, following the instructions for the
         # datasette-publish-fly plugin) and thus need to exit and not proceed
-        if not found_fly_executable:
+        if not found_publish_platform_executable:
             output.console.print(
-                ":person_shrugging: Was not able to find '{fly_executable_path}'"
+                ":person_shrugging: Was not able to find '{datasette_platform}'"
             )
             return None
+        # was able to find the fly or vercel executable that will support the
+        # publication of this datasette instance to the platform
+        else:
+            output.console.print(
+                f":tada: Using '{publish_platform_executable}' to publish a datasette"
+            )
+            output.console.print()
+        # create the customized running argument for either fly or vercel; note
+        # that these programs take different arguments for specifying the name
+        # of the application as it will be deployed on the platform
+        running_argument = ""
+        if datasette_platform == constants.chasten.Executable_Fly:
+            running_argument = "--app=chasten"
+        elif datasette_platform == constants.chasten.Executable_Vercel:
+            running_argument = "--project=chasten"
         # the metadata parameter should not be passed to the datasette
         # program if it was not specified as an option
+        # there was a metadata parameter, so include it
         if metadata is not None:
             cmd = [
                 str(full_executable_name),
                 "publish",
-                constants.chasten.Executable_Fly,
+                datasette_platform,
                 str(database_path),
-                "--app=chasten",
+                running_argument,
                 "-m",
                 str(metadata),
             ]
+        # there was not a metadata parameter, so include it
         else:
             cmd = [
                 str(full_executable_name),
                 "publish",
-                constants.chasten.Executable_Fly,
+                datasette_platform,
                 str(database_path),
-                "--app=chasten",
+                running_argument,
             ]
         # run the datasette server as a subprocess of chasten;
         # note that the only way to stop the server is to press CTRL-C;
