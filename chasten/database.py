@@ -85,13 +85,29 @@ def enable_full_text_search(chasten_database_name: str) -> None:
     # full-text search on the view called chasten_complete
 
 
-def display_datasette_details(  # noqa: PLR0913
+def display_final_diagnostic_message(datasette_platform: str, publish: bool):
+    """Output the final diagnostic message before control is given to a different tool."""
+    # output a "final" prompt about either the publication platform of a reminder
+    # that the remainder of the output comes from running a local datasette instance
+    # the database will be published to an external platform
+    if publish:
+        output.console.print(
+            f":sparkles: Debugging output from publishing datasette to '{datasette_platform}':"
+        )
+    # the database will be displayed through a localhost-based server
+    else:
+        output.console.print(
+            ":sparkles: Debugging output from the local datasette server:"
+        )
+    output.console.print()
+
+
+
+def display_datasette_details(
     label: str,
     virtual_env_location: str,
     executable_path: str,
     full_executable_name: str,
-    datasette_platform: str,
-    publish: bool,
 ) -> None:
     """Display details about the current datasette configuration."""
     # output diagnostic information about the datasette instance; note
@@ -112,20 +128,9 @@ def display_datasette_details(  # noqa: PLR0913
             f"{constants.markers.Indent}{small_bullet_unicode} Cannot find: '{output.shorten_file_name(full_executable_name, 120)}'"
         )
     output.console.print()
-    # output a "final" prompt about either the publication platform of a reminder
-    # that the remainder of the output comes from running a local datasette instance
-    if publish:
-        output.console.print(
-            f":sparkles: Debugging output from publishing datasette to '{datasette_platform}':"
-        )
-    else:
-        output.console.print(
-            ":sparkles: Debugging output from the local datasette instance:"
-        )
-    output.console.print()
 
 
-def start_datasette_server(  # # noqa: PLR0912
+def start_datasette_server(  # noqa: PLR0912
     database_path: Path,
     datasette_metadata: Path,
     datasette_platform: str = enumerations.DatasettePublicationPlatform.FLY.value,
@@ -162,8 +167,6 @@ def start_datasette_server(  # # noqa: PLR0912
         virtual_env_location,
         str(executable_path),
         full_executable_name,
-        str(datasette_platform),  # type: ignore
-        publish,
     )
     # since it was not possible to find the executable for datasette, display and
     # error message and then exit this function since no further steps are possible
@@ -218,9 +221,10 @@ def start_datasette_server(  # # noqa: PLR0912
         # publication of this datasette instance to the platform
         else:
             output.console.print(
-                f":tada: Using '{publish_platform_executable}' to publish a datasette"
+                f":sparkles: Using '{publish_platform_executable}' to publish a datasette"
             )
             output.console.print()
+        display_final_diagnostic_message(datasette_platform, publish)
         # create the customized running argument for either fly or vercel; note
         # that these programs take different arguments for specifying the name
         # of the application as it will be deployed on the platform
@@ -239,7 +243,7 @@ def start_datasette_server(  # # noqa: PLR0912
                 datasette_platform,
                 str(database_path),
                 running_argument,
-                "--install=datasette-copyable"
+                constants.datasette.Datasette_Copyable_Install,
                 "-m",
                 str(metadata),
             ]
@@ -251,7 +255,7 @@ def start_datasette_server(  # # noqa: PLR0912
                 datasette_platform,
                 str(database_path),
                 running_argument,
-                "--install=datasette-copyable"
+                constants.datasette.Datasette_Copyable_Install,
             ]
         # run the datasette server as a subprocess of chasten;
         # note that the only way to stop the server is to press CTRL-C;
