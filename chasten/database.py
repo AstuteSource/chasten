@@ -244,6 +244,8 @@ def start_datasette_server(  # noqa: PLR0912
                 str(database_path),
                 running_argument,
                 constants.datasette.Datasette_Copyable_Install,
+                constants.datasette.Datasette_Export_Notebook,
+                constants.datasette.Datasette_Search_All,
                 "-m",
                 str(metadata),
             ]
@@ -256,6 +258,8 @@ def start_datasette_server(  # noqa: PLR0912
                 str(database_path),
                 running_argument,
                 constants.datasette.Datasette_Copyable_Install,
+                constants.datasette.Datasette_Export_Notebook,
+                constants.datasette.Datasette_Search_All,
             ]
         # run the datasette server as a subprocess of chasten;
         # note that the only way to stop the server is to press CTRL-C;
