@@ -24,7 +24,8 @@ SELECT
   sources.check_passed,
   sources_check_matches.lineno,
   sources_check_matches.coloffset,
-  sources_check_matches.linematch
+  sources_check_matches.linematch,
+  sources_check_matches.linematch_context
 FROM
   sources
   JOIN sources_check_matches ON sources._link = sources_check_matches._link_sources
