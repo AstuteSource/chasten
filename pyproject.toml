@@ -20,6 +20,18 @@ pyyaml = "^6.0"
 jsonschema = "^4.18.3"
 thefuzz = "^0.19.0"
 python-levenshtein = "^0.21.1"
+flatterer = "^0.19.8"
+datasette = "^0.64.3"
+datasette-copyable = "^0.3.2"
+datasette-export-notebook = "^1.0"
+datasette-publish-fly = "^1.3"
+datasette-search-all = "^1.1.1"
+sqlite-utils = "^3.34"
+sqlean-py = "^0.21.5.3"
+datasette-sqlite-regex = "^0.2.3"
+pysqlite3 = "^0.5.1"
+sqlite-regex = "^0.2.3"
+datasette-publish-vercel = "^0.14.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
@@ -31,11 +43,13 @@ isort = "^5.12.0"
 hypothesis = {extras = ["cli"], version = "^6.81.1"}
 hypofuzz = "^23.7.1"
 pytest-cov = "^4.1.0"
-pytest-sugar = "^0.9.7"
 types-pyyaml = "^6.0.12.10"
 types-jsonschema = "^4.17.0.9"
 hypothesis-jsonschema = "^0.22.1"
 pytest-clarity = "^1.0.1"
+pytest-randomly = "^3.13.0"
+pytest-pretty = "^1.2.0"
+pytest-xdist = "^3.3.1"
 
 [tool.pytest.ini_options]
 filterwarnings = [
@@ -67,7 +81,7 @@ ensure_newline_before_comments = true
 line_length = 88
 
 [tool.taskipy.variables]
-coverage-test-command = "pytest -s --cov-config .coveragerc --cov-report term-missing --cov-report json --cov --cov-branch"
+coverage-test-command = "pytest -s --cov-context=test --cov-config .coveragerc --cov-report term-missing --cov-report json --cov --cov-branch"
 coverage-test-command-silent = "pytest -x --show-capture=no --cov-config .coveragerc --cov-report term-missing --cov-report json --cov --cov-branch"
 developer-test-command = "pytest -x -s -m 'not fuzz'"
 developer-test-silent-command = "pytest -x -m 'not fuzz' --show-capture=no"
@@ -75,7 +89,7 @@ hypothesis-test-command = "pytest -x -s -m 'fuzz'"
 hypothesis-test-silent-command = "pytest -x -m 'fuzz' --show-capture=no"
 
 [tool.taskipy.tasks]
-all = "task black && task mypy && task ruff && task test-silent"
+all = "task black && task mypy && task ruff && task test"
 lint = "task black && task mypy && task ruff"
 black = { cmd = "black chasten tests --check", help = "Run the black checks for source code format" }
 fiximports = { cmd = "isort chasten tests", help = "Run isort to fix source code imports" }
@@ -86,8 +100,12 @@ developer-test = { cmd = "{developer-test-command}", help = "Run developer-creat
 developer-test-silent = { cmd = "{developer-test-silent-command}", help = "Run developer-created without output", use_vars = true }
 hypothesis = { cmd = "{hypothesis-test-command}", help = "Run the hypothesis-based test cases", use_vars = true}
 hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the hypothesis-based test cases", use_vars = true }
-test = { cmd = "pytest -x -s -vv", help = "Run the pytest test suite" }
-test-silent = { cmd = "pytest -x --show-capture=no", help = "Run the pytest test suite without showing output" }
+test = { cmd = "pytest -x -s -vv -n auto", help = "Run the pytest test suite using order randomization and test distribution" }
+test-not-randomly = { cmd = "pytest -x -s -vv -p no:randomly", help = "Run the pytest test suite without order randomization" }
+test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist", help = "Run the pytest test suite without order randomization" }
+test-silent = { cmd = "pytest -x --show-capture=no -n auto", help = "Run the pytest test suite without showing output" }
+test-silent-not-randomly = { cmd = "pytest -x --show-capture=no -p no:randomly", help = "Run the pytest test suite without showing output and order randomization" }
+test-silent-not-xdist = { cmd = "pytest -x --show-capture=no -p no:xdist", help = "Run the pytest test suite without showing output and test distribution" }
 test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
 test-coverage-silent = { cmd = "{coverage-test-command-silent}", help = "Run coverage monitoring for tests without output", use_vars = true }
 

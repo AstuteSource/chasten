@@ -41,6 +41,7 @@ JSON_SCHEMA_CHECKS = {
                 "properties": {
                     "name": {"type": "string"},
                     "id": {"type": "string"},
+                    "description": {"type": "string"},
                     "pattern": {"type": "string"},
                     "code": {"type": "string"},
                     "count": {

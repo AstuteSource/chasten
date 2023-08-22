@@ -1,15 +1,12 @@
-"""Chasten checks the AST of a Python program."""
+"""💫 Chasten checks the AST of a Python program."""
 
 import sys
-from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from rich.panel import Panel
-from rich.syntax import Syntax
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
@@ -17,11 +14,13 @@ from chasten import (
     checks,
     configuration,
     constants,
+    database,
     debug,
     enumerations,
     filesystem,
     output,
     process,
+    results,
     server,
     util,
     validate,
@@ -30,9 +29,12 @@ from chasten import (
 # create a Typer object to support the command-line interface
 cli = typer.Typer()
 
+# create a small bullet for display in the output
+small_bullet_unicode = constants.markers.Small_Bullet_Unicode
+
 
 # ---
-# Region: helper functions
+# Region: Helper functions {{{
 # ---
 
 
@@ -245,14 +247,43 @@ def validate_configuration_files(
     return (False, {})
 
 
+def display_serve_or_publish_details(
+    label: str,
+    database_path: Path,
+    metadata: Path,
+    port: int = 8001,
+    publish: bool = False,
+) -> None:
+    """Display diagnostic details at startup of serve or publish commands."""
+    # output diagnostic information about the datasette instance
+    output.console.print()
+    output.console.print(label)
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Database: '{output.shorten_file_name(str(database_path), 120)}'"
+    )
+    output.console.print(
+        f"{constants.markers.Indent}{small_bullet_unicode} Metadata: '{output.shorten_file_name(str(metadata), 120)}'"
+    )
+    # do not display a port if the task is publishing to fly.io
+    # because that step does not support port specification
+    if not publish:
+        output.console.print(
+            f"{constants.markers.Indent}{small_bullet_unicode} Port: {port}"
+        )
+
+
 # ---
-# Region: command-line interface functions
+# End region: Helper functions }}}
+# ---
+
+# ---
+# Start region: Command-line interface functions {{{
 # ---
 
 
 @cli.command()
 def interact(ctx: typer.Context) -> None:
-    """Interactively configure and run."""
+    """🚀 Interactively configure and run."""
     # construct a Trogon object; this will create a
     # terminal-user interface that will allow the
     # person using chasten to pick a mode and then
@@ -267,25 +298,31 @@ def configure(  # noqa: PLR0913
     task: enumerations.ConfigureTask = typer.Argument(
         enumerations.ConfigureTask.VALIDATE.value
     ),
-    force: bool = typer.Option(
-        False,
-        "--force",
-        "-f",
-        help="Create configuration directory and files even if they exist",
-    ),
     config: Path = typer.Option(
         None,
         "--config",
         "-c",
         help="A directory with configuration file(s).",
     ),
-    verbose: bool = typer.Option(False),
-    debug_level: debug.DebugLevel = typer.Option(debug.DebugLevel.ERROR.value),
-    debug_destination: debug.DebugDestination = typer.Option(
-        debug.DebugDestination.CONSOLE.value, "--debug-dest"
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
     ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    force: bool = typer.Option(
+        False,
+        help="Create configuration directory and files even if they exist",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """Manage tool configuration."""
+    """🪂 Manage chasten's configuration."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -332,7 +369,7 @@ def configure(  # noqa: PLR0913
             )
         # cannot re-create the configuration directory, so display
         # a message and suggest the use of --force the next time;
-        # exit early and signal an error
+        # exit early and signal an error with a non-zero exist code
         except FileExistsError:
             if not force:
                 output.console.print(
@@ -346,9 +383,7 @@ def configure(  # noqa: PLR0913
 
 @cli.command()
 def analyze(  # noqa: PLR0913, PLR0915
-    project: str = typer.Option(
-        ..., "--project-name", "-p", help="Name of the project."
-    ),
+    project: str = typer.Argument(help="Name of the project."),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -361,20 +396,34 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-e",
         help="Attribute name, value, and match confidence level for exclusion.",
     ),
-    directory: Path = typer.Option(
+    input_path: Path = typer.Option(
         filesystem.get_default_directory_list(),
         "--search-path",
         "-d",
         help="A path (i.e., directory or file) with Python source code(s).",
+        exists=True,
+        file_okay=True,
+        dir_okay=True,
+        readable=True,
+        resolve_path=True,
+    ),
+    output_directory: Path = typer.Option(
+        None,
+        "--save-directory",
+        "-s",
+        help="A directory for saving output file(s).",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        writable=True,
+        resolve_path=True,
     ),
     config: Path = typer.Option(
         None,
         "--config",
         "-c",
         help="A directory with configuration file(s).",
-    ),
-    verbose: bool = typer.Option(
-        False, "--verbose", "-v", help="Enable verbose mode output."
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
@@ -388,16 +437,45 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-t",
         help="Specify the destination for debugging output.",
     ),
+    verbose: bool = typer.Option(False, help="Enable verbose mode output."),
+    save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
-    """Analyze the AST of Python source code."""
+    """💫 Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
         debug_level,
         debug_destination,
         project=project,
-        directory=directory,
+        directory=input_path,
     )
+    # extract the current version of the program
+    chasten_version = util.get_chasten_version()
+    # create the include and exclude criteria
+    include = results.CheckCriterion(
+        attribute=str(checks.fix_check_criterion(check_include[0])),
+        value=str(checks.fix_check_criterion(check_include[1])),
+        confidence=int(checks.fix_check_criterion(check_include[2])),
+    )
+    exclude = results.CheckCriterion(
+        attribute=str(checks.fix_check_criterion(check_exclude[0])),
+        value=str(checks.fix_check_criterion(check_exclude[1])),
+        confidence=int(checks.fix_check_criterion(check_exclude[2])),
+    )
+    # create a configuration that is the same for all results
+    chasten_configuration = results.Configuration(
+        chastenversion=chasten_version,
+        projectname=project,
+        configdirectory=config,
+        searchpath=input_path,
+        debuglevel=debug_level,
+        debugdestination=debug_destination,
+        checkinclude=include,
+        checkexclude=exclude,
+    )
+    # connect the configuration to the top-level chasten object for results saving
+    # note: this is the final object that contains all of the data
+    chasten_results_save = results.Chasten(configuration=chasten_configuration)
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
@@ -430,64 +508,42 @@ def analyze(  # noqa: PLR0913, PLR0915
     # the specified search path is not valid and thus it is
     # not possible to analyze the specific Python source code file
     if not filesystem.confirm_valid_directory(
-        directory
-    ) and not filesystem.confirm_valid_file(directory):
+        input_path
+    ) and not filesystem.confirm_valid_file(input_path):
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
     # create the list of directories
-    valid_directories = [directory]
+    valid_directories = [input_path]
     # output the list of directories subject to checking
-    output.console.print(f":sparkles: Analyzing Python source code in:\n{directory}")
+    output.console.print()
+    output.console.print(f":sparkles: Analyzing Python source code in: {input_path}")
     # output the number of checks that will be performed
     output.console.print()
-    output.console.print(
-        f":tada: Running a total of {len(check_list)} matching check(s):"
-    )
+    output.console.print(f":tada: Performing {len(check_list)} check(s):")
+    output.console.print()
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
         current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
-        # display the XPATH expression for the current check
-        output.console.print("\n:tada: Performing check:")
-        xpath_syntax = Syntax(
-            current_xpath_pattern,
-            constants.markers.Xml,
-            theme=constants.chasten.Theme_Colors,
-        )
         # extract the minimum and maximum values for the checks, if they exist
         # note that this function will return None for a min or a max if
         # that attribute does not exist inside of the current_check; importantly,
         # having a count or a min or a max is all optional in a checks file
         (min_count, max_count) = checks.extract_min_max(current_check)
-        min_label = checks.create_attribute_label(min_count, constants.checks.Check_Min)
-        max_label = checks.create_attribute_label(max_count, constants.checks.Check_Max)
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
-        check_id_label = checks.create_attribute_label(check_id, constants.checks.Check_Id)  # type: ignore
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
-        check_name_label = checks.create_attribute_label(check_name, constants.checks.Check_Name)  # type: ignore
-        # create the combined attribute label that displays all details for the check
-        combined_attribute_label = checks.join_attribute_labels(
-            [check_id_label, check_name_label, min_label, max_label]
-        )
-        # display the check with additional details about its configuration
-        output.console.print(
-            Panel(
-                xpath_syntax,
-                expand=False,
-                title=f"{combined_attribute_label}",
-            )
-        )
+        check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
-        # XPATH query using the search_python_file in search module of pyastgrep
+        # XPATH query using the search_python_file in search module of pyastgrep;
+        # this looks for matches across all path(s) in the specified source path
         match_generator = pyastgrepsearch.search_python_files(
-            paths=valid_directories,
-            expression=current_xpath_pattern,
+            paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         )
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
@@ -498,63 +554,117 @@ def analyze(  # noqa: PLR0913, PLR0915
         (match_generator_list, _) = process.filter_matches(
             match_generator_list, pyastgrepsearch.Match
         )
-        output.console.print()
-        output.console.print(
-            f":sparkles: Found a total of {len(match_generator_list)} matches"
-        )
+        # organize the matches according to the file to which they
+        # correspond so that processing of matches takes place per-file
+        match_dict = process.organize_matches(match_generator_list)
         # perform an enforceable check if it is warranted for this check
+        current_check_save = None
         if checks.is_checkable(min_count, max_count):
             # determine whether or not the number of found matches is within mix and max
             check_status = checks.check_match_count(
                 len(match_generator_list), min_count, max_count
             )
-            # produce and display a status message about the check
-            check_status_message = checks.make_checks_status_message(check_status)
-            output.console.print(check_status_message)
             # keep track of the outcome for this check
             check_status_list.append(check_status)
+        # this is not an enforceable check and thus the tool always
+        # records that the checked passed as a default
+        else:
+            check_status = True
+        # convert the status of the check to a visible symbol for display
+        check_status_symbol = util.get_symbol_boolean(check_status)
+        # escape the open bracket symbol that may be in an XPATH expression
+        # and will prevent it from displaying correctly
+        current_xpath_pattern_escape = current_xpath_pattern.replace("[", "\\[")
+        # display minimal diagnostic output
+        output.console.print(
+            f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'"
+            + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}"
+        )
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
-        for search_output in match_generator_list:
-            if isinstance(search_output, pyastgrepsearch.Match):
-                # display a label for matching output information
-                output.opt_print_log(verbose, blank=constants.markers.Empty_String)
-                output.opt_print_log(verbose, label=":sparkles: Matching source code:")
-                # extract the direct line number for this match
-                position_end = search_output.position.lineno
-                # get a pre-defined number of the lines both
-                # before and after the line that is the closest match;
-                # note that the use of "*" is an indicator of the
-                # specific line that is the focus of the search
-                all_lines = search_output.file_lines
-                # create a deepcopy of the listing of lines so that
-                # the annotated version of the lines for this specific
-                # match does not appear in annotated version of other matches
-                all_lines_for_marking = deepcopy(all_lines)
-                lines = all_lines_for_marking[
-                    max(0, position_end - constants.markers.Code_Context) : position_end
-                    + constants.markers.Code_Context
-                ]
-                # create a rich panel to display the results
-                code_syntax = Syntax(
-                    "\n".join(str(line) for line in lines),
-                    constants.chasten.Programming_Language,
-                    theme=constants.chasten.Theme_Colors,
-                    background_color=constants.chasten.Theme_Background,
-                    line_numbers=True,
-                    start_line=(
-                        max(1, position_end - constants.markers.Code_Context + 1)
-                    ),
-                )
-                # display the results in a rich panel
-                output.opt_print_log(
-                    verbose,
-                    panel=Panel(
-                        code_syntax,
-                        expand=False,
-                        title=f"{search_output.path}:{search_output.position.lineno}:{search_output.position.col_offset}",
-                    ),
-                )
+        current_result_source = results.Source(
+            filename=str(str(vd) for vd in valid_directories)
+        )
+        # there were no matches and thus the current_check_save of None
+        # should be recorded inside of the source of the results
+        if len(match_generator_list) == 0:
+            current_result_source.check = current_check_save
+        # iteratively analyze:
+        # a) A specific file name
+        # b) All of the matches for that file name
+        # Note: the goal is to only process matches for a
+        # specific file, ensuring that matches for different files
+        # are not mixed together, which would contaminate the results
+        # Note: this is needed because using pyastgrepsearch will
+        # return results for all of the files that matched the check
+        for file_name, matches_list in match_dict.items():
+            # create the current check
+            current_check_save = results.Check(
+                id=check_id,  # type: ignore
+                name=check_name,  # type: ignore
+                description=check_description,  # type: ignore
+                min=min_count,  # type: ignore
+                max=max_count,  # type: ignore
+                pattern=current_xpath_pattern,
+                passed=check_status,
+            )
+            # create a source that is solely for this file name
+            current_result_source = results.Source(filename=file_name)
+            # put the current check into the list of checks in the current source
+            current_result_source.check = current_check_save
+            # display minimal diagnostic output
+            output.console.print(
+                f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
+            )
+            # extract the lines of source code for this file; note that all of
+            # these matches are organized for the same file and thus it is
+            # acceptable to extract the lines of the file from the first match
+            # a long as there are matches available for analysis
+            if len(matches_list) > 0:
+                current_result_source._filelines = matches_list[0].file_lines
+            # iterate through all of the matches that are specifically
+            # connected to this source that is connected to a specific file name
+            for current_match in matches_list:
+                if isinstance(current_match, pyastgrepsearch.Match):
+                    current_result_source._filelines = current_match.file_lines
+                    # extract the direct line number for this match
+                    position_end = current_match.position.lineno
+                    # extract the column offset for this match
+                    column_offset = current_match.position.col_offset
+                    # create a match specifically for this file;
+                    # note that the AST starts line numbering at 1 and
+                    # this means that storing the matching line requires
+                    # the indexing of file_lines with position_end - 1;
+                    # note also that linematch is the result of using
+                    # lstrip to remove any blank spaces before the code
+                    current_match_for_current_check_save = results.Match(
+                        lineno=position_end,
+                        coloffset=column_offset,
+                        linematch=current_match.file_lines[position_end - 1].lstrip(
+                            constants.markers.Space
+                        ),
+                        linematch_context=util.join_and_preserve(
+                            current_match.file_lines,
+                            max(0, position_end - constants.markers.Code_Context),
+                            position_end + constants.markers.Code_Context,
+                        ),
+                    )
+                    # save the entire current_match that is an instance of
+                    # pyastgrepsearch.Match for verbose debugging output as needed
+                    current_check_save._matches.append(current_match)
+                    # add the match to the listing of matches for the current check
+                    current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
+            # add the current source to main object that contains a list of source
+            chasten_results_save.sources.append(current_result_source)
+    # display all of the analysis results if verbose output is requested
+    output.print_analysis_details(chasten_results_save, verbose=verbose)
+    # save all of the results from this analysis
+    saved_file_name = filesystem.write_chasten_results(
+        output_directory, project, chasten_results_save, save
+    )
+    # output the name of the saved file if saving successfully took place
+    if saved_file_name:
+        output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
@@ -565,8 +675,229 @@ def analyze(  # noqa: PLR0913, PLR0915
 
 
 @cli.command()
+def integrate(  # noqa: PLR0913
+    project: str = typer.Argument(help="Name of the project."),
+    json_path: List[Path] = typer.Argument(
+        help="Directories, files, or globs for chasten's JSON result file(s).",
+    ),
+    output_directory: Path = typer.Option(
+        ...,
+        "--save-directory",
+        "-s",
+        help="A directory for saving converted file(s).",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
+    ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    force: bool = typer.Option(
+        False,
+        help="Create converted results files even if they exist",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
+) -> None:
+    """🚧 Integrate files and make a database."""
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(
+        verbose,
+        debug_level,
+        debug_destination,
+        project=project,
+        output_directory=output_directory,
+        json_path=json_path,
+        force=force,
+    )
+    # output the list of directories subject to checking
+    output.console.print()
+    output.console.print(":sparkles: Combining data file(s) in:")
+    output.console.print()
+    output.print_list_contents(json_path)
+    # extract all of the JSON dictionaries from the specified files
+    json_dicts = filesystem.get_json_results(json_path)
+    # combine all of the dictionaries into a single string
+    combined_json_dict = process.combine_dicts(json_dicts)
+    # write the combined JSON file string to the filesystem
+    combined_json_file_name = filesystem.write_dict_results(
+        combined_json_dict, output_directory, project
+    )
+    # output the name of the saved file if saving successfully took place
+    if combined_json_file_name:
+        output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
+    # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
+    # create the SQLite3 database and then configure the database for use in datasett
+    combined_flattened_directory = filesystem.write_flattened_csv_and_database(
+        combined_json_file_name,
+        output_directory,
+        project,
+    )
+    # output the name of the saved file if saving successfully took place
+    if combined_flattened_directory:
+        output.console.print(
+            f"\n:sparkles: Created this directory structure in {Path(combined_flattened_directory).parent}:"
+        )
+        combined_directory_tree = filesystem.create_directory_tree_visualization(
+            Path(combined_flattened_directory)
+        )
+        output.console.print()
+        output.console.print(combined_directory_tree)
+
+
+@cli.command()
+def datasette_serve(  # noqa: PLR0913
+    database_path: Path = typer.Argument(
+        help="SQLite3 database file storing chasten's results.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    port: int = typer.Option(
+        8001,
+        "--port",
+        "-p",
+        help="Port on which to run a datasette instance",
+    ),
+    metadata: Path = typer.Option(
+        None,
+        "--metadata",
+        "-m",
+        help="Meta-data file storing database configuration.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
+    ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
+) -> None:
+    """🏃 Start a local datasette server."""
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(
+        verbose,
+        debug_level,
+        debug_destination,
+        database=database_path,
+        datasette_port=port,
+        metadata=metadata,
+    )
+    # display diagnostic information about the datasette instance
+    label = ":sparkles: Starting a local datasette instance:"
+    display_serve_or_publish_details(
+        label, database_path, metadata, port, publish=False
+    )
+    # start the datasette server that will run indefinitely;
+    # shutting down the datasette server with a CTRL-C will
+    # also shut down this command in chasten
+    database.start_datasette_server(
+        database_path=database_path,
+        datasette_port=port,
+        datasette_metadata=metadata,
+        publish=False,
+    )
+
+
+@cli.command()
+def datasette_publish(  # noqa: PLR0913
+    database_path: Path = typer.Argument(
+        help="SQLite3 database file storing chasten's results.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    metadata: Path = typer.Option(
+        None,
+        "--metadata",
+        "-m",
+        help="Meta-data file storing database configuration.",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    datasette_platform: enumerations.DatasettePublicationPlatform = typer.Option(
+        enumerations.DatasettePublicationPlatform.FLY.value,
+        "--platform",
+        "-p",
+        help="Specify the deployment platform for datasette.",
+    ),
+    debug_level: debug.DebugLevel = typer.Option(
+        debug.DebugLevel.ERROR.value,
+        "--debug-level",
+        "-l",
+        help="Specify the level of debugging output.",
+    ),
+    debug_destination: debug.DebugDestination = typer.Option(
+        debug.DebugDestination.CONSOLE.value,
+        "--debug-dest",
+        "-t",
+        help="Specify the destination for debugging output.",
+    ),
+    verbose: bool = typer.Option(False, help="Display verbose debugging output"),
+) -> None:
+    """🌎 Publish a datasette to Fly or Vercel."""
+    # output the preamble, including extra parameters specific to this function
+    output_preamble(
+        verbose,
+        debug_level,
+        debug_destination,
+        database=database_path,
+        metadata=metadata,
+    )
+    output.console.print()
+    output.console.print(
+        f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
+    )
+    # display details about the publishing step
+    label = f":sparkles: Publishing a datasette to {datasette_platform.value}:"
+    display_serve_or_publish_details(label, database_path, metadata, publish=True)
+    # publish the datasette instance using fly.io;
+    # this passes control to datasette and then to
+    # the fly program that must be installed
+    database.start_datasette_server(
+        database_path=database_path,
+        datasette_metadata=metadata,
+        datasette_platform=datasette_platform.value,
+        publish=True,
+    )
+
+
+@cli.command()
 def log() -> None:
-    """Start the logging server."""
+    """🦚 Start the logging server."""
     # display the header
     output.print_header()
     # display details about the server
@@ -578,3 +909,8 @@ def log() -> None:
     # before running any sub-command
     # of the chasten tool
     server.start_syslog_server()
+
+
+# ---
+# End region: Command-line interface functions }}}
+# ---

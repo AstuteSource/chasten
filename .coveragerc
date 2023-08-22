@@ -1,3 +1,6 @@
 [run]
 relative_files=true
 source=./chasten
+[json]
+show_contexts=True
+pretty_print=True

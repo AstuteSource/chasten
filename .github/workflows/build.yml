@@ -1,6 +1,10 @@
 # Basic workflow
 name: build
 
+# Use more columns for terminal output
+env:
+  COLUMNS: 120
+
 # Controls when the action will run
 # Workflow begins with push or PR events
 # Focuses on the master branch only
@@ -62,7 +66,7 @@ jobs:
         - name: Run program
           if: always()
           run: |
-           poetry run chasten analyze --project-name chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
+           poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
         # Run the tests
         - name: Run Tests
           if: always()

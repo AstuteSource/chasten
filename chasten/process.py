@@ -1,5 +1,6 @@
 """Analyze the abstract syntax tree, its XML-based representation, and/or the search results."""
 
+import json
 from typing import Any, Dict, List, Tuple, Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
@@ -63,3 +64,46 @@ def filter_matches(
             did_not_match_list.append(match)
     # return both of the created lists
     return (subset_match_list, did_not_match_list)
+
+
+def organize_matches(
+    match_list: List[pyastgrepsearch.Match],
+) -> Dict[str, List[pyastgrepsearch.Match]]:
+    """Organize the matches on a per-file basis to support simplified processing."""
+    match_dict: Dict[str, List[pyastgrepsearch.Match]] = {}
+    # iterate through each of the matches in the list, with
+    # the goal of creating a dictionary organized so that
+    # --> the key is the name of a file under analysis
+    # --> the value is a list of all of the matches for that file
+    for current_match in match_list:
+        # extract the name of the file for the current match
+        current_match_file_name = str(current_match.path)
+        # already storing matches for this file
+        if current_match_file_name in match_dict:
+            # extract the existing list of matches for this file
+            current_match_file_list = match_dict[current_match_file_name]
+            current_match_file_list.append(current_match)
+        # not already storing matches for this file
+        else:
+            # create an empty list for storing the matches
+            current_match_list: List[pyastgrepsearch.Match] = []
+            # add the current match to the list
+            current_match_list.append(current_match)
+            # associate this new list with the current file name
+            match_dict[current_match_file_name] = current_match_list
+    return match_dict
+
+
+def combine_dicts(dict_list: List[Dict[Any, Any]]) -> str:
+    """Combine all dictionaries in the list into a single list of dictionaries as a string."""
+    # combine all of the dictionaries in the list into
+    # a single string that is a list of each JSON-based
+    # dictionary represented as a string; this leads to:
+    # [
+    #   { nested JSON for file 1 },
+    #   { nested JSON for file 2 },
+    #   ...
+    #   { nested JSON for file n }
+    # ]
+    # which is a list of valid JSON objects
+    return json.dumps(dict_list, indent=2)

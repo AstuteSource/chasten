@@ -105,10 +105,9 @@ def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(tmpdir):
         main.cli,
         [
             "analyze",
+            project_name,
             "--search-path",
             test_one,
-            "--project-name",
-            project_name,
             "--config",
             configuration_directory,
             "--verbose",
@@ -130,7 +129,6 @@ def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd):
             "analyze",
             "--search-path",
             cwd,
-            "--project-name",
             project_name,
             "--config",
             configuration_directory,
@@ -161,7 +159,7 @@ def test_cli_analyze_incorrect_arguments_no_project(cwd, tmpdir):
     )
     # crashes because the command-line arguments are wrong
     assert result.exit_code != 0
-    assert "Missing option" in result.output
+    assert "Missing argument" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
@@ -177,7 +175,6 @@ def test_cli_analyze_incorrect_arguments_wrong_config(tmpdir):
         main.cli,
         [
             "analyze",
-            "--project-name",
             project_name,
             "--search-path",
             test_one,
@@ -204,7 +201,6 @@ def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
         main.cli,
         [
             "analyze",
-            "--project-name",
             project_name,
             "--search-path",
             test_one_incorrect_name,
@@ -213,8 +209,14 @@ def test_cli_analyze_incorrect_arguments_wrong_source_directory(tmpdir):
             "--verbose",
         ],
     )
-    assert result.exit_code == 1
-    assert "Cannot perform analysis due to configuration" in result.output
+    # running the program with an invalid --search-path
+    # should not work and thus a zero exit code is wrong
+    assert result.exit_code != 0
+    # note the error code of 2 indicates that it was
+    # an error arising from the fact that typer could
+    # not validate that test_oneFF is a existing directory
+    assert result.exit_code == 2  # noqa
+    assert "Usage:" in result.output
 
 
 def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
@@ -230,7 +232,6 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
         main.cli,
         [
             "analyze",
-            "--project-name",
             project_name,
             "--search-path",
             test_one,
@@ -301,7 +302,6 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
         main.cli,
         [
             "analyze",
-            "--project-name",
             project_name,
             "--config",
             configuration_directory,

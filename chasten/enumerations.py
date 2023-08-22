@@ -10,10 +10,18 @@ class ConfigureTask(str, Enum):
     VALIDATE = "validate"
 
 
+class DatasettePublicationPlatform(str, Enum):
+    """Define the different platforms for publishing a datasette server."""
+
+    FLY = "fly"
+    VERCEL = "vercel"
+
+
 class FilterableAttribute(str, Enum):
     """Define the names of attributes that are subject to filtering."""
 
-    NAME = "name"
     CODE = "code"
     ID = "id"
+    NONE = ""
+    NAME = "name"
     PATTERN = "pattern"

@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Tuple, Union
 
-from chasten import constants, util
+from chasten import constants, enumerations, util
 
 
 def extract_min_max(
@@ -14,6 +14,15 @@ def extract_min_max(
     min_count = check.get(constants.checks.Check_Count, {}).get(constants.checks.Check_Min)  # type: ignore
     max_count = check.get("count", {}).get("max")  # type: ignore
     return (min_count, max_count)
+
+
+def extract_description(check: Dict[str, Union[str, Dict[str, int]]]) -> str:
+    """Extract the description that may optionally be stored in a check."""
+    # the attribute is not None and thus the function
+    # should create the labelled attribute out of it
+    if "description" in check:
+        return str(check["description"])
+    return ""
 
 
 def create_attribute_label(attribute: Union[str, int, None], label: str) -> str:
@@ -92,3 +101,22 @@ def make_checks_status_message(check_status: bool) -> str:
     return (
         f":worried: Did the check pass? {util.get_human_readable_boolean(check_status)}"
     )
+
+
+def fix_check_criterion(
+    criterion: Union[enumerations.FilterableAttribute, str, int]
+) -> Union[str, int]:
+    """Remove null values from a criterion."""
+    # the converted criterion's default is an empty string
+    new_criterion: Union[str, int] = ""
+    # if the criterion is not None, then it should either be
+    # the value in the enumeration or the value of a string or int
+    if criterion is not None:
+        # the criterion is an enum and thus the value must be extracted
+        if type(criterion) is enumerations.FilterableAttribute:
+            new_criterion = criterion.value
+        # the criterion is not an enum and thus it must be
+        # an int or a string that can be stored directly
+        else:
+            new_criterion = criterion  # type: ignore
+    return new_criterion

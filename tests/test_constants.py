@@ -20,13 +20,16 @@ def test_filesystem_constants():
     directory=strategies.text(),
     configfile=strategies.text(),
     checksfile=strategies.text(),
+    extra=strategies.text(),
     yes=strategies.text(),
     no=strategies.text(),
 )
 @pytest.mark.fuzz
-def test_fuzz_init(directory, configfile, checksfile, yes, no):
+def test_fuzz_init(directory, configfile, checksfile, extra, yes, no):  # noqa: PLR0913
     """Use Hypothesis to confirm that initial value is set correctly."""
-    fs = constants.Filesystem(directory, configfile, checksfile)
+    fs = constants.Filesystem(
+        directory, configfile, checksfile, extra, extra, extra, extra, extra, extra
+    )
     assert fs.Current_Directory == directory
     hr = constants.Humanreadable(yes, no)
     assert hr.Yes == yes
@@ -48,25 +51,38 @@ def test_fuzz_immutable(fs, hr):
         hr.No = "NO"
 
 
-@given(dir1=strategies.text(), dir2=strategies.text(), filename=strategies.text())
+@given(
+    dir1=strategies.text(),
+    dir2=strategies.text(),
+    filename=strategies.text(),
+    extra=strategies.text(),
+)
 @pytest.mark.fuzz
-def test_fuzz_distinct(dir1, dir2, filename):
+def test_fuzz_distinct(dir1, dir2, filename, extra):
     """Use Hypothesis to confirm equality when the inputs names are the same."""
-    fs1 = constants.Filesystem(dir1, filename, filename)
-    fs2 = constants.Filesystem(dir2, filename, filename)
+    fs1 = constants.Filesystem(
+        dir1, filename, filename, extra, extra, extra, extra, extra, extra
+    )
+    fs2 = constants.Filesystem(
+        dir2, filename, filename, extra, extra, extra, extra, extra, extra
+    )
     if dir1 != dir2:
         assert fs1 != fs2
     else:
         assert fs1 == fs2
 
 
-@given(directory=strategies.text(), filename=strategies.text())
+@given(directory=strategies.text(), filename=strategies.text(), extra=strategies.text())
 @pytest.mark.fuzz
-def test_fuzz_dataclass_equality(directory, filename):
+def test_fuzz_dataclass_equality(directory, filename, extra):
     """Use Hypothesis to confirm that the same directory makes the same constant."""
     dir1 = directory
     dir2 = directory
     assert dir1 == dir2
-    fs1 = constants.Filesystem(dir1, filename, filename)
-    fs2 = constants.Filesystem(dir2, filename, filename)
+    fs1 = constants.Filesystem(
+        dir1, filename, filename, extra, extra, extra, extra, extra, extra
+    )
+    fs2 = constants.Filesystem(
+        dir2, filename, filename, extra, extra, extra, extra, extra, extra
+    )
     assert fs1 == fs2

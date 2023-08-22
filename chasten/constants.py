@@ -10,7 +10,10 @@ class Chasten:
 
     Application_Name: str
     Application_Author: str
+    Chasten_Database_View: str
     Emoji: str
+    Executable_Fly: str
+    Executable_Vercel: str
     Https: str
     Name: str
     Programming_Language: str
@@ -25,7 +28,10 @@ class Chasten:
 chasten = Chasten(
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
+    Chasten_Database_View="chasten_complete",
     Emoji=":dizzy:",
+    Executable_Fly="fly",
+    Executable_Vercel="vercel",
     Https="https://",
     Name="chasten",
     Programming_Language="python",
@@ -71,20 +77,53 @@ checks = Checks(
 )
 
 
+# datasette constant
+@dataclass(frozen=True)
+class Datasette:
+    """Define the Datasette dataclass for constant(s)."""
+
+    Chasten_Database: str
+    Datasette_Executable: str
+    Datasette_Copyable_Install: str
+    Datasette_Export_Notebook: str
+    Datasette_Search_All: str
+
+
+datasette = Datasette(
+    Chasten_Database="chasten.db",
+    Datasette_Executable="datasette",
+    Datasette_Copyable_Install="--install=datasette-copyable",
+    Datasette_Export_Notebook="--install=datasette-export-notebook",
+    Datasette_Search_All="--install=datasette-search-all",
+)
+
+
 # filesystem constant
 @dataclass(frozen=True)
 class Filesystem:
     """Define the Filesystem dataclass for constant(s)."""
 
     Current_Directory: str
+    Dash: str
+    Dot: str
     Main_Configuration_File: str
     Main_Checks_File: str
+    Main_Results_File_Name: str
+    Main_Results_Combined_File_Name: str
+    Main_Results_Flattened_Directory_Name: str
+    Results_Extension: str
 
 
 filesystem = Filesystem(
     Current_Directory=".",
+    Dash="-",
+    Dot=".",
     Main_Configuration_File="config.yml",
     Main_Checks_File="checks.yml",
+    Main_Results_File_Name="chasten-results",
+    Main_Results_Combined_File_Name="chasten-integrated-results",
+    Main_Results_Flattened_Directory_Name="chasten-flattened-csvs-sqlite-db",
+    Results_Extension="json",
 )
 
 
@@ -171,6 +210,7 @@ class Markers:
     Nothing: str
     Single_Quote: str
     Slice_One: int
+    Small_Bullet_Unicode: str
     Space: str
     Tab: str
     Underscore: str
@@ -196,6 +236,7 @@ markers = Markers(
     Nothing="",
     Single_Quote="'",
     Slice_One=1,
+    Small_Bullet_Unicode="\u2022",
     Space=" ",
     Tab="\t",
     Underscore="_",
