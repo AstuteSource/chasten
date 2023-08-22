@@ -1,13 +1,12 @@
 """Mange the SQLite database containing results from chasten analyses."""
 
-import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 from sqlite_utils import Database
 
-from chasten import constants, output
+from chasten import constants, filesystem, output
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
@@ -47,7 +46,9 @@ def create_chasten_view(chasten_database_name: str) -> None:
     # When using datasette each of the columns in this view
     # are "facetable" which means that they can be enabled or disabled
     # inside of the web-based user interface
-    database.create_view("chasten_complete", CHASTEN_SQL_SELECT_QUERY)
+    database.create_view(
+        constants.chasten.Chasten_Database_View, CHASTEN_SQL_SELECT_QUERY
+    )
 
 
 def enable_full_text_search(chasten_database_name: str) -> None:
@@ -141,7 +142,9 @@ def start_local_datasette_server(
     # the search from this location for the virtual environment.
     virtual_env_location = sys.prefix
     full_executable_name = virtual_env_location + "/bin/" + executable_name
-    executable_path = shutil.which(full_executable_name)
+    (found_executable, executable_path) = filesystem.can_find_executable(
+        full_executable_name
+    )
     # output diagnostic information about the datasette instance; note
     # that the output must appear here and not from the calling function
     # because once the datasette instance starts the chasten tool can
@@ -153,7 +156,15 @@ def start_local_datasette_server(
     display_datasette_details(
         label, virtual_env_location, str(executable_path), full_executable_name, publish
     )
-    # run the localhost server
+    # since it was not possible to find the executable for datasette, display and
+    # error message and then exit this function since no further steps are possible
+    if not found_executable:
+        output.console.print(
+            ":person_shrugging: Was not able to find '{executable_name}'"
+        )
+        return None
+    # run the localhost server because the
+    # function was not asked to publish a database
     if not publish:
         # the metadata parameter should not be passed to the datasette
         # program if it was not specified as an option
@@ -180,13 +191,22 @@ def start_local_datasette_server(
         proc.wait()
     # publish the datasette instance to fly.io
     elif publish:
+        (found_fly_executable, fly_executable_path) = filesystem.can_find_executable(constants.chasten.Executable_Fly)
+        # was not able to find the fly executable (which the person using this
+        # program has to install separately, following the instructions for the
+        # datasette-publish-fly plugin) and thus need to exit and not proceed
+        if not found_fly_executable:
+            output.console.print(
+                ":person_shrugging: Was not able to find '{fly_executable_path}'"
+            )
+            return None
         # the metadata parameter should not be passed to the datasette
         # program if it was not specified as an option
         if metadata is not None:
             cmd = [
                 str(full_executable_name),
                 "publish",
-                "fly",
+                constants.chasten.Executable_Fly,
                 str(database_path),
                 "--app=chasten",
                 "-m",
@@ -196,7 +216,7 @@ def start_local_datasette_server(
             cmd = [
                 str(full_executable_name),
                 "publish",
-                "fly",
+                constants.chasten.Executable_Fly,
                 str(database_path),
                 "--app=chasten",
             ]
