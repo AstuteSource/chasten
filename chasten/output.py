@@ -19,7 +19,7 @@ logger: logging.Logger = logging.getLogger()
 console = Console()
 
 # define a small bullet for display
-small_bullet_unicode = "\u2022"
+small_bullet_unicode = constants.markers.Small_Bullet_Unicode
 
 
 def setup(
