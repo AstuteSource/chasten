@@ -621,12 +621,12 @@ def analyze(  # noqa: PLR0913, PLR0915
             # acceptable to extract the lines of the file from the first match
             # a long as there are matches available for analysis
             if len(matches_list) > 0:
-                current_result_source.filelines = matches_list[0].file_lines
+                current_result_source._filelines = matches_list[0].file_lines
             # iterate through all of the matches that are specifically
             # connected to this source that is connected to a specific file name
             for current_match in matches_list:
                 if isinstance(current_match, pyastgrepsearch.Match):
-                    current_result_source.filelines = current_match.file_lines
+                    current_result_source._filelines = current_match.file_lines
                     # extract the direct line number for this match
                     position_end = current_match.position.lineno
                     # extract the column offset for this match
@@ -642,6 +642,11 @@ def analyze(  # noqa: PLR0913, PLR0915
                         coloffset=column_offset,
                         linematch=current_match.file_lines[position_end - 1].lstrip(
                             constants.markers.Space
+                        ),
+                        linematch_context=util.join_and_preserve(
+                            current_match.file_lines,
+                            max(0, position_end - constants.markers.Code_Context),
+                            position_end + constants.markers.Code_Context,
                         ),
                     )
                     # save the entire current_match that is an instance of
