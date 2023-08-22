@@ -559,6 +559,24 @@ datasette = ">=0.60.2"
 test = ["cogapp", "pytest", "pytest-mock"]
 
 [[package]]
+name = "datasette-publish-vercel"
+version = "0.14.2"
+description = "Datasette plugin for publishing data using Vercel"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "datasette-publish-vercel-0.14.2.tar.gz", hash = "sha256:9632bbed0012941bf171510ea39d79ae8db0977d99300f1c36b176ea00cc05d5"},
+    {file = "datasette_publish_vercel-0.14.2-py3-none-any.whl", hash = "sha256:5c6ba4ce54898c79c62eeeb27b79437773e569fbc2da3fba8a3f9dd2cb8908f6"},
+]
+
+[package.dependencies]
+datasette = ">=0.59"
+
+[package.extras]
+test = ["pytest"]
+
+[[package]]
 name = "datasette-search-all"
 version = "1.1.1"
 description = "Datasette plugin for searching all searchable tables at once"
@@ -3034,4 +3052,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "9f4262fd5f3f5748376a8302d57c86b305040b67a5d4e2e22a8cd5f3230a7da0"
+content-hash = "d6232eab32445f6756dcc0cee8072288614047411fe6ebda3fcc002073bbb502"
