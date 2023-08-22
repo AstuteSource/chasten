@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chasten"
-version = "0.1.0"
+version = "0.1.1"
 description = "Chasten checks the AST of a Python program!"
 authors = ["Gregory M. Kapfhammer <gkapfham@allegheny.edu>"]
 readme = "README.md"
