@@ -102,7 +102,6 @@ def display_final_diagnostic_message(datasette_platform: str, publish: bool):
     output.console.print()
 
 
-
 def display_datasette_details(
     label: str,
     virtual_env_location: str,
