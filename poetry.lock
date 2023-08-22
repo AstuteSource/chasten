@@ -577,6 +577,24 @@ datasette = ">=0.63.1"
 test = ["pytest", "pytest-asyncio", "sqlite-utils"]
 
 [[package]]
+name = "datasette-sqlite-regex"
+version = "0.2.3"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "datasette_sqlite_regex-0.2.3-py3-none-any.whl", hash = "sha256:7fa31aad0630cdcb1b59dff14ab120d1b6dc3bfc7a8b048e489bbc0f6bf9b42d"},
+]
+
+[package.dependencies]
+datasette = "*"
+sqlite-regex = "*"
+
+[package.extras]
+test = ["pytest"]
+
+[[package]]
 name = "elementpath"
 version = "4.1.4"
 description = "XPath 1.0/2.0/3.0/3.1 parsers and selectors for ElementTree and lxml"
@@ -2040,6 +2058,17 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "pysqlite3"
+version = "0.5.1"
+description = "DB-API 2.0 interface for Sqlite 3.x"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pysqlite3-0.5.1.tar.gz", hash = "sha256:45496b7a5e5931afb9993f76ce48873d126abfc0fe70b65373970d353fca2c24"},
+]
+
+[[package]]
 name = "pytest"
 version = "7.4.0"
 description = "pytest: simple powerful testing with Python"
@@ -2631,6 +2660,35 @@ files = [
 ]
 
 [[package]]
+name = "sqlean-py"
+version = "0.21.5.3"
+description = "sqlite3 with extensions"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "sqlean.py-0.21.5.3-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:85f7c13c38db401db41b278bfb98037291f1e7775b5433773c021bd54ebc1bb5"},
+    {file = "sqlean.py-0.21.5.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e16a8317e7125bec4c22a033a971c68fb0e29e4bc014f9efe81a4a66c27011c8"},
+    {file = "sqlean.py-0.21.5.3-cp310-cp310-win_amd64.whl", hash = "sha256:baeca0d87b6c64b7c2eb41b4c103fd2f0220996e6293c0a53b3fa8aa0e8188d9"},
+    {file = "sqlean.py-0.21.5.3-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:1a34abb6ce66d09181ce8490485c7c32564796df1fa51c49909dd7164592dfad"},
+    {file = "sqlean.py-0.21.5.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ba82d621b9ab55090da9c3f582ee8c6049cbbfd5ace0245736c2470515896eae"},
+    {file = "sqlean.py-0.21.5.3-cp311-cp311-win_amd64.whl", hash = "sha256:6facce17d6a35b50e5be5fa3afb73c549239fb7653401ef01f42c319d2c24023"},
+    {file = "sqlean.py-0.21.5.3-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:c36deabcf59e18a8e5a67bf8b82cf8a73db0b942cf3f02cc44f787af7636d8b4"},
+    {file = "sqlean.py-0.21.5.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6e85feabfb2806b025fded79f9d1315555e0fbee06a90bd4d10acd6d6a4b2b92"},
+    {file = "sqlean.py-0.21.5.3-cp312-cp312-win_amd64.whl", hash = "sha256:db2fdd0237f082b699094b95dce052a811f2280fc3cf51909d65ad18bd6b04cd"},
+    {file = "sqlean.py-0.21.5.3-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:81790eed0503cb8f6ac51e3d55a2d76c7e2091859d934eae7c597d285d867d22"},
+    {file = "sqlean.py-0.21.5.3-cp36-cp36m-win_amd64.whl", hash = "sha256:fef7f9bd046f2cf6378dd7e9c483cc2480cdcaf97605ac9cf72b04aacca7b4ee"},
+    {file = "sqlean.py-0.21.5.3-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0324d82a2a841cc25803eccc246dad0aa77ba7427018571e3b97ab5408085245"},
+    {file = "sqlean.py-0.21.5.3-cp37-cp37m-win_amd64.whl", hash = "sha256:fe544a46f24b8e20537bb7f37104c50d811fc6bc276162d20e862d9abdbab06b"},
+    {file = "sqlean.py-0.21.5.3-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:a1c3cc2d824a4d16f7a7ffa488109f10f18a12d3c3e8f6f07f051389c34c9fa7"},
+    {file = "sqlean.py-0.21.5.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:67537acefc4bdd4208a14403a79b1757029d020645fd3150fadc4806b7b23edd"},
+    {file = "sqlean.py-0.21.5.3-cp38-cp38-win_amd64.whl", hash = "sha256:2bb75059bb43c79ac2032f786d5d9cc9e510db2c070ff854faa3b4c81ade58de"},
+    {file = "sqlean.py-0.21.5.3-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:fe6b5ecf3ca00c448a5d6fd754e258e3b803f22ed375d944df93f7a3fe5a1b55"},
+    {file = "sqlean.py-0.21.5.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7cd5fe8e6691a62c376e6fbc772d7668c71eae490c712d73771b6c3f345739d8"},
+    {file = "sqlean.py-0.21.5.3-cp39-cp39-win_amd64.whl", hash = "sha256:3a6d4db8c5e603727a787231fc267ccd7267bd9ded6e0b780351b96f080c8f5e"},
+]
+
+[[package]]
 name = "sqlite-fts4"
 version = "1.0.3"
 description = "Python functions for working with SQLite FTS4 search"
@@ -2640,6 +2698,23 @@ python-versions = "*"
 files = [
     {file = "sqlite-fts4-1.0.3.tar.gz", hash = "sha256:78b05eeaf6680e9dbed8986bde011e9c086a06cb0c931b3cf7da94c214e8930c"},
     {file = "sqlite_fts4-1.0.3-py3-none-any.whl", hash = "sha256:0359edd8dea6fd73c848989e1e2b1f31a50fe5f9d7272299ff0e8dbaa62d035f"},
+]
+
+[package.extras]
+test = ["pytest"]
+
+[[package]]
+name = "sqlite-regex"
+version = "0.2.3"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "sqlite_regex-0.2.3-py3-none-macosx_10_6_x86_64.whl", hash = "sha256:4953e2c56fa2b54e6a8cafa59c027fd5e2fca41c2e74ba6fb611e38b3bc264c7"},
+    {file = "sqlite_regex-0.2.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:254527dabb2ef8336b1ffd8b70152c8a77186b6b3d4175776417576f7057dcf7"},
+    {file = "sqlite_regex-0.2.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux1_x86_64.whl", hash = "sha256:a6c9be1fdadf0e41da91214e5e9de7483e6eb57dda46c892c4029bd20f08f508"},
+    {file = "sqlite_regex-0.2.3-py3-none-win_amd64.whl", hash = "sha256:74cbca39b4b418fda46ddfd8ca486ed579ea1ca38d5fca664593c2f8cff86b15"},
 ]
 
 [package.extras]
@@ -2959,4 +3034,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "786fbfe90bcc7060bf2e304c8527690bb36b8fc9226a6b83a2d743c521482344"
+content-hash = "9f4262fd5f3f5748376a8302d57c86b305040b67a5d4e2e22a8cd5f3230a7da0"
