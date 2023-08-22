@@ -191,7 +191,7 @@ def start_local_datasette_server(
         proc.wait()
     # publish the datasette instance to fly.io
     elif publish:
-        (found_fly_executable, fly_executable_path) = filesystem.can_find_executable(constants.chasten.Executable_Fly)
+        (found_fly_executable, _) = filesystem.can_find_executable(constants.chasten.Executable_Fly)
         # was not able to find the fly executable (which the person using this
         # program has to install separately, following the instructions for the
         # datasette-publish-fly plugin) and thus need to exit and not proceed
