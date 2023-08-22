@@ -42,3 +42,8 @@ def get_chasten_version() -> str:
     except importlib.metadata.PackageNotFoundError:
         version_string_of_foo = default_chasten_semver
     return version_string_of_foo
+
+
+def join_and_preserve(data, start, end):
+    """Join and preserve lines inside of a list."""
+    return constants.markers.Newline.join(data[start:end])
