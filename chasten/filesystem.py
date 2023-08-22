@@ -5,7 +5,7 @@ import shutil
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, NoReturn, Optional, Union
+from typing import Any, Dict, List, NoReturn, Optional, Tuple, Union
 
 import flatterer  # type: ignore
 from rich.tree import Tree
@@ -294,3 +294,16 @@ def get_json_results(json_paths: List[Path]) -> List[Dict[Any, Any]]:
         json_dicts_list.append(json_dict)
     # return the list of JSON dictionaries
     return json_dicts_list
+
+
+def can_find_executable(executable_name: str) -> Tuple[bool, str]:
+    """Determine whether or not it is possible to find an executable."""
+    # use the shutil.which function to find the path of the executable
+    executable_path = shutil.which(executable_name)
+    # the executable is available in the path, so
+    # signal that it is found and return the full path
+    if executable_path is not None:
+        return (True, executable_path)
+    # the executable is not available, so signal its
+    # absence and then return an emptry string instead of a path
+    return (False, constants.markers.Nothing)
