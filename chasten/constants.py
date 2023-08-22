@@ -84,11 +84,13 @@ class Datasette:
 
     Chasten_Database: str
     Datasette_Executable: str
+    Datasette_Copyable_Install: str
 
 
 datasette = Datasette(
     Chasten_Database="chasten.db",
     Datasette_Executable="datasette",
+    Datasette_Copyable_Install="--install=datasette-copyable",
 )
 
 
