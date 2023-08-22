@@ -85,12 +85,16 @@ class Datasette:
     Chasten_Database: str
     Datasette_Executable: str
     Datasette_Copyable_Install: str
+    Datasette_Export_Notebook: str
+    Datasette_Search_All: str
 
 
 datasette = Datasette(
     Chasten_Database="chasten.db",
     Datasette_Executable="datasette",
     Datasette_Copyable_Install="--install=datasette-copyable",
+    Datasette_Export_Notebook="--install=datasette-export-notebook",
+    Datasette_Search_All="--install=datasette-search-all",
 )
 
 
