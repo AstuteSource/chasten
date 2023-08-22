@@ -122,7 +122,7 @@ def display_datasette_details(
     output.console.print()
 
 
-def start_local_datasette_server(
+def start_datasette_server(
     database_path: Path,
     datasette_metadata: Path,
     datasette_port: int = 8001,

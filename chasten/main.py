@@ -817,7 +817,7 @@ def datasette_serve(  # noqa: PLR0913
     # start the datasette server that will run indefinitely;
     # shutting down the datasette server with a CTRL-C will
     # also shut down this command in chasten
-    database.start_local_datasette_server(
+    database.start_datasette_server(
         database_path=database_path,
         datasette_port=port,
         datasette_metadata=metadata,
@@ -877,7 +877,7 @@ def datasette_publish(
     # publish the datasette instance using fly.io;
     # this passes control to datasette and then to
     # the fly program that must be installed
-    database.start_local_datasette_server(
+    database.start_datasette_server(
         database_path=database_path,
         datasette_metadata=metadata,
         publish=True,
