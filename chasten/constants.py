@@ -13,6 +13,7 @@ class Chasten:
     Chasten_Database_View: str
     Emoji: str
     Executable_Fly: str
+    Executable_Vercel: str
     Https: str
     Name: str
     Programming_Language: str
@@ -30,6 +31,7 @@ chasten = Chasten(
     Chasten_Database_View="chasten_complete",
     Emoji=":dizzy:",
     Executable_Fly="fly",
+    Executable_Vercel="vercel",
     Https="https://",
     Name="chasten",
     Programming_Language="python",
