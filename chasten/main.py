@@ -879,8 +879,8 @@ def datasette_publish(  # noqa: PLR0913
     )
     output.console.print()
     output.console.print(
-            f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
-        )
+        f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
+    )
     # display details about the publishing step
     label = f":sparkles: Publishing a datasette to {datasette_platform.value}:"
     display_serve_or_publish_details(label, database_path, metadata, publish=True)
