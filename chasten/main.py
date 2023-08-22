@@ -826,7 +826,7 @@ def datasette_serve(  # noqa: PLR0913
 
 
 @cli.command()
-def datasette_publish(
+def datasette_publish(  # noqa: PLR0913
     database_path: Path = typer.Argument(
         help="SQLite3 database file storing chasten's results.",
         exists=True,
@@ -848,6 +848,12 @@ def datasette_publish(
         writable=True,
         resolve_path=True,
     ),
+    datasette_platform: enumerations.DatasettePublicationPlatform = typer.Option(
+        enumerations.DatasettePublicationPlatform.FLY.value,
+        "--platform",
+        "-p",
+        help="Specify the deployment platform for datasette.",
+    ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
         "--debug-level",
@@ -862,7 +868,7 @@ def datasette_publish(
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🌎 Publish a datasette to fly.io."""
+    """🌎 Publish a datasette to Fly or Vercel."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -871,8 +877,12 @@ def datasette_publish(
         database=database_path,
         metadata=metadata,
     )
+    output.console.print()
+    output.console.print(
+            f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
+        )
     # display details about the publishing step
-    label = ":sparkles: Publishing a datasette to fly.io:"
+    label = f":sparkles: Publishing a datasette to {datasette_platform.value}:"
     display_serve_or_publish_details(label, database_path, metadata, publish=True)
     # publish the datasette instance using fly.io;
     # this passes control to datasette and then to
@@ -880,6 +890,7 @@ def datasette_publish(
     database.start_datasette_server(
         database_path=database_path,
         datasette_metadata=metadata,
+        datasette_platform=datasette_platform.value,
         publish=True,
     )
 
