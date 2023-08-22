@@ -10,7 +10,9 @@ class Chasten:
 
     Application_Name: str
     Application_Author: str
+    Chasten_Database_View: str
     Emoji: str
+    Executable_Fly: str
     Https: str
     Name: str
     Programming_Language: str
@@ -25,7 +27,9 @@ class Chasten:
 chasten = Chasten(
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
+    Chasten_Database_View="chasten_complete",
     Emoji=":dizzy:",
+    Executable_Fly="fly",
     Https="https://",
     Name="chasten",
     Programming_Language="python",
