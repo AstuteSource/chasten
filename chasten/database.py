@@ -239,6 +239,7 @@ def start_datasette_server(  # # noqa: PLR0912
                 datasette_platform,
                 str(database_path),
                 running_argument,
+                "--install=datasette-copyable"
                 "-m",
                 str(metadata),
             ]
@@ -250,6 +251,7 @@ def start_datasette_server(  # # noqa: PLR0912
                 datasette_platform,
                 str(database_path),
                 running_argument,
+                "--install=datasette-copyable"
             ]
         # run the datasette server as a subprocess of chasten;
         # note that the only way to stop the server is to press CTRL-C;
