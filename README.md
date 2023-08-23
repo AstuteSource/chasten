@@ -104,3 +104,24 @@ chasten:
   checks-file:
     - checks.yml
 ```
+
+The `checks.yml file` can contain one to many checks. Here is an example of a
+check configuration file with two checks that respectively find the first
+executable line of non-test and test-case functions in a Python project:
+
+```yml
+checks:
+  - name: "all-non-test-function-definition"
+    code: "FUNC"
+    id: "FUNC001"
+    description: "First executable line of a non-test function, skipping over docstrings and/or comments"
+    pattern: '//FunctionDef[not(contains(@name, "test_"))]/body/Expr[value/Constant]/following-sibling::*[1] | //FunctionDef[not(contains(@name, "test_"))]/body[not(Expr/value/Constant)]/*[1]'
+  - name: "all-test-function-definition"
+    code: "FUNC"
+    id: "FUNC002"
+    description: "First executable line of a test function, skipping over docstrings and/or comments"
+    pattern: '//FunctionDef[starts-with(@name, "test_")]/body/Expr[value/Constant]/following-sibling::*[1] | //AsyncFunctionDef[starts-with(@name, "test_")]/body/Expr[value/Constant]/following-sibling::*[1] | //FunctionDef[starts-with(@name, "test_")]/body[not(Expr/value/Constant)]/*[1] | //AsyncFunctionDef[starts-with(@name, "test_")]/body[not(Expr/value/Constant)]/*[1]'
+    count:
+      min: 7
+      max: 22
+```
