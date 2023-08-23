@@ -146,14 +146,14 @@ repositories that are forks of existing Python projects created for convenient
 analysis. To incrementally analyze these two projects with `chasten`, you can
 type the following commands:
 
-- After creating a `subject-data` directory that contains a `lazytracker`
+- After creating a `subject-data/` directory that contains a `lazytracker/`
 directory, run the `chasten analyze` command for the `lazytracker` program:
 
 ```shell
 chasten analyze lazytracker \
         --config <path to the chasten-configuration/ directory> \
         --search-path <path to the lazytracker/ directory> \
-        --save-directory < path to the subject-data/lazytracker/ directory> \
+        --save-directory <path to the subject-data/lazytracker/ directory> \
         --save
  ```
 
