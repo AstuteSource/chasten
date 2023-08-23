@@ -278,9 +278,7 @@ interface (TUI). To use TUI-based way to create a complete command-line for
 
 - Found a bug or have a feature that the development team should implement?
 [Raise an issue](https://github.com/AstuteSource/chasten/issues)
-
 - Interesting in learning more about tool usage details? [Check the
 wiki](https://github.com/AstuteSource/chasten/wiki)
-
 - Want to discuss ways to use the tool? [Participate in
 Discussions](https://github.com/AstuteSource/chasten/discussions/2)
