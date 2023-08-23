@@ -263,6 +263,8 @@ Importantly, the use of the `chasten datasette-publish` command with the
 instructions for the `datasette-publish-vercel` plugin to install the `vercel`
 command-line tool. This is necessary because, although
 `datasette-publish-vercel` is one of `chasten`'s dependencies neither `chasten`
-nor `datasette-publish-vercel` provide the `vercel` tool even though they use it.
+nor `datasette-publish-vercel` provide the `vercel` tool even though they use
+it. You must take similar steps before publishing your database to
+[Fly](https://fly.io/)!
 
 ## 🤯 Interaction
