@@ -30,7 +30,7 @@ that contain XPATH expressions.
 ## 🔋Features
 
 - ✨ Easy-to-configure, automated analysis of a Python program's abstract syntax tree
-- 📃 Flexible and easy-to-use YAML-based configuration file for describing analyses
+- 📃 Flexible and easy-to-use YAML-based configuration file for describing analyses and checks
 - 🪂 Automated generation and verification of the YAML configuration files for an analysis
 - 🚀 Configurable saving of analysis results in the JSON, CSV, or SQLite formats
 - 🚧 Automated integration of result files that arise from multiple runs of the tool
@@ -44,12 +44,11 @@ that contain XPATH expressions.
 
 - Python 3.11
 - Chasten leverages numerous Python packages, including notable ones such as:
-    - [datasette](https://github.com/simonw/datasette): Interactive data
-    analysis dashboards
-    - pyastgrep:
-    - pydantic:
-    - rich:
-    - trogon:
-    - typer:
+    - [datasette](https://github.com/simonw/datasette): Interactive data analysis dashboards
+    - [pyastgrep](https://github.com/spookylukey/pyastgrep): XPATH-based analysis of a Python program's AST
+    - [pydantic](https://github.com/pydantic/pydantic): Automated generation and validation of configuration files
+    - [rich](https://github.com/Textualize/rich): Full-featured formatting of text in the terminal
+    - [trogon](https://github.com/Textualize/trogon): Automated generation of terminal user interfaces for a command-line tool
+    - [typer](https://github.com/tiangolo/typer): Easy-to-implement and fun-to-use command-line interfaces
 
 ## 🔽 Installation
