@@ -1,19 +1,29 @@
-<img src="https://github.com/AstuteSource/chasten/blob/master/.github/images/chasten-logo.svg" alt="Chasten Logo" title="Chasten Logo" />
+<img src="https://github.com/AstuteSource/chasten/blob/master/.github/images/chasten-logo.svg" alt="Chasten Logo"
+    title="Chasten Logo" />
 
 # 💫 chasten
 
 [![build](https://github.com/gkapfham/chasten/actions/workflows/build.yml/badge.svg)](https://github.com/gkapfham/chasten/actions/workflows/build.yml)
 ![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gkapfham/5300aa276fa9261b2b21b96c3141b3ad/raw/covbadge.json)
-[![Language: Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://github.com/gkapfham/chasten/search?l=python)
+[![Language:
+Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://github.com/gkapfham/chasten/search?l=python)
 [![Code Style: black](https://img.shields.io/badge/Code%20Style-Black-blue.svg)](https://github.com/psf/black)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-blue.svg)](https://github.com/gkapfham/chasten/graphs/commit-activity)
 [![License LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-**Chasten** is a Python program that uses XPATH expressions to find patterns in the the abstract syntax tree (AST) of a Python program
+**Chasten** is a Python program that uses XPATH expressions to find patterns in
+the abstract syntax tree (AST) of a Python program. You can use Chasten to
+quickly implement your own configurable linting rules! For instance, do you want
+to ensure that a Python program has does not have any triple-nested `for` loops
+inside of `async` functions? Or, do you want to confirm that every function
+inside your Python program has type annotations and a docstring comment? Chasten
+can help! It allows you to express these checks &mdash; and many other checks
+&mdash; in simple YAML files that contain XPATH expressions. Continue reading to
+learn more and get started!
 
 ## 🔋Features
 
-- 💫 Easy-to-configure, automated analysis of a Python program's abstract syntax tree
+- ✨ Easy-to-configure, automated analysis of a Python program's abstract syntax tree
 - 📃 Flexible and easy-to-use YAML-based configuration file for describing analyses
 - 🪂 Automated generation and verification of the YAML configuration files for an analysis
 - 🚀 Configurable saving of analysis results in the JSON, CSV, or SQLite formats
