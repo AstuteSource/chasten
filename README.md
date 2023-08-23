@@ -215,4 +215,7 @@ This command will produce a directory like
 that contains a SQLite database called `chasten.db` and a `csv/` directory with
 CSV files that correspond to each of the tables inside of the database.
 
+You can learn more about the `integrate` sub-command by typing `chasten
+integrate --help`.
+
 ## 🌄 Results
