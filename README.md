@@ -184,7 +184,7 @@ chasten analyze multicounter \
 `subject-data/lazytracker` directory you will find a JSON file with a name like
 `chasten-results-multicounter-20230821171712-5c52f2f1b61b4cce97624cc34cb39d4f.json`
 with name components that are similar to the JSON file created for the
-`lazytracker` program.
+`multicounter` program.
 
 ## 🚧 Integration
 
