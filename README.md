@@ -27,10 +27,28 @@ a docstring comment? **Chasten can help**! It allows you to express these checks
 &mdash; and many other types of analyses as well &mdash; in simple YAML files
 that contain XPATH expressions.
 
+## 😉 Definition
+
 - **chasten** (transitive verb) "to make someone aware of failure or of having
 done something wrong" [Cambridge
 Dictionary](https://dictionary.cambridge.org/us/dictionary/english/chasten).
-    - Sentence Use: "Her remarks are a gift to me even as they chasten and redirect my efforts to expand the arguments of this book into a larger one." [Cambridge English Corpus](https://www.cambridge.org/gb/cambridgeenglish/better-learning-insights/corpus)
+    - **Sentence**: "Her remarks are a gift to me even as they chasten and
+    redirect my efforts to expand the arguments of this book into a larger one."
+    [Cambridge English
+    Corpus](https://www.cambridge.org/gb/cambridgeenglish/better-learning-insights/corpus)
+
+- **chasten** (uncountable or singular noun) "a tool that analyzes the abstract
+syntax tree of a Python program to detect potential sources of programmer
+mistakes so as to prevent program failure" [AstuteSource
+Developers](https://github.com/AstuteSource).
+    - **Student Sentence**: "I'm glad that `chasten` reminded me to add
+    docstrings and type annotations to all of the functions in `main.py`"
+    - **Instructor Sentence**: "`chasten` makes it easy for me to automatically
+    and reliably confirm that student programs have the required coding
+    constructs"
+    - **Developer Sentence**: "Since I was already familiar with XPATH
+    expressions, `chasten` made it fun for me to do automate analysis of Python
+    code"
 
 ## 🔋Features
 
