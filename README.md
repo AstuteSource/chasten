@@ -274,6 +274,15 @@ create the tool's command-line arguments and options through a terminal user
 interface (TUI). To use TUI-based way to create a complete command-line for
 `chasten` you can type the command `chasten interact`.
 
+## 🤗 Learning
+
+- Curious about the nodes that are available in a Python program's AST?
+    - [XPATH documentation](https://www.w3schools.com/xml/xpath_syntax.asp) expressions to find
+patterns in the
+    - [Abstract Syntax Tree documentation](https://docs.python.org/3/library/ast.html) introduces the components of a Python AST
+    - [Green Tea Snakes](https://greentreesnakes.readthedocs.io/en/latest/index.html) provides the "missing Python AST docs"
+- Want to learn more about how to write XPATH expressions for 
+
 ## 🧗Improvement
 
 - Found a bug or have a feature that the development team should implement?
