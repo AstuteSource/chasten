@@ -1,4 +1,6 @@
-![Chasten Logo](./.github/images/chasten-logo.svg)
+<!-- ![Chasten Logo](./.github/images/chasten-logo.svg) -->
+
+<link rel="icon" href="https://github.com/AstuteSource/chasten/blob/master/.github/images/chasten-logo.svg" />
 
 # chasten
 
