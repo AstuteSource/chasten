@@ -144,7 +144,7 @@ Since `chasten` needs a project with Python source code as the input to its
 📦 [AstuteSource/multicounter](https://github.com/AstuteSource/multicounter)
 repositories that are forks of existing Python projects created for convenient
 analysis. To incrementally analyze these two projects with `chasten`, you can
-type the following commands:
+type the following commands to produce a results JSON file for each project:
 
 - After creating a `subject-data/` directory that contains a `lazytracker/`
 directory, you can run the `chasten analyze` command for the `lazytracker`
