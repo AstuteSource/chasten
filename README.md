@@ -188,7 +188,8 @@ with name components that are similar to the JSON file created for the
 
 - Since the `all-test-function-definition` check specifies that the program must
 have between `1` and `10` tests you will notice that this check passes for both
-`lazytracker` and `multicounter`.
+`lazytracker` and `multicounter`. This means that `chasten` returns a `0` error
+code to communicate to your operating system that the check passed.
 
 - You can learn more about how to use the `analyze` sub-command by typing
 `chasten analyze --help`. For instance, `chasten` supports the `--check-include`
@@ -198,4 +199,14 @@ for any of a check's attributes specified in the `checks.yml` file.
 
 ## 🚧 Integration
 
- 
+After running `chasten` on the `lazytracker` and `multicounter` programs you can
+integrate their individual JSON files into a single JSON file, joint CSV files,
+and a SQLite database. Once you have made an `integrated-data` directory, you
+can type this command to perform the integration:
+
+```shell
+chasten integrate all-programs \
+        <path to subject-data>/**/*.json \
+        --save-directory <path to the integrated-data/ directory>
+```
+
