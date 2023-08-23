@@ -91,7 +91,8 @@ Follow these steps to install the `chasten` program:
 ## 🪂 Configuration
 
 You can configure `chasten` with two YAML files, normally called `config.yml`
-and `checks.yml`. Please refer to the
+and `checks.yml`. Although `chasten` can generate a starting configuration, you
+can check out the
 [AstuteSource/chasten-configuration](https://github.com/AstuteSource/chasten-configuration)
 repository for example(s) of configuration files that you can use to configure
 the tool. Although the `config.yml` file can reference multiple check
