@@ -228,8 +228,8 @@ while you study the source code for these projects with your text editor!
 Examining the results will reveal that `chasten`, through its use of the 📦
 [spookylukey/pyastgrep](https://github.com/spookylukey/pyastgrep), correctly
 uses XPATH expression for `all-test-function-definition` to find the first line
-of executable source code inside of each test case, skipping over a function's
-docstring or other starting comments.
+of executable source code inside of each test, skipping over a function's
+docstring and other comments.
 
 For the `lazytracker` program you will notice that `chasten` reports that there
 are `6` test cases even though `pytest` only finds and runs `5` tests. This is
