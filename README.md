@@ -225,10 +225,10 @@ If you want to create an interactive data analysis dashboard that uses 📦
 `chasten datasette-serve <path containing integrated results>/chasten.db --port
 8001`. Now you can use the dashboard in your web browser to analyze the results
 while you study the source code for these projects with your text editor!
-Examining the results will reveal that `chasten`, through its use of the 📦
+Examining the results will reveal that `chasten`, through its use of 📦
 [spookylukey/pyastgrep](https://github.com/spookylukey/pyastgrep), correctly
-uses XPATH expression for `all-test-function-definition` to find the first line
-of executable source code inside of each test, skipping over a function's
+uses the XPATH expression for `all-test-function-definition` to find the first
+line of executable source code inside of each test, skipping over a function's
 docstring and other comments.
 
 For the `lazytracker` program you will notice that `chasten` reports that there
