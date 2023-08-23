@@ -80,8 +80,27 @@ Developers](https://github.com/AstuteSource).
 
 ## 🔽 Installation
 
+Follow these steps to install the `chasten` program:
+
 - Install Python 3.11 for your operating system
 - Install [pipx](https://github.com/pypa/pipx) to support program installation in isolated environments
 - Type `pipx install chasten` to install Chasten
 - Type `pipx list` and confirm that Chasten is installed
 - Type `chasten --help` to learn how to use the tool
+
+## 🌟 Configuration
+
+You can configure `chasten` with two YAML files, normally called `config.yml`
+and `checks.yml`. Please refer to the
+[AstuteSource/chasten-configuration](https://github.com/AstuteSource/chasten-configuration)
+repository for example(s) of configuration files. Although the `config.yml` file
+can reference multiple check configuration files, this example shows how to
+specify a single `checks.yml` file:
+
+```yml
+# chasten configuration
+chasten:
+  # point to a single checks file
+  checks-file:
+    - checks.yml
+```
