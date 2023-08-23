@@ -93,9 +93,10 @@ Follow these steps to install the `chasten` program:
 You can configure `chasten` with two YAML files, normally called `config.yml`
 and `checks.yml`. Please refer to the
 [AstuteSource/chasten-configuration](https://github.com/AstuteSource/chasten-configuration)
-repository for example(s) of configuration files. Although the `config.yml` file
-can reference multiple check configuration files, this example shows how to
-specify a single `checks.yml` file:
+repository for example(s) of configuration files that you can use to configure
+the tool. Although the `config.yml` file can reference multiple check
+configuration files, this example shows how to specify a single `checks.yml`
+file:
 
 ```yml
 # chasten configuration
@@ -105,9 +106,15 @@ chasten:
     - checks.yml
 ```
 
-The `checks.yml file` can contain one to many checks. Here is an example of a
+The `checks.yml file` can contain one or more checks. Here is an example of a
 check configuration file with two checks that respectively find the first
-executable line of non-test and test-case functions in a Python project:
+executable line of non-test and test-case functions in a Python project. Note
+that the `pattern` attribute specifies the XPATH version 2.0 expression that
+`chasten` will use to detect the specified type of Python function. You can type
+`poetry run chasten configure validate --config <path to chasten-configuration/
+directory>` after filling in `<path to chasten-configuration>` with the
+fully-qualified name of your configuration directory and the tool will confirm
+that your configuration meets the tool's specification.
 
 ```yml
 checks:
@@ -122,6 +129,6 @@ checks:
     description: "First executable line of a test function, skipping over docstrings and/or comments"
     pattern: '//FunctionDef[starts-with(@name, "test_")]/body/Expr[value/Constant]/following-sibling::*[1] | //AsyncFunctionDef[starts-with(@name, "test_")]/body/Expr[value/Constant]/following-sibling::*[1] | //FunctionDef[starts-with(@name, "test_")]/body[not(Expr/value/Constant)]/*[1] | //AsyncFunctionDef[starts-with(@name, "test_")]/body[not(Expr/value/Constant)]/*[1]'
     count:
-      min: 7
-      max: 22
+      min: 1
+      max: 10
 ```
