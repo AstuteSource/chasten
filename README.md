@@ -153,6 +153,15 @@ directory, run the `chasten analyze` command for the `lazytracker` program:
 chasten analyze lazytracker \
         --config <path to the chasten-configuration/ directory> \
         --search-path <path to the lazytracker/ directory> \
-        --save-directory /home/gkapfham/working/source/astute-subjects/subject-data/lazytracker \
+        --save-directory < path to the subject-data/lazytracker/ directory> \
         --save`
  ```
+
+- Now you can scan the output to confirm that `chasten` finds `6` test functions
+in the `lazytracker` project. If you look in the `subject-data/lazytracker`
+directory you will find a JSON file with a name like
+`chasten-results-lazytracker-20230823162341-4c23fc443a6b4c4aa09886f1ecb96e9f.json`.
+Running `chasten` on this program more than once will produce a new results file
+with a different timestamp (i.e., `20230823162341`) and unique identifier (i.e.,
+`4c23fc443a6b4c4aa09886f1ecb96e9f`) in its name, thus ensuring that you do not
+accidentally write over your prior results when you use the `--save` option.
