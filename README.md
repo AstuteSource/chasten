@@ -210,3 +210,9 @@ chasten integrate all-programs \
         --save-directory <path to the integrated-data/ directory>
 ```
 
+This command will produce a directory like
+`chasten-flattened-csvs-sqlite-db-all-programs-20230823171016-2061b524276b4299b04359ba30452923/`
+that contains a SQLite database called `chasten.db` and a `csv/` directory with
+CSV files that correspond to each of the tables inside of the database.
+
+## 🌄 Results
