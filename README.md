@@ -27,10 +27,10 @@ a docstring comment? **Chasten can help**! It allows you to express these checks
 &mdash; and many other types of analyses as well &mdash; in simple YAML files
 that contain XPATH expressions.
 
-## 😉 Definition
+## 😂 Definitions
 
 - **chasten** (transitive verb) "to make someone aware of failure or of having
-done something wrong" [Cambridge
+done something wrong", [Cambridge
 Dictionary](https://dictionary.cambridge.org/us/dictionary/english/chasten).
     - **Sentence**: "Her remarks are a gift to me even as they chasten and
     redirect my efforts to expand the arguments of this book into a larger one."
@@ -39,16 +39,20 @@ Dictionary](https://dictionary.cambridge.org/us/dictionary/english/chasten).
 
 - **chasten** (uncountable or singular noun) "a tool that analyzes the abstract
 syntax tree of a Python program to detect potential sources of programmer
-mistakes so as to prevent program failure" [AstuteSource
+mistakes so as to prevent program failure", [AstuteSource
 Developers](https://github.com/AstuteSource).
     - **Student Sentence**: "I'm glad that `chasten` reminded me to add
-    docstrings and type annotations to all of the functions in `main.py`"
+    docstrings and type annotations to all of the functions in `main.py`. It was
+    easy to see what to fix!"
     - **Instructor Sentence**: "`chasten` makes it easy for me to automatically
     and reliably confirm that student programs have the required coding
-    constructs"
+    constructs. It's so much better than regular expressions!"
     - **Developer Sentence**: "Since I was already familiar with XPATH
-    expressions, `chasten` made it fun for me to do automate analysis of Python
-    code"
+    expressions, `chasten` made it fun for me to do an automate analysis of
+    a Python codebase that I maintain."
+    - **Researcher Sentence**: "In addition to helping me quickly scan the
+    source code of Python projects, `chasten`'s analysis dashboard lets me
+    understand the data."
 
 ## 🔋Features
 
