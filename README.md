@@ -239,3 +239,20 @@ with `test_`. This example illustrates the limitations of static analysis with
 `chasten`! Even though the tool correctly detected all of the "test functions",
 the nesting of the functions in the test suite means that `pytest` will run the
 outer `test_` function and use the inner `test_` function for testing purposes.
+
+With that said, `chasten` correctly finds each of the tests for the
+`multicounter` project. You can follow each of the previous steps in this
+document to apply `chasten` to your own Python program!
+
+## 🌎 Deployment
+
+If you want to make your `chasten.db` publicly available for everyone to study,
+you can use the `chasten datasette-publish` sub-command. As long as you have
+followed the installation instructions for 📦
+[simonw/datasette-publish-fly](https://github.com/simonw/datasette-publish-fly)
+and 📦
+[simonw/datasette-publish-vercel](https://github.com/simonw/datasette-publish-vercel),
+you can use the plugins to deploy a public `datasette` server that hosts your
+`chasten.db`.
+
+## 🤯 Interaction
