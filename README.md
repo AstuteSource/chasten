@@ -17,12 +17,12 @@ patterns in the [abstract syntax
 tree](https://docs.python.org/3/library/ast.html) (AST) of a Python program. You
 can use Chasten to quickly implement your own configurable linting rules!
 
-For instance, do you want to ensure that a Python program has does not have any
-triple-nested `for` loops inside of `async` functions? Or, do you want to
-confirm that every function inside your Python program has type annotations and
-a docstring comment? Chasten can help! It allows you to express these checks
-&mdash; and many other checks &mdash; in simple YAML files that contain XPATH
-expressions. Continue reading to learn more and get started!
+Do you want to ensure that a Python program has does not have any triple-nested
+`for` loops inside of `async` functions? Or, do you want to confirm that every
+function inside your Python program has type annotations and a docstring
+comment? Chasten can help! It allows you to express these checks &mdash; and
+many other types of analyses &mdash; in simple YAML files that contain XPATH
+expressions.
 
 ## 🔋Features
 
