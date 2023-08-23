@@ -35,7 +35,7 @@ that contain XPATH expressions.
 - 🚀 Configurable saving of analysis results in the JSON, CSV, or SQLite formats
 - 🚧 Automated integration of result files that arise from multiple runs of the tool
 - 📦 Interactive results analysis through the use of a locally running datasette server
-- 🌎 Automated deployment of a datasette server on platforms like Fly or Vercel.
+- 🌎 Automated deployment of a datasette server on platforms like Fly or Vercel
 - 🦚 Detailed console and syslog logging to furnish insights into the tool's behavior
 - 💠 Rich command-line interface with robust verification of arguments and options
 - 🤯 Interactive command-line generation through an easy-to-use terminal user interface
