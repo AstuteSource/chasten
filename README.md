@@ -253,6 +253,9 @@ followed the installation instructions for 📦
 and 📦
 [simonw/datasette-publish-vercel](https://github.com/simonw/datasette-publish-vercel),
 you can use the plugins to deploy a public `datasette` server that hosts your
-`chasten.db`.
+`chasten.db`. For instance, running the command `chasten datasette-publish <path
+containing integrated results>/chasten.db --platform vercel` will publish the
+results from running `chasten` on `lazytracker` and `multicounter` to the
+[Vercel](https://vercel.com/) platform.
 
 ## 🤯 Interaction
