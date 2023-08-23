@@ -143,4 +143,10 @@ Since `chasten` needs a project with Python source code as the input to its
 📦 [AstuteSource/lazytracker](https://github.com/AstuteSource/lazytracker) and
 📦 [AstuteSource/multicounter](https://github.com/AstuteSource/multicounter)
 repositories that are forks of existing Python projects created for convenient
-analysis.
+analysis. To incrementally analyze these two projects with `chasten`, you can
+type the following commands:
+
+- Run `chasten analyze lazytracker --config /home/gkapfham/working/source/astute-subjects/chasten-configuration \
+               --search-path /home/gkapfham/working/source/astute-subjects/subject-forks/lazytracker/ \
+               --save-directory /home/gkapfham/working/source/astute-subjects/subject-data/lazytracker \
+               --save`
