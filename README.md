@@ -44,12 +44,12 @@ Developers](https://github.com/AstuteSource).
     - **Student Sentence**: "I'm glad that `chasten` reminded me to add
     docstrings and type annotations to all of the functions in `main.py`. It was
     easy to see what to fix!"
-    - **Instructor Sentence**: "`chasten` makes it easy for me to automatically
-    and reliably confirm that student programs have the required coding
-    constructs. It's so much better than regular expressions!"
+    - **Instructor Sentence**: "`chasten` makes it easy for me to confirm that
+    student programs have the required coding constructs. It's much better than
+    using regular expressions!"
     - **Developer Sentence**: "Since I was already familiar with XPATH
-    expressions, `chasten` made it fun for me to do an automate analysis of
-    a Python codebase that I maintain."
+    expressions, `chasten` made it fun for me to do an automate analysis of a
+    Python codebase that I maintain."
     - **Researcher Sentence**: "In addition to helping me quickly scan the
     source code of Python projects, `chasten`'s analysis dashboard lets me
     understand the data."
