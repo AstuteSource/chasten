@@ -32,7 +32,7 @@ that contain XPATH expressions.
 - **chasten** (transitive verb) "to make someone aware of failure or of having
 done something wrong", [Cambridge
 Dictionary](https://dictionary.cambridge.org/us/dictionary/english/chasten).
-    - **Sentence**: "Her remarks are a gift to me even as they chasten and
+    - **Example Sentence**: "Her remarks are a gift to me even as they chasten and
     redirect my efforts to expand the arguments of this book into a larger one."
     [Cambridge English
     Corpus](https://www.cambridge.org/gb/cambridgeenglish/better-learning-insights/corpus)
