@@ -88,7 +88,7 @@ Follow these steps to install the `chasten` program:
 - Type `pipx list` and confirm that Chasten is installed
 - Type `chasten --help` to learn how to use the tool
 
-## 🌟 Configuration
+## 🪂 Configuration
 
 You can configure `chasten` with two YAML files, normally called `config.yml`
 and `checks.yml`. Please refer to the
@@ -106,18 +106,18 @@ chasten:
     - checks.yml
 ```
 
-The `checks.yml file` can contain one or more checks. Here is an example of a
-check configuration file with two checks that respectively find the first
-executable line of non-test and test-case functions in a Python project. Note
-that the `pattern` attribute specifies the XPATH version 2.0 expression that
-`chasten` will use to detect the specified type of Python function. You can type
-`chasten configure validate --config <path to chasten-configuration/
+The `checks.yml` file must contain one or more checks. What follows is an
+example of a check configuration file with two checks that respectively find the
+first executable line of non-test and test-case functions in a Python project.
+Note that the `pattern` attribute specifies the XPATH version 2.0 expression
+that `chasten` will use to detect the specified type of Python function. You can
+type `chasten configure validate --config <path to chasten-configuration/
 directory>` after filling in `<path to chasten-configuration>` with the
 fully-qualified name of your configuration directory and the tool will confirm
 that your configuration meets the tool's specification. You can also use the
 command `chasten configure create` command to automatically generate a starting
-configuration! Typing `chasten configure --help` will further explain how to use
-the tool's configuration sub-command.
+configuration! Typing `chasten configure --help` will explain how to configure
+the tool.
 
 ```yml
 checks:
