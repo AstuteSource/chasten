@@ -258,4 +258,11 @@ containing integrated results>/chasten.db --platform vercel` will publish the
 results from running `chasten` on `lazytracker` and `multicounter` to the
 [Vercel](https://vercel.com/) platform.
 
+Importantly, the use of the `chasten datasette-publish` command with the
+`--platform vercel` option requires you to have previously followed the
+instructions for the `datasette-publish-vercel` plugin to install the `vercel`
+command-line tool. This is necessary because, although
+`datasette-publish-vercel` is one of `chasten`'s dependencies neither `chasten`
+nor `datasette-publish-vercel` provide the `vercel` tool even though they use it.
+
 ## 🤯 Interaction
