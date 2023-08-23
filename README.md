@@ -1,6 +1,6 @@
-# chasten
-
 ![Chasten Logo](./.github/images/chasten-logo.svg)
+
+# chasten
 
 [![build](https://github.com/gkapfham/chasten/actions/workflows/build.yml/badge.svg)](https://github.com/gkapfham/chasten/actions/workflows/build.yml)
 ![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gkapfham/5300aa276fa9261b2b21b96c3141b3ad/raw/covbadge.json)
