@@ -268,3 +268,8 @@ it. You must take similar steps before publishing your database to
 [Fly](https://fly.io/)!
 
 ## 🤯 Interaction
+
+Even though `chasten` is a command-line application, you create interactively
+create the tool's command-line arguments and options through a terminal user
+interface (TUI). To use TUI-based way to create a complete command-line for
+`chasten` you can type the command `chasten interact`.
