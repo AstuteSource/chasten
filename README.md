@@ -17,8 +17,8 @@ Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://github.c
 patterns in the [abstract syntax
 tree](https://docs.python.org/3/library/ast.html) (AST) of a Python program. You
 can use Chasten to quickly implement your own configurable linting rules,
-without having to learn how to use a complex AST analysis framework or regular
-expressions.
+without having to use a complex AST analysis framework or resorting to imprecise
+regular expressions.
 
 - Do you want to ensure that a Python program has does not have any
 triple-nested `for` loops inside of `async` functions? Or, do you want to
