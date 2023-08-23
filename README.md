@@ -223,4 +223,14 @@ integrate --help`.
 If you want to create an interactive data analysis dashboard that uses 📦
 [simonw/datasette](https://github.com/simonw/datasette) you can run the command
 `chasten datasette-serve <path containing integrated results>/chasten.db --port
-8001`. 
+8001`. Now you can use the dashboard in your web browser to analyze the results
+while you study the source code for these projects with your text editor!
+
+For the `lazytracker` program you will notice that `chasten` reports that there
+are `6` test cases even though `pytest` only finds and runs `5` tests. This is
+due to the fact that `tests/test_tracked.py` test suite in `lazytracker`
+contains a function starting with `test_` inside of another function starting
+with `test_`. This example illustrates the limitations of static analysis with
+`chasten`! Even though the tool correctly detected all of the "test functions",
+the nesting of the functions in the test suite means that `pytest` will run the
+outer `test_` function and use the inner `test_` function for testing purposes.
