@@ -74,7 +74,7 @@ Developers](https://github.com/AstuteSource).
     - [datasette](https://github.com/simonw/datasette): Interactive data analysis dashboards
     - [pyastgrep](https://github.com/spookylukey/pyastgrep): XPATH-based analysis of a Python program's AST
     - [pydantic](https://github.com/pydantic/pydantic): Automated generation and validation of configuration files
-    - [rich](https://github.com/Textualize/rich): Full-featured formatting of text in the terminal
+    - [rich](https://github.com/Textualize/rich): Full-featured formatting and display of text in the terminal
     - [trogon](https://github.com/Textualize/trogon): Automated generation of terminal user interfaces for a command-line tool
     - [typer](https://github.com/tiangolo/typer): Easy-to-implement and fun-to-use command-line interfaces
 
@@ -183,7 +183,7 @@ chasten analyze multicounter \
 `10` test functions in the `multicounter` project. If you look in the
 `subject-data/lazytracker` directory you will find a JSON file with a name like
 `chasten-results-multicounter-20230821171712-5c52f2f1b61b4cce97624cc34cb39d4f.json`
-with name components that are similar to the JSON file created for the
+and name components that are similar to the JSON file created for the
 `multicounter` program.
 
 - Since the `all-test-function-definition` check specifies that the program must
@@ -193,9 +193,9 @@ code to communicate to your operating system that the check passed.
 
 - You can learn more about how to use the `analyze` sub-command by typing
 `chasten analyze --help`. For instance, `chasten` supports the `--check-include`
-and `--check-exclude` commands that allow you to respectively include and
-exclude specific checks according to fuzzy matching rules that you can specify
-for any of a check's attributes specified in the `checks.yml` file.
+and `--check-exclude` options that allow you to respectively include and exclude
+specific checks according to fuzzy matching rules that you can specify for any
+of a check's attributes specified in the `checks.yml` file.
 
 ## 🚧 Integration
 
