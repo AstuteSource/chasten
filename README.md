@@ -11,18 +11,22 @@ Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://github.c
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-blue.svg)](https://github.com/gkapfham/chasten/graphs/commit-activity)
 [![License LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-**Chasten** is a Python program that uses
+## 🎉 Introduction
+
+- **Chasten** is a Python program that uses
 [XPATH](https://www.w3schools.com/xml/xpath_syntax.asp) expressions to find
 patterns in the [abstract syntax
 tree](https://docs.python.org/3/library/ast.html) (AST) of a Python program. You
-can use Chasten to quickly implement your own configurable linting rules!
-
-Do you want to ensure that a Python program has does not have any triple-nested
-`for` loops inside of `async` functions? Or, do you want to confirm that every
-function inside your Python program has type annotations and a docstring
-comment? Chasten can help! It allows you to express these checks &mdash; and
-many other types of analyses &mdash; in simple YAML files that contain XPATH
+can use Chasten to quickly implement your own configurable linting rules,
+without having to learn how to use a complex AST analysis framework or regular
 expressions.
+
+- Do you want to ensure that a Python program has does not have any
+triple-nested `for` loops inside of `async` functions? Or, do you want to
+confirm that every function inside your Python program has type annotations and
+a docstring comment? **Chasten can help**! It allows you to express these checks
+&mdash; and many other types of analyses as well &mdash; in simple YAML files
+that contain XPATH expressions.
 
 ## 🔋Features
 
@@ -40,8 +44,9 @@ expressions.
 ## ⚡️ Requirements
 
 - Python 3.11
-- Chasten leverages numerous Python packages, including notable ones such as (listed in alphabetical order):
-    - [datasette](https://github.com/simonw/datasette):
+- Chasten leverages numerous Python packages, including notable ones such as:
+    - [datasette](https://github.com/simonw/datasette): Interactive data
+    analysis dashboards
     - pyastgrep:
     - pydantic:
     - rich:
