@@ -154,7 +154,7 @@ chasten analyze lazytracker \
         --config <path to the chasten-configuration/ directory> \
         --search-path <path to the lazytracker/ directory> \
         --save-directory < path to the subject-data/lazytracker/ directory> \
-        --save`
+        --save
  ```
 
 - Now you can scan the output to confirm that `chasten` finds `6` test functions
