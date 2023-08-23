@@ -219,3 +219,8 @@ You can learn more about the `integrate` sub-command by typing `chasten
 integrate --help`.
 
 ## 🌄 Results
+
+If you want to create an interactive data analysis dashboard that uses 📦
+[simonw/datasette](https://github.com/simonw/datasette) you can run the command
+`chasten datasette-serve <path containing integrated results>/chasten.db --port
+8001`. 
