@@ -201,7 +201,7 @@ for any of a check's attributes specified in the `checks.yml` file.
 
 After running `chasten` on the `lazytracker` and `multicounter` programs you can
 integrate their individual JSON files into a single JSON file, joint CSV files,
-and a SQLite database. Once you have made an `integrated-data` directory, you
+and a SQLite database. Once you have made an `integrated-data/` directory, you
 can type this command to perform the integration:
 
 ```shell
