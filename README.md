@@ -135,3 +135,12 @@ checks:
       min: 1
       max: 10
 ```
+
+## ✨ Analysis
+
+Since `chasten` needs a project with Python source code as the input to its
+`analysis` sub-command, you can clone the
+📦 [AstuteSource/lazytracker](https://github.com/AstuteSource/lazytracker) and
+📦 [AstuteSource/multicounter](https://github.com/AstuteSource/multicounter)
+repositories that are forks of existing Python projects created for convenient
+analysis.
