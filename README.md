@@ -187,8 +187,8 @@ with name components that are similar to the JSON file created for the
 `multicounter` program.
 
 - Since the `all-test-function-definition` check specifies that the program must
-  have between `1` and `10` checks you will notice that `chasten`'s output
-indicates that this check passes for both `lazytracker` and `multicounter`.
+have between `1` and `10` checks you will notice that `chasten`'s test-counting
+check passes for both `lazytracker` and `multicounter`.
 
 - You can learn more about how to use the `analyze` sub-command by typing
 `chasten analyze --help`. For instance, `chasten` supports the `--check-include`
