@@ -61,7 +61,7 @@ Developers](https://github.com/AstuteSource).
 - 🪂 Automated generation and verification of the YAML configuration files for an analysis
 - 🚀 Configurable saving of analysis results in the JSON, CSV, or SQLite formats
 - 🚧 Automated integration of result files that arise from multiple runs of the tool
-- 📦 Interactive results analysis through the use of a locally running datasette server
+- 🌄 Interactive results analysis through the use of a locally running datasette server
 - 🌎 Automated deployment of a datasette server on platforms like Fly or Vercel
 - 🦚 Detailed console and syslog logging to furnish insights into the tool's behavior
 - 💠 Rich command-line interface with robust verification of arguments and options
