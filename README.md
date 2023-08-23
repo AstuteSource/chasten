@@ -165,7 +165,7 @@ test functions in the `lazytracker` project. If you look in the
 Running `chasten` on this program more than once will produce a new results file
 with a different timestamp (i.e., `20230823162341`) and unique identifier (i.e.,
 `4c23fc443a6b4c4aa09886f1ecb96e9f`) in its name, thus ensuring that you do not
-accidentally write over your prior results when you use the `--save` option.
+accidentally write over your prior results when using the `--save` option.
 
 - After creating a `multicounter/` directory in the existing `subject-data/`
 directory, you can run the `chasten analyze` command for the `multicounter`
