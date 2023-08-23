@@ -27,11 +27,9 @@ a docstring comment? **Chasten can help**! It allows you to express these checks
 &mdash; and many other types of analyses as well &mdash; in simple YAML files
 that contain XPATH expressions.
 
-- **chasten**:
-    - Classification: transitive verb
-    - Definition: "to make someone aware of failure or of having done something
-    wrong" [Cambridge
-    Dictionary](https://dictionary.cambridge.org/us/dictionary/english/chasten)
+- **chasten** (transitive verb) "to make someone aware of failure or of having
+done something wrong" [Cambridge
+Dictionary](https://dictionary.cambridge.org/us/dictionary/english/chasten).
     - Sentence Use: "Her remarks are a gift to me even as they chasten and redirect my efforts to expand the arguments of this book into a larger one." [Cambridge English Corpus](https://www.cambridge.org/gb/cambridgeenglish/better-learning-insights/corpus)
 
 ## 🔋Features
