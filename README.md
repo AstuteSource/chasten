@@ -11,15 +11,18 @@ Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://github.c
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-blue.svg)](https://github.com/gkapfham/chasten/graphs/commit-activity)
 [![License LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-**Chasten** is a Python program that uses XPATH expressions to find patterns in
-the abstract syntax tree (AST) of a Python program. You can use Chasten to
-quickly implement your own configurable linting rules! For instance, do you want
-to ensure that a Python program has does not have any triple-nested `for` loops
-inside of `async` functions? Or, do you want to confirm that every function
-inside your Python program has type annotations and a docstring comment? Chasten
-can help! It allows you to express these checks &mdash; and many other checks
-&mdash; in simple YAML files that contain XPATH expressions. Continue reading to
-learn more and get started!
+**Chasten** is a Python program that uses
+[XPATH](https://www.w3schools.com/xml/xpath_syntax.asp) expressions to find
+patterns in the [abstract syntax
+tree](https://docs.python.org/3/library/ast.html) (AST) of a Python program. You
+can use Chasten to quickly implement your own configurable linting rules!
+
+For instance, do you want to ensure that a Python program has does not have any
+triple-nested `for` loops inside of `async` functions? Or, do you want to
+confirm that every function inside your Python program has type annotations and
+a docstring comment? Chasten can help! It allows you to express these checks
+&mdash; and many other checks &mdash; in simple YAML files that contain XPATH
+expressions. Continue reading to learn more and get started!
 
 ## 🔋Features
 
