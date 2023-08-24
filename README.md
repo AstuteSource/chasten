@@ -277,11 +277,17 @@ interface (TUI). To use TUI-based way to create a complete command-line for
 ## 🤗 Learning
 
 - Curious about the nodes that are available in a Python program's AST?
-    - [XPATH documentation](https://www.w3schools.com/xml/xpath_syntax.asp) expressions to find
-patterns in the
-    - [Abstract Syntax Tree documentation](https://docs.python.org/3/library/ast.html) introduces the components of a Python AST
-    - [Green Tea Snakes](https://greentreesnakes.readthedocs.io/en/latest/index.html) provides the "missing Python AST docs"
-- Want to learn more about how to write XPATH expressions for 
+    - [Abstract Syntax Tree
+    documentation](https://docs.python.org/3/library/ast.html) introduces the
+    nodes of a Python AST
+    - [Green Tea
+    Snakes](https://greentreesnakes.readthedocs.io/en/latest/index.html)
+    provides the "missing Python AST docs"
+    - [Textual AST View](https://github.com/davep/textual-astview) provides a
+    terminal-based tool for browsing a Python program's AST
+- Want to learn more about how to write XPATH expressions for a Python AST?
+    - [XPATH documentation](https://www.w3schools.com/xml/xpath_syntax.asp)
+    describes how to write XPATH expressions
 
 ## 🧗Improvement
 
