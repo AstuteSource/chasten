@@ -221,7 +221,7 @@ integrate --help`.
 
 ## 🌄 Results
 
-If you want to create an interactive data analysis dashboard that uses 📦
+If you want to create an interactive analysis dashboard that uses 📦
 [simonw/datasette](https://github.com/simonw/datasette) you can run `chasten
 datasette-serve <path containing integrated results>/chasten.db --port 8001`.
 Now you can use the dashboard in your web browser to analyze the results while
