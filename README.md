@@ -222,11 +222,11 @@ integrate --help`.
 ## 🌄 Results
 
 If you want to create an interactive data analysis dashboard that uses 📦
-[simonw/datasette](https://github.com/simonw/datasette) you can run the command
-`chasten datasette-serve <path containing integrated results>/chasten.db --port
-8001`. Now you can use the dashboard in your web browser to analyze the results
-while you study the source code for these projects with your editor!
-Examining the results will reveal that `chasten`, through its use of 📦
+[simonw/datasette](https://github.com/simonw/datasette) you can run `chasten
+datasette-serve <path containing integrated results>/chasten.db --port 8001`.
+Now you can use the dashboard in your web browser to analyze the results while
+you study the source code for these projects with your editor! Examining the
+results will reveal that `chasten`, through its use of 📦
 [spookylukey/pyastgrep](https://github.com/spookylukey/pyastgrep), correctly
 uses the XPath expression for `all-test-function-definition` to find the first
 line of executable source code inside of each test, skipping over a function's
