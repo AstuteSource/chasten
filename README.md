@@ -71,12 +71,13 @@ Developers](https://github.com/AstuteSource).
 
 - Python 3.11
 - Chasten leverages numerous Python packages, including notable ones such as:
-    - [datasette](https://github.com/simonw/datasette): Interactive data analysis dashboards
-    - [pyastgrep](https://github.com/spookylukey/pyastgrep): XPath-based analysis of a Python program's AST
-    - [pydantic](https://github.com/pydantic/pydantic): Automated generation and validation of configuration files
-    - [rich](https://github.com/Textualize/rich): Full-featured formatting and display of text in the terminal
-    - [trogon](https://github.com/Textualize/trogon): Automated generation of terminal user interfaces for a command-line tool
-    - [typer](https://github.com/tiangolo/typer): Easy-to-implement and fun-to-use command-line interfaces
+    - [Datasette](https://github.com/simonw/datasette): Interactive data analysis dashboards
+    - [Pyastgrep](https://github.com/spookylukey/pyastgrep): XPath-based analysis of a Python program's AST
+    - [Pydantic](https://github.com/pydantic/pydantic): Automated generation and validation of configuration files
+    - [Rich](https://github.com/Textualize/rich): Full-featured formatting and display of text in the terminal
+    - [Trogon](https://github.com/Textualize/trogon): Automated generation of terminal user interfaces for a command-line tool
+    - [Typer](https://github.com/tiangolo/typer): Easy-to-implement and fun-to-use command-line interfaces
+- The developers of Chasten use [Poetry](https://github.com/python-poetry/poetry) for packaging and dependency management
 
 ## 🔽 Installation
 
