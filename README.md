@@ -290,8 +290,15 @@ interface (TUI). To use TUI-based way to create a complete command-line for
     XPath expressions for querying a Python program's AST
     - [XPath documentation](https://www.w3schools.com/xml/xpath_syntax.asp)
     describes how to write XPath expressions
-    - [XPath Axes](https://www.w3schools.com/xml/xpath_axes.asp) summaries
-    the ways that XPath axes relate a note to other nodes
+    - [XPath Axes](https://www.w3schools.com/xml/xpath_axes.asp) summaries the
+    ways that XPath axes relate a note to other nodes
+- Interested in exploring other approaches to querying source code?
+    - [srcML](https://www.srcml.org/) supports XPath-based querying of programs
+    implemented in C, C#, C++, and Java
+    - [Treesitter](https://tree-sitter.github.io/tree-sitter/) provides a
+    general-purpose approach to modelling and querying source code
+    - [Python Treesitter](https://github.com/tree-sitter/py-tree-sitter) offers
+    a Python language bindings for to parsing and querying with Treesitter
 
 ## 🧗Improvement
 
