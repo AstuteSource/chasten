@@ -288,7 +288,7 @@ interface (TUI). To use TUI-based way to create a complete command-line for
 - **Want to learn more about how to write XPath expressions for a Python AST?**
     - [Pyastgrep](https://github.com/spookylukey/pyastgrep) offers examples of
     XPath expressions for querying a Python program's AST
-    - [XPath documentation](https://www.w3schools.com/xml/xpath_syntax.asp)
+    - [XPath Documentation](https://www.w3schools.com/xml/xpath_syntax.asp)
     describes how to write XPath expressions
     - [XPath Axes](https://www.w3schools.com/xml/xpath_axes.asp) summaries the
     ways that XPath axes relate a note to other nodes
