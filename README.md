@@ -276,7 +276,7 @@ interface (TUI). To use TUI-based way to create a complete command-line for
 
 ## 🤗 Learning
 
-- Curious about the nodes that are available in a Python program's AST?
+- **Curious about the nodes that are available in a Python program's AST?**
     - [Abstract Syntax Tree
     documentation](https://docs.python.org/3/library/ast.html) introduces the
     nodes of a Python AST
@@ -285,14 +285,14 @@ interface (TUI). To use TUI-based way to create a complete command-line for
     provides the "missing Python AST docs"
     - [Textual AST View](https://github.com/davep/textual-astview) provides a
     terminal-based tool for browsing a Python program's AST
-- Want to learn more about how to write XPath expressions for a Python AST?
+- **Want to learn more about how to write XPath expressions for a Python AST?**
     - [Pyastgrep](https://github.com/spookylukey/pyastgrep) offers examples of
     XPath expressions for querying a Python program's AST
     - [XPath documentation](https://www.w3schools.com/xml/xpath_syntax.asp)
     describes how to write XPath expressions
     - [XPath Axes](https://www.w3schools.com/xml/xpath_axes.asp) summaries the
     ways that XPath axes relate a note to other nodes
-- Interested in exploring other approaches to querying source code?
+- **Interested in exploring other approaches to querying source code?**
     - [srcML](https://www.srcml.org/) supports XPath-based querying of programs
     implemented in C, C#, C++, and Java
     - [Treesitter](https://tree-sitter.github.io/tree-sitter/) provides a
