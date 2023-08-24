@@ -13,7 +13,7 @@ Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://github.c
 ## 🎉 Introduction
 
 - **Chasten** is a Python program that uses
-[XPATH](https://www.w3schools.com/xml/xpath_syntax.asp) expressions to find
+[XPath](https://www.w3schools.com/xml/xpath_syntax.asp) expressions to find
 patterns in the [abstract syntax
 tree](https://docs.python.org/3/library/ast.html) (AST) of a Python program. You
 can use Chasten to quickly implement your own configurable linting rules,
@@ -25,7 +25,7 @@ triple-nested `for` loops inside of `async` functions? Or, do you want to
 confirm that every function inside your Python program has type annotations and
 a docstring comment? **Chasten can help**! It allows you to express these checks
 &mdash; and many other types of analyses as well &mdash; in simple YAML files
-that contain XPATH expressions.
+that contain XPath expressions.
 
 ## 😂 Definitions
 
@@ -47,7 +47,7 @@ Developers](https://github.com/AstuteSource).
     - **Instructor Sentence**: "`chasten` makes it easy for me to reliably
     confirm that student programs have the required coding constructs. It's much
     better than using regular expressions!"
-    - **Developer Sentence**: "Since I was already familiar with XPATH
+    - **Developer Sentence**: "Since I was already familiar with XPath
     expressions, `chasten` made it fun and easy for me to do an automate
     analysis of a Python codebase that I maintain."
     - **Researcher Sentence**: "In addition to helping me quickly scan the
@@ -72,7 +72,7 @@ Developers](https://github.com/AstuteSource).
 - Python 3.11
 - Chasten leverages numerous Python packages, including notable ones such as:
     - [datasette](https://github.com/simonw/datasette): Interactive data analysis dashboards
-    - [pyastgrep](https://github.com/spookylukey/pyastgrep): XPATH-based analysis of a Python program's AST
+    - [pyastgrep](https://github.com/spookylukey/pyastgrep): XPath-based analysis of a Python program's AST
     - [pydantic](https://github.com/pydantic/pydantic): Automated generation and validation of configuration files
     - [rich](https://github.com/Textualize/rich): Full-featured formatting and display of text in the terminal
     - [trogon](https://github.com/Textualize/trogon): Automated generation of terminal user interfaces for a command-line tool
@@ -109,7 +109,7 @@ chasten:
 The `checks.yml` file must contain one or more checks. What follows is an
 example of a check configuration file with two checks that respectively find the
 first executable line of non-test and test-case functions in a Python project.
-Note that the `pattern` attribute specifies the XPATH version 2.0 expression
+Note that the `pattern` attribute specifies the XPath version 2.0 expression
 that `chasten` will use to detect the specified type of Python function. You can
 type `chasten configure validate --config <path to chasten-configuration/
 directory>` after filling in `<path to chasten-configuration>` with the
@@ -227,7 +227,7 @@ If you want to create an interactive data analysis dashboard that uses 📦
 while you study the source code for these projects with your text editor!
 Examining the results will reveal that `chasten`, through its use of 📦
 [spookylukey/pyastgrep](https://github.com/spookylukey/pyastgrep), correctly
-uses the XPATH expression for `all-test-function-definition` to find the first
+uses the XPath expression for `all-test-function-definition` to find the first
 line of executable source code inside of each test, skipping over a function's
 docstring and other comments.
 
@@ -285,9 +285,13 @@ interface (TUI). To use TUI-based way to create a complete command-line for
     provides the "missing Python AST docs"
     - [Textual AST View](https://github.com/davep/textual-astview) provides a
     terminal-based tool for browsing a Python program's AST
-- Want to learn more about how to write XPATH expressions for a Python AST?
-    - [XPATH documentation](https://www.w3schools.com/xml/xpath_syntax.asp)
-    describes how to write XPATH expressions
+- Want to learn more about how to write XPath expressions for a Python AST?
+    - [Pyastgrep](https://github.com/spookylukey/pyastgrep) offers examples of
+    XPath expressions for querying a Python program's AST
+    - [XPath documentation](https://www.w3schools.com/xml/xpath_syntax.asp)
+    describes how to write XPath expressions
+    - [XPath Axes](https://www.w3schools.com/xml/xpath_axes.asp) summaries
+    the ways that XPath axes relate a note to other nodes
 
 ## 🧗Improvement
 
