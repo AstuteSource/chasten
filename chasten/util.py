@@ -2,6 +2,8 @@
 
 import importlib.metadata
 
+import platform
+
 from chasten import constants
 
 checkmark_unicode = "\u2713"
@@ -16,6 +18,11 @@ def get_human_readable_boolean(answer: bool) -> str:
         return constants.humanreadable.Yes
     # the provided answer is false
     return constants.humanreadable.No
+
+def get_OS() -> str:
+    """Gets the Operating system of the user."""
+    OpSystem = platform.system()
+    return OpSystem
 
 
 def get_symbol_boolean(answer: bool) -> str:
