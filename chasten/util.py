@@ -3,7 +3,7 @@
 import importlib.metadata
 
 from chasten import constants
-from urllib.parse import urlparse
+from purl import URL
 
 checkmark_unicode = "\u2713"
 xmark_unicode = "\u2717"
@@ -51,22 +51,22 @@ def join_and_preserve(data, start, end):
 
 def is_url(url: str) -> bool:
     """Determine if string is valid URL."""
-    # use urllib to parse input url
-    url_parsed = urlparse(url)
+    # parse input url
+    url_parsed = URL(url)
     # only input characters for initiatig query and/or fragments if necessary
-    query_character = "?" if url_parsed.query else ""
-    fragment_character = "#" if url_parsed.fragment else ""
+    query_character = "?" if url_parsed.query() else ""
+    fragment_character = "#" if url_parsed.fragment() else ""
     # piece the url back together to make sure it matches what was input
     url_reassembled = "".join(
         [
-            url_parsed.scheme,
+            url_parsed.scheme(),
             "://",
-            url_parsed.netloc,
-            url_parsed.path,
+            url_parsed.netloc(),
+            url_parsed.path(),
             query_character,
-            url_parsed.query,
+            url_parsed.query(),
             fragment_character,
-            url_parsed.fragment
+            url_parsed.fragment()
         ]
     )
     # determine if parsed and reconstructed url matches original

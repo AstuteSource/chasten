@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+from purl import URL
 from typing import Any, Dict, List, Tuple, Union
 
 import typer
@@ -79,15 +80,15 @@ def display_configuration_directory(
     output.opt_print_log(verbose, empty="")
 
 
-def extract_configuration_details(
+def extract_configuration_details_from_config_dir(
     chasten_user_config_dir_str: str,
     configuration_file: str = constants.filesystem.Main_Configuration_File,
 ) -> Tuple[bool, str, str, Dict[str, Dict[str, Any]]]:
-    """Display details about the configuration."""
+    """Display details about the configuration given a config directory."""
     # create the name of the main configuration file
-    configuration_file_str = f"{chasten_user_config_dir_str}/{configuration_file}"
+    configuration_file_path_str = f"{chasten_user_config_dir_str}/{configuration_file}"
     # load the text of the main configuration file
-    configuration_file_path = Path(configuration_file_str)
+    configuration_file_path = Path(configuration_file_path_str)
     # the configuration file does not exist and thus
     # the extraction process cannot continue, the use of
     # these return values indicates that the extraction
@@ -96,16 +97,32 @@ def extract_configuration_details(
         return (False, None, None, None)  # type: ignore
     configuration_file_yml = configuration_file_path.read_text()
     # load the contents of the main configuration file
+    with open(configuration_file_path_str) as user_configuration_file_text:
+        (yaml_success, yaml_data) = convert_configuration_text_to_yaml(user_configuration_file_text)
+        # return success status, filename, file contents, and yaml parsed data upon success
+        if yaml_success:
+            return (True, configuration_file_path_str, configuration_file_yml, yaml_data)
+        # return none types upon failure in yaml parsing
+        else:
+            return (False, None, None, None) # type: ignore
+
+
+def convert_configuration_text_to_yaml(
+    configuration_file_contents_str: str
+) -> Tuple[bool, Dict[str, Dict[str, Any]]]:
+    """Return details about the configuration."""
     yaml_data = None
-    with open(configuration_file_str) as user_configuration_file:
-        yaml_data = yaml.safe_load(user_configuration_file)
+    try:
+        yaml_data = yaml.safe_load(configuration_file_contents_str)
+    except Exception e:
+        # yaml parsing has failed and we will indicate the input is invalid
+        return (False, None)
     # return the file name, the textual contents of the configuration file, and
     # a dict-based representation of the configuration file
-    return (True, configuration_file_str, configuration_file_yml, yaml_data)
+    return (True, yaml_data)
 
 
 def validate_file(
-    configuration_file_str: str,
     configuration_file_yml: str,
     yml_data_dict: Dict[str, Dict[str, Any]],
     json_schema: Dict[str, Any] = validate.JSON_SCHEMA_CONFIG,
@@ -137,11 +154,11 @@ def validate_configuration_files(
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
 ]:
     """Validate the configuration."""
-    # there is a specified configuration directory path;
+    # there is a specified configuration directory path or url;
     # this overrides the use of the configuration files that
     # may exist inside of the platform-specific directory
     if config:
-        # the configuration file exists and thus it should
+        # the configuration file or url exists and thus it should
         # be used instead of the platform-specific directory
         if config.exists():
             chasten_user_config_dir_str = str(config)
@@ -172,7 +189,7 @@ def validate_configuration_files(
         configuration_file_str,
         configuration_file_yml,
         yml_data_dict,
-    ) = extract_configuration_details(chasten_user_config_dir_str)
+    ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str)
     # it was not possible to extract the configuration details and
     # thus this function should return immediately with False
     # to indicate the failure and an empty configuration dictionary
@@ -188,12 +205,12 @@ def validate_configuration_files(
     # --> Step 3: Otherwise, return an invalid configuration
     # validate the user's configuration and display the results
     config_file_validated = validate_file(
-        configuration_file_str,
         configuration_file_yml,
         yml_data_dict,
         validate.JSON_SCHEMA_CONFIG,
         verbose,
     )
+    # FIXME: print out validation status from configuration_file_str
     # if one or more exist, retrieve the name of the checks files
     (_, checks_file_name_list) = validate.extract_checks_file_name(yml_data_dict)
     # iteratively extract the contents of each checks file
@@ -214,7 +231,7 @@ def validate_configuration_files(
             configuration_file_str,
             configuration_file_yml,
             yml_data_dict,
-        ) = extract_configuration_details(chasten_user_config_dir_str, checks_file_name)
+        ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str, checks_file_name)
         # the checks file could not be extracted in a valid
         # fashion and thus there is no need to continue the
         # validation of this file or any of the other check file
@@ -224,12 +241,12 @@ def validate_configuration_files(
         # function should proceed to validate a checks configuration file
         else:
             check_file_validated = validate_file(
-                configuration_file_str,
                 configuration_file_yml,
                 yml_data_dict,
                 validate.JSON_SCHEMA_CHECKS,
                 verbose,
             )
+            # FIXME: print out validation status from configuration_file_str
         # keep track of the validation of all of validation
         # records for each of the check files
         checks_files_validated_list.append(check_file_validated)
@@ -298,11 +315,11 @@ def configure(  # noqa: PLR0913
     task: enumerations.ConfigureTask = typer.Argument(
         enumerations.ConfigureTask.VALIDATE.value
     ),
-    config: Path = typer.Option(
+    config: Union[Path, URL] = typer.Option(
         None,
         "--config",
         "-c",
-        help="A directory with configuration file(s).",
+        help="A directory or URL with configuration file(s).",
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
