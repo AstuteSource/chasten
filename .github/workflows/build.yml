@@ -18,12 +18,19 @@ on:
 # This job performs all necessary checks
 jobs:
   build:
-    # Use the latest version of Ubuntu on Microsoft Azure
-    runs-on: ubuntu-latest
+    # Use the latest version of Ubuntu,Windows and MacOS
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        # Performs all actions on different versions of Python
-        python-version: ['3.11']
+        os: [ubuntu-latest]
+        # Performs all actions on different versions of Python and OS
+        python-version: ['3.10','3.11']
+        include:
+          - os: macos-latest
+            python-version: ["3.10","3.11"]
+          - os: windows-latest
+            python-version: ["3.10","3.11"]
     # Define the workflow steps
     steps:
     # Checkout the code of the repository
