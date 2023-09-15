@@ -1,7 +1,6 @@
 """Utilities for use within chasten."""
 
 import importlib.metadata
-
 import platform
 
 from chasten import constants
@@ -18,6 +17,7 @@ def get_human_readable_boolean(answer: bool) -> str:
         return constants.humanreadable.Yes
     # the provided answer is false
     return constants.humanreadable.No
+
 
 def get_OS() -> str:
     """Gets the Operating system of the user."""

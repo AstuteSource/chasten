@@ -2,11 +2,7 @@
 
 import pytest
 
-from chasten import database
-
-from chasten import util
-
-from chasten import filesystem
+from chasten import database, filesystem, util
 
 
 @pytest.mark.fuzz

@@ -141,7 +141,7 @@ def executable_name(OpSystem: str = "Linux") -> str:
     return virtual_env_location + exe_directory + executable_name
 
 
-def start_datasette_server(  # noqa: PLR0912
+def start_datasette_server(  # noqa: PLR0912, PLR0913
     database_path: Path,
     datasette_metadata: Path,
     datasette_platform: str = enumerations.DatasettePublicationPlatform.FLY.value,
