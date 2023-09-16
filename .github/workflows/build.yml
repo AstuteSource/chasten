@@ -19,7 +19,7 @@ on:
 jobs:
   build:
     # Use the latest version of Ubuntu on Microsoft Azure
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
