@@ -2076,17 +2076,6 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
-name = "pysqlite3"
-version = "0.5.1"
-description = "DB-API 2.0 interface for Sqlite 3.x"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pysqlite3-0.5.1.tar.gz", hash = "sha256:45496b7a5e5931afb9993f76ce48873d126abfc0fe70b65373970d353fca2c24"},
-]
-
-[[package]]
 name = "pytest"
 version = "7.4.0"
 description = "pytest: simple powerful testing with Python"
