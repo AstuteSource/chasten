@@ -10,7 +10,7 @@ env:
 # Focuses on the master branch only
 on:
   push:
-    branches: [ master ]
+    branches: [ master , Datasette-serve-fix]
   pull_request:
     branches: [ master ]
 
@@ -22,8 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Performs all actions on different versions of Python
-        python-version: ['3.11']
+        os: [ubuntu-latest]
+        python-version: ["3.10","3.11"]
+        include:
+          - os: macos-latest
+            python-version: "3.11"
+          - os: windows-latest
+            python-version: "3.11"
     # Define the workflow steps
     steps:
     # Checkout the code of the repository
