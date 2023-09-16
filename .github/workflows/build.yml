@@ -10,7 +10,7 @@ env:
 # Focuses on the master branch only
 on:
   push:
-    branches: [ master , Work-flow-changes-to-check-more-OS]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -19,11 +19,17 @@ on:
 jobs:
   build:
     # Use the latest version of Ubuntu on Microsoft Azure
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        # Performs all actions on different versions of Python
-        python-version: ['3.11']
+        os: [ubuntu-latest]
+        python-version: ["3.10","3.11"]
+        include:
+          - os: macos-latest
+            python-version: "3.11"
+          - os: windows-latest
+            python-version: "3.11"
     # Define the workflow steps
     steps:
     # Checkout the code of the repository
@@ -68,20 +74,6 @@ jobs:
           run: |
            poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
         # Run the tests
-  test:
-    name: Test
-    runs-on: ${{ matrix.os }}
-    needs: build
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.10","3.11"]
-        include:
-          - os: macos-latest
-            python-version: "3.11"
-          - os: windows-latest
-            python-version: "3.11"
-    steps:
         - name: Run Tests
           if: always()
           run: |
