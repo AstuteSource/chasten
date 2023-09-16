@@ -24,7 +24,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.10","3.11"]
+        python-version: ["3.11"]
         include:
           - os: macos-latest
             python-version: "3.11"
@@ -40,6 +40,7 @@ jobs:
         # Run the mdl linting tool
         # Refers to .mdlrc file in repository
         - name: Run Markdown Linting
+          if: matrix.os == 'ubuntu-latest'
           uses: actionshub/markdownlint@main
         # Setup Python for the current language version
         - name: Setup Python ${{ matrix.python-version }}
@@ -85,7 +86,7 @@ jobs:
             poetry run task test-coverage-silent > coverage.txt
         # Display the Coverage Report
         - name: Display Coverage
-          if: always()
+          if: always() && matrix.os == 'ubuntu-latest'
           run: |
             export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
             echo "total=$TOTAL" >> $GITHUB_ENV
