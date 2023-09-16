@@ -10,7 +10,7 @@ env:
 # Focuses on the master branch only
 on:
   push:
-    branches: [ master , Datasette-serve-fix]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -19,16 +19,11 @@ on:
 jobs:
   build:
     # Use the latest version of Ubuntu on Microsoft Azure
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.11"]
-        include:
-          - os: macos-latest
-            python-version: "3.11"
-          - os: windows-latest
-            python-version: "3.11"
+        # Performs all actions on different versions of Python
+        python-version: ['3.11']
     # Define the workflow steps
     steps:
     # Checkout the code of the repository
