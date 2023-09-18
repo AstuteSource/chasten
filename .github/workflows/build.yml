@@ -69,11 +69,15 @@ jobs:
           if: always()
           run: |
             poetry run task lint
-        # Run the program
+        - name: Encode Windows
+          if: matrix.os == 'windows-latest'
+          run: |
+            $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
+          # Run the program
         - name: Run program
           if: always()
           run: |
-            poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path . /p:ConsoleEncoding=UTF8
+            poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
 
         # Run the tests
         - name: Run Tests
