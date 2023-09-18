@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Tuple
 import jsonschema
 from jsonschema.exceptions import ValidationError
 
-from chasten import constants
+from chasten import constants, output, util
 
 # intuitive description:
 # a configuration file links to one or more checks files
@@ -119,3 +119,29 @@ def validate_checks_configuration(
 ) -> Tuple[bool, str]:
     """Validate the checks configuration."""
     return validate_configuration(configuration, JSON_SCHEMA_CHECKS)
+
+
+def validate_file(
+    file_name: str,
+    configuration_file_yaml_str: str,
+    yaml_data_dict: Dict[str, Dict[str, Any]],
+    json_schema: Dict[str, Any] = JSON_SCHEMA_CONFIG,
+    verbose: bool = False,
+) -> bool:
+    """Validate the provided file according to the provided JSON schema."""
+    # perform the validation of the configuration file
+    (validated, errors) = validate_configuration(yaml_data_dict, json_schema)
+    output.console.print(
+        f":sparkles: Validated {file_name}? {util.get_human_readable_boolean(validated)}"
+    )
+    # there was a validation error, so display the error report
+    if not validated:
+        output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
+    # validation worked correctly, so display the configuration file
+    else:
+        output.opt_print_log(verbose, newline="")
+        output.opt_print_log(
+            verbose, label=f":sparkles: Contents of {file_name}:\n"
+        )
+        output.opt_print_log(verbose, config_file=configuration_file_yaml_str)
+    return validated
