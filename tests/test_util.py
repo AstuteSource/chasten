@@ -29,13 +29,10 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
     else:
         assert str_answer == "No"
 
-# FIXME: ask for help?
-@given(answer=provisional.urls())
+
+@given(url=provisional.urls())
 @pytest.mark.fuzz
-def test_is_url(answer: bool) -> None:
+def test_is_url_correct(url: str) -> None:
     """Use Hypothesis to confirm that URLs are correctly recognized/unrecognized."""
-    str_answer = util.is_url(answer=answer)
-    if answer:
-        assert str_answer == "Yes"
-    else:
-        assert str_answer == "No"
+    result = util.is_url(url=url)
+    assert result == True
