@@ -18,7 +18,7 @@ on:
 # This job performs all necessary checks
 jobs:
   build:
-    # Use the latest version of Ubuntu on Microsoft Azure
+    # Use the latest version of Ubuntu on MacOS and Windows
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -73,7 +73,8 @@ jobs:
         - name: Run program
           if: always()
           run: |
-            poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
+            poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path . /p:ConsoleEncoding=UTF8
+
         # Run the tests
         - name: Run Tests
           if: always()
