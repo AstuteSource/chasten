@@ -440,7 +440,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     verbose: bool = typer.Option(False, help="Enable verbose mode output."),
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
-    """* Analyze the AST of Python source code."""
+    """💫 Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
