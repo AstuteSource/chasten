@@ -95,13 +95,13 @@ def extract_configuration_details_from_config_dir(
     # failed and any future steps cannot continue
     if not configuration_file_path.exists():
         return (False, None, None, None)  # type: ignore
-    configuration_file_yml = configuration_file_path.read_text()
+    configuration_file_yaml_str = configuration_file_path.read_text()
     # load the contents of the main configuration file
     with open(configuration_file_path_str) as user_configuration_file_text:
         (yaml_success, yaml_data) = convert_configuration_text_to_yaml(user_configuration_file_text)
         # return success status, filename, file contents, and yaml parsed data upon success
         if yaml_success:
-            return (True, configuration_file_path_str, configuration_file_yml, yaml_data)
+            return (True, configuration_file_path_str, configuration_file_yaml_str, yaml_data)
         # return none types upon failure in yaml parsing
         else:
             return (False, None, None, None) # type: ignore
@@ -123,16 +123,17 @@ def convert_configuration_text_to_yaml(
 
 
 def validate_file(
-    configuration_file_yml: str,
-    yml_data_dict: Dict[str, Dict[str, Any]],
+    file_name: str,
+    configuration_file_yaml_str: str,
+    yaml_data_dict: Dict[str, Dict[str, Any]],
     json_schema: Dict[str, Any] = validate.JSON_SCHEMA_CONFIG,
     verbose: bool = False,
 ) -> bool:
     """Validate the provided file according to the provided JSON schema."""
     # perform the validation of the configuration file
-    (validated, errors) = validate.validate_configuration(yml_data_dict, json_schema)
+    (validated, errors) = validate.validate_configuration(yaml_data_dict, json_schema)
     output.console.print(
-        f":sparkles: Validated {configuration_file_str}? {util.get_human_readable_boolean(validated)}"
+        f":sparkles: Validated {file_name}? {util.get_human_readable_boolean(validated)}"
     )
     # there was a validation error, so display the error report
     if not validated:
@@ -141,14 +142,14 @@ def validate_file(
     else:
         output.opt_print_log(verbose, newline="")
         output.opt_print_log(
-            verbose, label=f":sparkles: Contents of {configuration_file_str}:\n"
+            verbose, label=f":sparkles: Contents of {file_name}:\n"
         )
-        output.opt_print_log(verbose, config_file=configuration_file_yml)
+        output.opt_print_log(verbose, config_file=configuration_file_yaml_str)
     return validated
 
 
 def validate_configuration_files(
-    config: Path,
+    config: Union[Path, URL],
     verbose: bool = False,
 ) -> Tuple[
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
@@ -160,7 +161,16 @@ def validate_configuration_files(
     if config:
         # the configuration file or url exists and thus it should
         # be used instead of the platform-specific directory
-        if config.exists():
+
+        # test if input configuration is valid URL
+        if (util.is_url(str(config))):
+            # re-parse input config so it is of type URL
+            config = URL(str(config))
+            chasten_user_config_url_str = str(config)
+        # test if input configuration is valid file path
+        elif (Path(str(config)).exists()):
+            # re-parse input config so it is of type Path
+            config = Path(str(config))
             chasten_user_config_dir_str = str(config)
         # the configuration file does not exist and thus,
         # since config was explicit, it is not possible
@@ -172,7 +182,7 @@ def validate_configuration_files(
     # configuration directory detected by platformdirs
     else:
         # detect and store the platform-specific user
-        # configuration directory
+        # configuration directory by default
         chasten_user_config_dir_str = configuration.user_config_dir(
             application_name=constants.chasten.Application_Name,
             application_author=constants.chasten.Application_Author,
@@ -186,9 +196,9 @@ def validate_configuration_files(
     # extract the configuration details
     (
         configuration_valid,
-        configuration_file_str,
-        configuration_file_yml,
-        yml_data_dict,
+        configuration_file_path_str,
+        configuration_file_yaml_str,
+        yaml_data_dict,
     ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str)
     # it was not possible to extract the configuration details and
     # thus this function should return immediately with False
@@ -205,14 +215,14 @@ def validate_configuration_files(
     # --> Step 3: Otherwise, return an invalid configuration
     # validate the user's configuration and display the results
     config_file_validated = validate_file(
-        configuration_file_yml,
-        yml_data_dict,
+        configuration_file_path_str,
+        configuration_file_yaml_str,
+        yaml_data_dict,
         validate.JSON_SCHEMA_CONFIG,
         verbose,
     )
-    # FIXME: print out validation status from configuration_file_str
     # if one or more exist, retrieve the name of the checks files
-    (_, checks_file_name_list) = validate.extract_checks_file_name(yml_data_dict)
+    (_, checks_file_name_list) = validate.extract_checks_file_name(yaml_data_dict)
     # iteratively extract the contents of each checks file
     # and then validate the contents of that checks file
     checks_files_validated_list = []
@@ -228,9 +238,9 @@ def validate_configuration_files(
     for checks_file_name in checks_file_name_list:
         (
             checks_file_extracted_valid,
-            configuration_file_str,
-            configuration_file_yml,
-            yml_data_dict,
+            configuration_file_path_str,
+            configuration_file_yaml_str,
+            yaml_data_dict,
         ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str, checks_file_name)
         # the checks file could not be extracted in a valid
         # fashion and thus there is no need to continue the
@@ -241,18 +251,18 @@ def validate_configuration_files(
         # function should proceed to validate a checks configuration file
         else:
             check_file_validated = validate_file(
-                configuration_file_yml,
-                yml_data_dict,
+                configuration_file_path_str,
+                configuration_file_yaml_str,
+                yaml_data_dict,
                 validate.JSON_SCHEMA_CHECKS,
                 verbose,
             )
-            # FIXME: print out validation status from configuration_file_str
         # keep track of the validation of all of validation
         # records for each of the check files
         checks_files_validated_list.append(check_file_validated)
-        # add the listing of checks from the current yml_data_dict to
+        # add the listing of checks from the current yaml_data_dict to
         # the overall listing of checks in the main dictionary
-        overall_checks_dict[constants.checks.Checks_Label].extend(yml_data_dict[constants.checks.Checks_Label])  # type: ignore
+        overall_checks_dict[constants.checks.Checks_Label].extend(yaml_data_dict[constants.checks.Checks_Label])  # type: ignore
     # the check files are only validated if all of them are valid
     check_files_validated = all(checks_files_validated_list)
     # the files validated correctly; return an indicator to
@@ -436,7 +446,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
-    config: Path = typer.Option(
+    config: Union[Path, URL] = typer.Option(
         None,
         "--config",
         "-c",
