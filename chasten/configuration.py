@@ -14,7 +14,7 @@ import platformdirs
 from rich.logging import RichHandler
 from rich.traceback import install
 
-from chasten import constants, validate, util
+from chasten import constants, validate, util, output
 
 
 def configure_tracebacks() -> None:
@@ -310,9 +310,9 @@ def extract_configuration_details_from_config_url(
     # create request with given URL as source
     response = requests.get(str(chasten_user_config_url))
     # the URL response is OK
-    if r.ok():
+    if response.ok:
         # assume URL endpoint returns raw text
-        configuration_file_yaml_str = response.text()
+        configuration_file_yaml_str = response.text
     # the URL indicates a problem with the response
     else:
         return (False, None, None) # type: ignore
