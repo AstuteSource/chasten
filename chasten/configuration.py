@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Tuple, Union
 from pathlib import Path
 from purl import URL
 import yaml
+import requests
 
 import platformdirs
 from rich.logging import RichHandler
@@ -279,10 +280,8 @@ def extract_configuration_details_from_config_dir(
     configuration_file -- optional configuration file to specify. If not supplied, a default location will be searched
     """
     # create the name of the main configuration file
-    # FIXME: use PurePath!!
-    configuration_file_path_str = f"{chasten_user_config_dir_str}/{configuration_file}"
     # load the text of the main configuration file
-    configuration_file_path = Path(configuration_file_path_str)
+    configuration_file_path = Path(chasten_user_config_dir_str) / Path(configuration_file)
     # the configuration file does not exist and thus
     # the extraction process cannot continue, the use of
     # these return values indicates that the extraction
@@ -309,12 +308,14 @@ def extract_configuration_details_from_config_url(
     chasten_user_config_url -- URL to config or checks yaml file.
     """
     # create request with given URL as source
-    # FIXME
-    # the URL does not exist or is invalid
-    # FIXME
-    return (False, None, None) # type: ignore
-    FIXME = ""
-    configuration_file_yaml_str = FIXME
+    response = requests.get(str(chasten_user_config_url))
+    # the URL response is OK
+    if r.ok():
+        # assume URL endpoint returns raw text
+        configuration_file_yaml_str = response.text()
+    # the URL indicates a problem with the response
+    else:
+        return (False, None, None) # type: ignore
     (yaml_success, yaml_data) = convert_configuration_text_to_yaml(configuration_file_yaml_str)
     # return success status, filename, file contents, and yaml parsed data upon success
     if yaml_success:
