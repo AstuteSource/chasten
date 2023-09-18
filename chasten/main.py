@@ -1,4 +1,4 @@
-"""💫 Chasten checks the AST of a Python program."""
+"""Chasten checks the AST of a Python program."""
 
 import sys
 from pathlib import Path
@@ -123,9 +123,7 @@ def validate_file(
     # validation worked correctly, so display the configuration file
     else:
         output.opt_print_log(verbose, newline="")
-        output.opt_print_log(
-            verbose, label=f"Contents of {configuration_file_str}:\n"
-        )
+        output.opt_print_log(verbose, label=f"Contents of {configuration_file_str}:\n")
         output.opt_print_log(verbose, config_file=configuration_file_yml)
     return validated
 
@@ -283,7 +281,7 @@ def display_serve_or_publish_details(
 
 @cli.command()
 def interact(ctx: typer.Context) -> None:
-    """🚀 Interactively configure and run."""
+    """Interactively configure and run."""
     # construct a Trogon object; this will create a
     # terminal-user interface that will allow the
     # person using chasten to pick a mode and then
@@ -322,7 +320,7 @@ def configure(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🪂 Manage chasten's configuration."""
+    """Manage chasten's configuration."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -440,7 +438,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     verbose: bool = typer.Option(False, help="Enable verbose mode output."),
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
-    """💫 Analyze the AST of Python source code."""
+    """Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -710,7 +708,7 @@ def integrate(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🚧 Integrate files and make a database."""
+    """Integrate files and make a database."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -799,7 +797,7 @@ def datasette_serve(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🏃 Start a local datasette server."""
+    """Start a local datasette server."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -868,7 +866,7 @@ def datasette_publish(  # noqa: PLR0913
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
 ) -> None:
-    """🌎 Publish a datasette to Fly or Vercel."""
+    """Publish a datasette to Fly or Vercel."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -897,7 +895,7 @@ def datasette_publish(  # noqa: PLR0913
 
 @cli.command()
 def log() -> None:
-    """🦚 Start the logging server."""
+    """Start the logging server."""
     # display the header
     output.print_header()
     # display details about the server
