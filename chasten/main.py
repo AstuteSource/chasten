@@ -117,7 +117,7 @@ def configure(  # noqa: PLR0913
     task: enumerations.ConfigureTask = typer.Argument(
         enumerations.ConfigureTask.VALIDATE.value
     ),
-    config: Union[Path, URL] = typer.Option(
+    config: str = typer.Option(
         None,
         "--config",
         "-c",
@@ -154,8 +154,8 @@ def configure(  # noqa: PLR0913
     # display the configuration directory and its contents
     if task == enumerations.ConfigureTask.VALIDATE:
         # validate the configuration files:
-        # --> config.yml
-        # --> checks.yml (or whatever file is reference in config.yml)
+        # --> config.yml (or url pointing to one)
+        # --> checks.yml (or whatever file/url is reference in config.yml)
         (validated, _) = configuration.validate_configuration_files(config, verbose)
         # some aspect of the configuration was not
         # valid, so exit early and signal an error
@@ -238,7 +238,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
-    config: Union[Path, URL] = typer.Option(
+    config: str = typer.Option(
         None,
         "--config",
         "-c",
