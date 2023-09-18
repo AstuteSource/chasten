@@ -13,7 +13,7 @@ import platformdirs
 from rich.logging import RichHandler
 from rich.traceback import install
 
-from chasten import constants, validate
+from chasten import constants, validate, util
 
 
 def configure_tracebacks() -> None:
@@ -102,9 +102,6 @@ def display_configuration_directory(
     output.opt_print_log(verbose, empty="")
 
 
-def 
-
-
 def validate_configuration_files(
     config: Union[Path, URL],
     verbose: bool = False,
@@ -145,8 +142,23 @@ def validate_configuration_files(
             application_author=constants.chasten.Application_Author,
         )
 
+    # input config is a URL
+    if isinstance(config, URL):
+        output.console.print(
+            ":sparkles: Configuration URL:"
+            + constants.markers.Space
+            + chasten_user_config_url_str
+            + constants.markers.Newline
+        )
+        # extract the configuration details
+        (
+            configuration_valid,
+            configuration_file_yaml_str,
+            yaml_data_dict,
+        ) = extract_configuration_details_from_config_url(chasten_user_config_url_str)
+        configuration_file_source =  chasten_user_config_url_str
     # input config is a Path
-    if isinstance(config, Path):
+    elif isinstance(config, Path):
         output.console.print(
             ":sparkles: Configuration directory:"
             + constants.markers.Space
@@ -168,20 +180,7 @@ def validate_configuration_files(
         # create a visualization of the user's configuration directory;
         # display details about the configuration directory in console
         display_configuration_directory(chasten_user_config_dir_str, verbose)
-    # input config is a URL
-    elif isinstance(config, URL):
-        output.console.print(
-            ":sparkles: Configuration URL:"
-            + constants.markers.Space
-            + chasten_user_config_url_str
-            + constants.markers.Newline
-        )
-        # extract the configuration details
-        (
-            configuration_valid,
-            configuration_file_yaml_str,
-            yaml_data_dict,
-        ) = extract_configuration_details_from_config_url(chasten_user_config_url_str)
+        configuration_file_source = chasten_user_config_dir_str
 
     # Summary of the remaining steps:
     # --> Step 1: Validate the main configuration file
@@ -189,14 +188,14 @@ def validate_configuration_files(
     # --> Step 3: If all files are valid, return overall validity
     # --> Step 3: Otherwise, return an invalid configuration
     # validate the user's configuration and display the results
-    # FIXME: work abstracted from file paths to allow URLs etc.
     config_file_validated = validate.validate_file(
-        configuration_file_path_str,
+        configuration_file_source,
         configuration_file_yaml_str,
         yaml_data_dict,
         validate.JSON_SCHEMA_CONFIG,
         verbose,
     )
+
     # if one or more exist, retrieve the name of the checks files
     (_, checks_file_name_list) = validate.extract_checks_file_name(yaml_data_dict)
     # iteratively extract the contents of each checks file
@@ -207,17 +206,36 @@ def validate_configuration_files(
     overall_checks_dict: Union[
         Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]
     ] = {}
-    # create abn empty list that will store the dicts of checks
+    # create an empty list that will store the dicts of checks
     overall_checks_list: List[Dict[str, Union[str, Dict[str, int]]]] = []
     # initialize the dictionary to contain the empty list
     overall_checks_dict[constants.checks.Checks_Label] = overall_checks_list
     for checks_file_name in checks_file_name_list:
-        (
-            checks_file_extracted_valid,
-            configuration_file_path_str,
-            configuration_file_yaml_str,
-            yaml_data_dict,
-        ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str, checks_file_name)
+        # specified check file is URL
+        if util.is_url(checks_file_name):
+            # extract the configuration details
+            (
+                checks_file_extracted_valid,
+                configuration_file_yaml_str,
+                yaml_data_dict,
+            ) = extract_configuration_details_from_config_url(checks_file_name)
+            # name of checks file is a url and thus can be used for logging
+            checks_file_source = checks_file_name
+        # assume check file name is a file path
+        else:
+            # will not support checks files being local paths
+            # if config file is a URL
+            if isinstance(config, URL):
+                return (False, {})
+            # extract the configuration details
+            (
+                checks_file_extracted_valid,
+                configuration_file_path_str,
+                configuration_file_yaml_str,
+                yaml_data_dict,
+            ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str, checks_file_name)
+            # configuration path returned from extraction function can be used for logging
+            checks_file_source = configuration_file_path_str
         # the checks file could not be extracted in a valid
         # fashion and thus there is no need to continue the
         # validation of this file or any of the other check file
@@ -226,8 +244,9 @@ def validate_configuration_files(
         # the checks file could be extract and thus the
         # function should proceed to validate a checks configuration file
         else:
+            # validate checks file
             check_file_validated = validate.validate_file(
-                configuration_file_path_str,
+                checks_file_source,
                 configuration_file_yaml_str,
                 yaml_data_dict,
                 validate.JSON_SCHEMA_CHECKS,
@@ -260,6 +279,7 @@ def extract_configuration_details_from_config_dir(
     configuration_file -- optional configuration file to specify. If not supplied, a default location will be searched
     """
     # create the name of the main configuration file
+    # FIXME: use PurePath!!
     configuration_file_path_str = f"{chasten_user_config_dir_str}/{configuration_file}"
     # load the text of the main configuration file
     configuration_file_path = Path(configuration_file_path_str)

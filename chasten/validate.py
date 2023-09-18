@@ -90,7 +90,6 @@ def extract_checks_file_name(
                 constants.checks.Check_File
             ]
             return (True, checks_file_name_list)
-        # FIXME: maybe allow constants.checks.Checks_Label in here so that remote configuration files can contain a total configuration in one file?
     # contents were not found and thus returen no filenames
     return (False, [constants.markers.Empty_String])
 
