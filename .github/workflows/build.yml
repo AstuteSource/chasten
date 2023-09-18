@@ -69,10 +69,6 @@ jobs:
           if: always()
           run: |
             poetry run task lint
-        - name: Encode Windows
-          if: matrix.os == 'windows-latest'
-          run: |
-            $PSDefaultParameterValues['*:Encoding'] = 'utf8'
           # Run the program
         - name: Run program
           if: always()
