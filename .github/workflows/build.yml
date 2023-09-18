@@ -72,7 +72,7 @@ jobs:
         - name: Encode Windows
           if: matrix.os == 'windows-latest'
           run: |
-            $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
+            $PSDefaultParameterValues['*:Encoding'] = 'utf8'
           # Run the program
         - name: Run program
           if: always()
