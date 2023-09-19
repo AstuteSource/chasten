@@ -40,7 +40,7 @@ chasten = Chasten(
     Tagline="chasten: Analyze the AST of Python Source Code",
     Theme_Background="default",
     Theme_Colors="ansi_dark",
-    Website=":link: GitHub: https://github.com/gkapfham/chasten",
+    Website="GitHub: https://github.com/gkapfham/chasten",
 )
 
 
