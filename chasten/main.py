@@ -912,11 +912,11 @@ def log() -> None:
 
 @cli.command()
 def version():
-    """Display the version of Chasten."""
+    """🖥️  Display the version of Chasten."""
     # Get Chasten version from util file
     version_string = util.get_chasten_version()
     # output chasten version
-    typer.echo(f"{version_string}")
+    typer.echo(f"chasten {version_string}")
 
 
 # ---
