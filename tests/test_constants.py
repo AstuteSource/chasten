@@ -4,7 +4,7 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 from hypothesis import given, strategies
-
+from pathlib import Path
 from chasten import constants
 
 
@@ -44,7 +44,7 @@ def test_fuzz_init(directory, configfile, checksfile, extra, yes, no):  # noqa: 
 def test_fuzz_immutable(fs, hr):
     """Use Hypothesis to confirm that attribute's value cannot be re-assigned."""
     with pytest.raises(FrozenInstanceError):
-        fs.Current_Directory = "/new/path"
+        fs.Current_Directory = str(Path("/new") / Path("path"))
     with pytest.raises(FrozenInstanceError):
         hr.Yes = "YES"
     with pytest.raises(FrozenInstanceError):
