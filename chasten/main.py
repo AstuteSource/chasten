@@ -115,7 +115,7 @@ def validate_file(
     # perform the validation of the configuration file
     (validated, errors) = validate.validate_configuration(yml_data_dict, json_schema)
     output.console.print(
-        f":sparkles: Validated {configuration_file_str}? {util.get_human_readable_boolean(validated)}"
+        f"# Validated {configuration_file_str}? {util.get_human_readable_boolean(validated)}"
     )
     # there was a validation error, so display the error report
     if not validated:
@@ -124,7 +124,7 @@ def validate_file(
     else:
         output.opt_print_log(verbose, newline="")
         output.opt_print_log(
-            verbose, label=f":sparkles: Contents of {configuration_file_str}:\n"
+            verbose, label=f"# Contents of {configuration_file_str}:\n"
         )
         output.opt_print_log(verbose, config_file=configuration_file_yml)
     return validated
@@ -161,7 +161,7 @@ def validate_configuration_files(
             application_author=constants.chasten.Application_Author,
         )
     output.console.print(
-        ":sparkles: Configuration directory:"
+        "# Configuration directory:"
         + constants.markers.Space
         + chasten_user_config_dir_str
         + constants.markers.Newline
@@ -365,7 +365,7 @@ def configure(  # noqa: PLR0913
             )
             # display diagnostic information about the completed process
             output.console.print(
-                f":sparkles: Created configuration directory and file(s) in {created_directory_path}"
+                f"# Created configuration directory and file(s) in {created_directory_path}"
             )
         # cannot re-create the configuration directory, so display
         # a message and suggest the use of --force the next time;
@@ -518,7 +518,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     valid_directories = [input_path]
     # output the list of directories subject to checking
     output.console.print()
-    output.console.print(f":sparkles: Analyzing Python source code in: {input_path}")
+    output.console.print(f"# Analyzing Python source code in: {input_path}")
     # output the number of checks that will be performed
     output.console.print()
     output.console.print(f":tada: Performing {len(check_list)} check(s):")
@@ -664,7 +664,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     # output the name of the saved file if saving successfully took place
     if saved_file_name:
-        output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
+        output.console.print(f"\n# Saved the file '{saved_file_name}'")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
@@ -723,7 +723,7 @@ def integrate(  # noqa: PLR0913
     )
     # output the list of directories subject to checking
     output.console.print()
-    output.console.print(":sparkles: Combining data file(s) in:")
+    output.console.print("# Combining data file(s) in:")
     output.console.print()
     output.print_list_contents(json_path)
     # extract all of the JSON dictionaries from the specified files
@@ -736,7 +736,7 @@ def integrate(  # noqa: PLR0913
     )
     # output the name of the saved file if saving successfully took place
     if combined_json_file_name:
-        output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
+        output.console.print(f"\n#Saved the file '{combined_json_file_name}'")
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
     # create the SQLite3 database and then configure the database for use in datasett
     combined_flattened_directory = filesystem.write_flattened_csv_and_database(
@@ -747,7 +747,7 @@ def integrate(  # noqa: PLR0913
     # output the name of the saved file if saving successfully took place
     if combined_flattened_directory:
         output.console.print(
-            f"\n:sparkles: Created this directory structure in {Path(combined_flattened_directory).parent}:"
+            f"\n# Created this directory structure in {Path(combined_flattened_directory).parent}:"
         )
         combined_directory_tree = filesystem.create_directory_tree_visualization(
             Path(combined_flattened_directory)
@@ -810,7 +810,7 @@ def datasette_serve(  # noqa: PLR0913
         metadata=metadata,
     )
     # display diagnostic information about the datasette instance
-    label = ":sparkles: Starting a local datasette instance:"
+    label = "# Starting a local datasette instance:"
     display_serve_or_publish_details(
         label, database_path, metadata, port, publish=False
     )
@@ -882,7 +882,7 @@ def datasette_publish(  # noqa: PLR0913
         f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
     )
     # display details about the publishing step
-    label = f":sparkles: Publishing a datasette to {datasette_platform.value}:"
+    label = f"# Publishing a datasette to {datasette_platform.value}:"
     display_serve_or_publish_details(label, database_path, metadata, publish=True)
     # publish the datasette instance using fly.io;
     # this passes control to datasette and then to
