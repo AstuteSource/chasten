@@ -54,6 +54,7 @@ def is_url(url: str) -> bool:
     # parse input url
     url_parsed = URL(url)
     # only input characters for initiatig query and/or fragments if necessary
+    port_character = ":" if (url_parsed.port() is not None) else ""
     query_character = "?" if url_parsed.query() else ""
     fragment_character = "#" if url_parsed.fragment() else ""
     # piece the url back together to make sure it matches what was input
@@ -62,6 +63,8 @@ def is_url(url: str) -> bool:
             url_parsed.scheme(),
             "://",
             url_parsed.netloc(),
+            port_character,
+            str((url_parsed.port() is not None) or ""), # to handle if port() is `None` type
             url_parsed.path(),
             query_character,
             url_parsed.query(),
