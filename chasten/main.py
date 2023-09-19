@@ -440,7 +440,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     verbose: bool = typer.Option(False, help="Enable verbose mode output."),
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
-    """💫 Analyze the AST of Python source code."""
+    """* Analyze the AST of Python source code."""
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -484,7 +484,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     # valid, so exit early and signal an error
     if not validated:
         output.console.print(
-            "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
+            "\n# Cannot perform analysis due to configuration error(s).\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
@@ -511,7 +511,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         input_path
     ) and not filesystem.confirm_valid_file(input_path):
         output.console.print(
-            "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
+            "\n:# Cannot perform analysis due to invalid search directory.\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
     # create the list of directories
@@ -521,7 +521,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print(f"# Analyzing Python source code in: {input_path}")
     # output the number of checks that will be performed
     output.console.print()
-    output.console.print(f":tada: Performing {len(check_list)} check(s):")
+    output.console.print(f"# Performing {len(check_list)} check(s):")
     output.console.print()
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
