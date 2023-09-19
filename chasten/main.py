@@ -671,7 +671,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     if not all_checks_passed:
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print("\n:joy: All checks passed.")
+    output.console.print("\n:) All checks passed.")
 
 
 @cli.command()
