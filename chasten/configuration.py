@@ -7,14 +7,20 @@ import sys
 from typing import Any, Dict, List, Tuple, Union
 from pathlib import Path
 from purl import URL
-import yaml
-import requests
 
 import platformdirs
 from rich.logging import RichHandler
 from rich.traceback import install
+import yaml
+import requests
 
-from chasten import constants, validate, util, output
+from chasten import (
+    constants,
+    filesystem,
+    output,
+    util,
+    validate,
+)
 
 
 def configure_tracebacks() -> None:
@@ -104,7 +110,7 @@ def display_configuration_directory(
 
 
 def validate_configuration_files(
-    config: Union[Path, URL],
+    config: str,
     verbose: bool = False,
 ) -> Tuple[
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
@@ -118,12 +124,12 @@ def validate_configuration_files(
         # be used instead of the platform-specific directory
 
         # input configuration is valid URL
-        if (util.is_url(str(config))):
+        if util.is_url(config):
             # re-parse input config so it is of type URL
             config = URL(str(config))
             chasten_user_config_url_str = str(config)
         # input configuration is valid file path
-        elif (Path(str(config)).exists()):
+        elif Path(config).exists():
             # re-parse input config so it is of type Path
             config = Path(str(config))
             chasten_user_config_dir_str = str(config)
@@ -290,11 +296,11 @@ def extract_configuration_details_from_config_dir(
         return (False, None, None, None)  # type: ignore
     configuration_file_yaml_str = configuration_file_path.read_text()
     # load the contents of the main configuration file
-    with open(configuration_file_path_str) as user_configuration_file_text:
+    with open(str(configuration_file_path)) as user_configuration_file_text:
         (yaml_success, yaml_data) = convert_configuration_text_to_yaml(user_configuration_file_text)
         # return success status, filename, file contents, and yaml parsed data upon success
         if yaml_success:
-            return (True, configuration_file_path_str, configuration_file_yaml_str, yaml_data)
+            return (True, str(configuration_file_path), configuration_file_yaml_str, yaml_data)
         # return none types upon failure in yaml parsing
         else:
             return (False, None, None, None) # type: ignore
