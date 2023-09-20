@@ -910,6 +910,7 @@ def log() -> None:
     # of the chasten tool
     server.start_syslog_server()
 
+
 @cli.command()
 def version():
     """Display the version of Chasten."""
