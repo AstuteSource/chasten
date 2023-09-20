@@ -1,7 +1,6 @@
 """Utilities for use within chasten."""
 
 import importlib.metadata
-import pkg_resources
 
 from chasten import constants
 
@@ -41,16 +40,7 @@ def get_chasten_version() -> str:
     # there is not a working package that importlib.metadata can access with a version;
     # in this situation the function should return the default value of 0.0.0
     except importlib.metadata.PackageNotFoundError:
-        try:
-            # if importlib.metadata fails, try using pkg_resources
-            # The 'distribution' variable holds information about the 'chasten' package
-            distribution = pkg_resources.get_distribution(
-                constants.chasten.Application_Name
-            )
-            # Retrieve version information from distribution
-            version_string_of_foo = distribution.version
-        except pkg_resources.DistributionNotFound:
-            # If both methods fail, return a default version
+            # If method fails, return a default version
             version_string_of_foo = default_chasten_semver
     return version_string_of_foo
 
