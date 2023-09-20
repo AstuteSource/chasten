@@ -40,8 +40,8 @@ def get_chasten_version() -> str:
     # there is not a working package that importlib.metadata can access with a version;
     # in this situation the function should return the default value of 0.0.0
     except importlib.metadata.PackageNotFoundError:
-            # If method fails, return a default version
-            version_string_of_foo = default_chasten_semver
+        # If method fails, return a default version
+        version_string_of_foo = default_chasten_semver
     return version_string_of_foo
 
 
