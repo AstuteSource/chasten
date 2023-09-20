@@ -44,9 +44,11 @@ def get_chasten_version() -> str:
         try:
             # if importlib.metadata fails, try using pkg_resources
             # The 'distribution' variable holds information about the 'chasten' package
-            distribution= pkg_resources.get_distribution(constants.chasten.Application_Name)
+            distribution = pkg_resources.get_distribution(
+                constants.chasten.Application_Name
+            )
             # Retrieve version information from distribution
-            version_string_of_foo= distribution.version
+            version_string_of_foo = distribution.version
         except pkg_resources.DistributionNotFound:
             # If both methods fail, return a default version
             version_string_of_foo = default_chasten_semver.version
