@@ -51,7 +51,7 @@ def get_chasten_version() -> str:
             version_string_of_foo = distribution.version
         except pkg_resources.DistributionNotFound:
             # If both methods fail, return a default version
-            version_string_of_foo = default_chasten_semver.version
+            version_string_of_foo = default_chasten_semver
     return version_string_of_foo
 
 
