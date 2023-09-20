@@ -29,7 +29,7 @@ chasten = Chasten(
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
     Chasten_Database_View="chasten_complete",
-    Emoji="*",
+    Emoji=":dizzy:",
     Executable_Fly="fly",
     Executable_Vercel="vercel",
     Https="https://",
@@ -40,7 +40,7 @@ chasten = Chasten(
     Tagline="chasten: Analyze the AST of Python Source Code",
     Theme_Background="default",
     Theme_Colors="ansi_dark",
-    Website="GitHub: https://github.com/gkapfham/chasten",
+    Website=":link: GitHub: https://github.com/gkapfham/chasten",
 )
 
 
