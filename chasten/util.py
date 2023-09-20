@@ -21,8 +21,8 @@ def get_human_readable_boolean(answer: bool) -> str:
 def get_symbol_boolean(answer: bool) -> str:
     """Produce a symbol-formatted version of a boolean value of True or False."""
     if answer:
-        return "[green]Yes[/green]"
-    return "[red]No[/red]"
+        return f"[green]{checkmark_unicode}[/green]"
+    return f"[red]{xmark_unicode}[/red]"
 
 
 def get_chasten_version() -> str:
