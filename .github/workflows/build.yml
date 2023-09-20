@@ -11,7 +11,7 @@ env:
 # Focuses on the master branch only
 on:
   push:
-    branches: [ master, Work-flow-changes-to-check-more-OS ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
