@@ -1,16 +1,11 @@
 """Validate various aspects of configurations and command-line arguments."""
 
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
+from typing import Any, Dict, List, Tuple
 
 import jsonschema
 from jsonschema.exceptions import ValidationError
 
-from chasten import constants
-from chasten import output
-from chasten import util
+from chasten import constants, output, util
 
 # intuitive description:
 # a configuration file links to one or more checks files

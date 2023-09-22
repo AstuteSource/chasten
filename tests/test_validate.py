@@ -1,12 +1,10 @@
 """Pytest test suite for the validate module."""
 
 import pytest
-from hypothesis import given
-from hypothesis import strategies
+from hypothesis import given, strategies
 from hypothesis_jsonschema import from_schema
 
-from chasten.validate import JSON_SCHEMA_CONFIG
-from chasten.validate import validate_configuration
+from chasten.validate import JSON_SCHEMA_CONFIG, validate_configuration
 
 
 def test_validate_config_valid_realistic():

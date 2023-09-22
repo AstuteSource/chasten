@@ -2,9 +2,8 @@
 
 import importlib.metadata
 
-from purl import URL
-
 from chasten import constants
+from purl import URL
 
 checkmark_unicode = "\u2713"
 xmark_unicode = "\u2717"

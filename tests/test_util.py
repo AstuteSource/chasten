@@ -1,9 +1,7 @@
 """Pytest test suite for the util module."""
 
 import pytest
-from hypothesis import given
-from hypothesis import provisional
-from hypothesis import strategies
+from hypothesis import given, strategies, provisional
 
 from chasten import util
 
