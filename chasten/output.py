@@ -3,14 +3,20 @@
 import logging
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
+from typing import Dict
+from typing import List
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 
-from chasten import checks, configuration, constants, debug, results
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import debug
+from chasten import results
 
 # declare a default logger
 logger: logging.Logger = logging.getLogger()

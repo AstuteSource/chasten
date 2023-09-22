@@ -2,7 +2,8 @@
 
 import pytest
 
-from chasten.debug import DebugDestination, DebugLevel
+from chasten.debug import DebugDestination
+from chasten.debug import DebugLevel
 
 
 def test_debug_level_values():
