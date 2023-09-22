@@ -275,6 +275,16 @@ create the tool's command-line arguments and options through a terminal user
 interface (TUI). To use TUI-based way to create a complete command-line for
 `chasten` you can type the command `chasten interact`.
 
+## 📊Log
+`Chasten` has a built-in System Log. While using chasten you can use the command `chasten log` in your terminal. The system log feature allows the user to see events and messages that are produced by `chasten`. In addition, the `chasten log` feature will assist in finding bugs and the events that led to the bug happening.
+
+```shell
+💫 chasten: Analyze the AST of Python Source Code
+🔗 GitHub: https://github.com/gkapfham/chasten
+✨ Syslog server for receiving debugging information
+```
+
+
 ## 🤗 Learning
 
 - **Curious about the nodes that are available in a Python program's AST?**
