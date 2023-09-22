@@ -68,8 +68,8 @@ class Check(BaseModel):
     id: str
     name: str
     description: str = ""
-    min: Optional[conint(ge=0)] = 0
-    max: Optional[conint(ge=0)] = 0
+    min: Optional[conint(ge=0)] = 0 # type: ignore
+    max: Optional[conint(ge=0)] = 0 # type: ignore
     pattern: str
     passed: bool
     matches: list[Match] = []
