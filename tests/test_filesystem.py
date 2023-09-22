@@ -1,11 +1,11 @@
 """Pytest test suite for the filesystem module."""
 
 import pathlib
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 from hypothesis import given, strategies
-from pathlib import Path
 from rich.tree import Tree
 
 from chasten import constants, filesystem

@@ -1,10 +1,10 @@
 """Pytest test suite for the constants module."""
 
 from dataclasses import FrozenInstanceError
+from pathlib import Path
 
 import pytest
 from hypothesis import given, strategies
-from pathlib import Path
 
 from chasten import constants
 
