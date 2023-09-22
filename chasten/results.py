@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from pydantic import BaseModel
