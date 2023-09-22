@@ -21,7 +21,7 @@ def test_valid_directory() -> None:
 
 def test_invalid_directory() -> None:
     """Confirm that a valid directory is found."""
-    directory_str =str(Path("./testsNOT/"))
+    directory_str = str(Path("./testsNOT/"))
     directory = pathlib.Path(directory_str)
     confirmation = filesystem.confirm_valid_directory(directory)
     assert confirmation is False
