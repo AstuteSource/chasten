@@ -5,7 +5,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from hypothesis import HealthCheck, given, settings, strategies
+from hypothesis import HealthCheck
+from hypothesis import given
+from hypothesis import settings
+from hypothesis import strategies
 from typer.testing import CliRunner
 
 from chasten import main
