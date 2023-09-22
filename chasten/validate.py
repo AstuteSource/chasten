@@ -1,9 +1,6 @@
 """Validate various aspects of configurations and command-line arguments."""
 
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
+from typing import Any, Dict, List, Tuple
 
 import jsonschema
 from jsonschema.exceptions import ValidationError

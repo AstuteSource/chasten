@@ -5,21 +5,12 @@ import shutil
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import NoReturn
-from typing import Optional
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, NoReturn, Optional, Tuple, Union
 
 import flatterer  # type: ignore
 from rich.tree import Tree
 
-from chasten import configuration
-from chasten import constants
-from chasten import database
-from chasten import results
+from chasten import configuration, constants, database, results
 
 CONFIGURATION_FILE_DEFAULT_CONTENTS = """
 # chasten configuration

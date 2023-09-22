@@ -4,12 +4,10 @@ import pathlib
 from unittest.mock import patch
 
 import pytest
-from hypothesis import given
-from hypothesis import strategies
+from hypothesis import given, strategies
 from rich.tree import Tree
 
-from chasten import constants
-from chasten import filesystem
+from chasten import constants, filesystem
 
 
 def test_valid_directory() -> None:
