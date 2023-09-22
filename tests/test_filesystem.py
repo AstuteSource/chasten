@@ -5,8 +5,8 @@ from unittest.mock import patch
 
 import pytest
 from hypothesis import given, strategies
-from rich.tree import Tree
 from pathlib import Path
+from rich.tree import Tree
 
 from chasten import constants, filesystem
 

@@ -5,6 +5,7 @@ from dataclasses import FrozenInstanceError
 import pytest
 from hypothesis import given, strategies
 from pathlib import Path
+
 from chasten import constants
 
 
