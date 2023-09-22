@@ -163,7 +163,7 @@ def validate_configuration_files(
             configuration_file_yaml_str,
             yaml_data_dict,
         ) = extract_configuration_details_from_config_url(chasten_user_config_url_str)
-        configuration_file_source =  chasten_user_config_url_str
+        configuration_file_source = chasten_user_config_url_str
     # input config is a Path
     elif isinstance(config, Path):
         output.console.print(
@@ -240,7 +240,9 @@ def validate_configuration_files(
                 configuration_file_path_str,
                 configuration_file_yaml_str,
                 yaml_data_dict,
-            ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str, checks_file_name)
+            ) = extract_configuration_details_from_config_dir(
+                chasten_user_config_dir_str, checks_file_name
+            )
             # configuration path returned from extraction function can be used for logging
             checks_file_source = configuration_file_path_str
         # the checks file could not be extracted in a valid
@@ -287,7 +289,9 @@ def extract_configuration_details_from_config_dir(
     """
     # create the name of the main configuration file
     # load the text of the main configuration file
-    configuration_file_path = Path(chasten_user_config_dir_str) / Path(configuration_file)
+    configuration_file_path = Path(chasten_user_config_dir_str) / Path(
+        configuration_file
+    )
     # the configuration file does not exist and thus
     # the extraction process cannot continue, the use of
     # these return values indicates that the extraction
@@ -297,13 +301,20 @@ def extract_configuration_details_from_config_dir(
     configuration_file_yaml_str = configuration_file_path.read_text()
     # load the contents of the main configuration file
     with open(str(configuration_file_path)) as user_configuration_file_text:
-        (yaml_success, yaml_data) = convert_configuration_text_to_yaml(user_configuration_file_text)
+        (yaml_success, yaml_data) = convert_configuration_text_to_yaml(
+            user_configuration_file_text
+        )
         # return success status, filename, file contents, and yaml parsed data upon success
         if yaml_success:
-            return (True, str(configuration_file_path), configuration_file_yaml_str, yaml_data)
+            return (
+                True,
+                str(configuration_file_path),
+                configuration_file_yaml_str,
+                yaml_data,
+            )
         # return none types upon failure in yaml parsing
         else:
-            return (False, None, None, None) # type: ignore
+            return (False, None, None, None)  # type: ignore
 
 
 def extract_configuration_details_from_config_url(
@@ -321,17 +332,19 @@ def extract_configuration_details_from_config_url(
         configuration_file_yaml_str = response.text
     # the URL indicates a problem with the response
     else:
-        return (False, None, None) # type: ignore
-    (yaml_success, yaml_data) = convert_configuration_text_to_yaml(configuration_file_yaml_str)
+        return (False, None, None)  # type: ignore
+    (yaml_success, yaml_data) = convert_configuration_text_to_yaml(
+        configuration_file_yaml_str
+    )
     # return success status, filename, file contents, and yaml parsed data upon success
     if yaml_success:
         return (True, configuration_file_yaml_str, yaml_data)
     else:
-        return (False, None, None) # type: ignore
+        return (False, None, None)  # type: ignore
 
 
 def convert_configuration_text_to_yaml(
-    configuration_file_contents_str: str
+    configuration_file_contents_str: str,
 ) -> Tuple[bool, Dict[str, Dict[str, Any]]]:
     """Return details about the configuration."""
     yaml_data = None

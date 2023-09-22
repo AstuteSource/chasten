@@ -298,7 +298,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
-    (validated, checks_dict) = configuration.validate_configuration_files(config, verbose)
+    (validated, checks_dict) = configuration.validate_configuration_files(
+        config, verbose
+    )
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:

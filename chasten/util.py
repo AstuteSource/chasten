@@ -49,6 +49,7 @@ def join_and_preserve(data, start, end):
     """Join and preserve lines inside of a list."""
     return constants.markers.Newline.join(data[start:end])
 
+
 def is_url(url: str) -> bool:
     """Determine if string is valid URL."""
     # parse input url
@@ -64,12 +65,14 @@ def is_url(url: str) -> bool:
             "://",
             url_parsed.netloc(),
             port_character,
-            str((url_parsed.port() is not None) or ""), # to handle if port() is `None` type
+            str(
+                (url_parsed.port() is not None) or ""
+            ),  # to handle if port() is `None` type
             url_parsed.path(),
             query_character,
             url_parsed.query(),
             fragment_character,
-            url_parsed.fragment()
+            url_parsed.fragment(),
         ]
     )
     # determine if parsed and reconstructed url matches original

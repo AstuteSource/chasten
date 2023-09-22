@@ -139,8 +139,6 @@ def validate_file(
     # validation worked correctly, so display the configuration file
     else:
         output.opt_print_log(verbose, newline="")
-        output.opt_print_log(
-            verbose, label=f":sparkles: Contents of {file_name}:\n"
-        )
+        output.opt_print_log(verbose, label=f":sparkles: Contents of {file_name}:\n")
         output.opt_print_log(verbose, config_file=configuration_file_yaml_str)
     return validated
