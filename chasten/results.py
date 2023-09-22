@@ -3,10 +3,11 @@
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Optional
 
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from pydantic import BaseModel
+from pydantic.types import conint
 
 from chasten import debug
 
@@ -67,8 +68,8 @@ class Check(BaseModel):
     id: str
     name: str
     description: str = ""
-    min: Union[None, int] = 0
-    max: Union[None, int] = 0
+    min: Optional[conint(ge=0)] = 0
+    max: Optional[conint(ge=0)] = 0
     pattern: str
     passed: bool
     matches: list[Match] = []
