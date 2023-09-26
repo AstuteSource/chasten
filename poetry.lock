@@ -807,7 +807,7 @@ requests = ">=2.24.0"
 pytrace = ["flask-cors (>=3.0.10)", "pycrunch-trace (>=0.1.6)"]
 
 [[package]]
-name = "hypothesis
+name = "hypothesis"
 version = "6.81.1"
 description = "A library for property-based testing"
 category = "dev"
