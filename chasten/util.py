@@ -1,6 +1,7 @@
 """Utilities for use within chasten."""
 
 import importlib.metadata
+
 import pkg_resources
 
 from chasten import constants
@@ -36,23 +37,18 @@ def get_chasten_version() -> str:
         version_string_of_foo = importlib.metadata.version(
             constants.chasten.Application_Name
         )
-    # note that using the version function does not work when chasten is run
-    # through a 'poetry shell' and/or a 'poetry run' command because at that stage
-    # there is not a working package that importlib.metadata can access with a version;
-    # in this situation the function should return the default value of 0.0.0
     except importlib.metadata.PackageNotFoundError:
-        try:
-            # if importlib.metadata fails, try using pkg_resources
-            # The 'distribution' variable holds information about the 'chasten' package
-            distribution = pkg_resources.get_distribution(
-                constants.chasten.Application_Name
-            )
-            # Retrieve version information from distribution
-            version_string_of_foo = distribution.version
-        except pkg_resources.DistributionNotFound:
-            # If both methods fail, return a default version
-            version_string_of_foo = default_chasten_semver
-    return version_string_of_foo
+        pass
+    else:
+        return version_string_of_foo
+    # if importlib.metadata fails, try using pkg_resources
+    try:
+        distribution = pkg_resources.get_distribution(
+            constants.chasten.Application_Name
+        )
+        return distribution.version
+    except pkg_resources.DistributionNotFound:
+        return default_chasten_semver
 
 
 def join_and_preserve(data, start, end):
