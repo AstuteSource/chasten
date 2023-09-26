@@ -91,11 +91,11 @@ Follow these steps to install the `chasten` program:
 
 ## 🐋 Docker
 
-There is also the option to use [Docker](https://www.docker.com/) to interact with `chasten`
+There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
 
 Follow these steps to utilize Docker:
 
-- Install Docker Desktop for your operating system
+- Install [Docker Desktop](https://docs.docker.com/get-docker/) for your operating system
 - Ensure Docker Desktop is running
 - `cd` into the chasten directory where the `Dockerfile` is located
 - Type `docker build -t chasten .` to build the container
