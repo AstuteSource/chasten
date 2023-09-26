@@ -27,7 +27,7 @@ from chasten import (
 )
 
 # create a Typer object to support the command-line interface
-cli = typer.Typer()
+cli = typer.Typer(no_args_is_help=True)
 
 # create a small bullet for display in the output
 small_bullet_unicode = constants.markers.Small_Bullet_Unicode
