@@ -1,6 +1,7 @@
 """Utilities for use within chasten."""
 
 import importlib.metadata
+
 import pkg_resources
 
 from chasten import constants
