@@ -198,7 +198,7 @@ def write_chasten_results(
         try:
             results_path_with_file.write_text(results_json)
         except:  # noqa: E722
-            results_path_with_file.write_text(results_json,"utf-8")
+            results_path_with_file.write_text(results_json, "utf-8")
 
         # return the name of the created file for diagnostic purposes
         return complete_results_file_name
