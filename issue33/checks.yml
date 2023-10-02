@@ -1,0 +1,15 @@
+checks:
+  - name: "For loop check"
+    code: "FLC"
+    id: "C001"
+    pattern: './/For'
+    count:
+      min: 12
+      max: 12
+  - name: "While loop check"
+    code: "WLC"
+    id: "C002"
+    pattern: './/While'
+    count:
+      min: 9
+      max: 9
