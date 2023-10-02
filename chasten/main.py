@@ -385,9 +385,9 @@ def configure(  # noqa: PLR0913
 def analyze(  # noqa: PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
     xpath: str = typer.Option(
-        None,
+        "2.0",
         "--xpath",
-        help="Version of xpath specified by user. (1.0 or 2.0)",
+        help="Version of xpath specified by user. (1.0 or 2.0).",
     ), 
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
@@ -547,9 +547,12 @@ def analyze(  # noqa: PLR0913, PLR0915
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
-        match_generator = pyastgrepsearch.search_python_files(
-            paths=valid_directories, expression=current_xpath_pattern, xpath2=True
-        )
+
+        if xpath == "1.0":
+            match_generator = pyastgrepsearch.search_python_files(paths=valid_directories, expression=current_xpath_pattern, xpath2=False)
+        else:
+            match_generator = pyastgrepsearch.search_python_files(paths=valid_directories, expression=current_xpath_pattern, xpath2=True)
+
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
         # indicate that the analysis completed for each located file
