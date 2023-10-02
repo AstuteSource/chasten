@@ -384,6 +384,11 @@ def configure(  # noqa: PLR0913
 @cli.command()
 def analyze(  # noqa: PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
+    xpath: str = typer.Option(
+        None,
+        "--xpath",
+        help="Version of xpath specified by user. (1.0 or 2.0)",
+    ), 
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
