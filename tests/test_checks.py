@@ -9,6 +9,8 @@ from chasten.checks import (
     check_match_count,
     extract_min_max,
     is_in_closed_interval,
+    extract_description,
+    make_checks_status_message
 )
 
 JSON_SCHEMA_COUNT = {
