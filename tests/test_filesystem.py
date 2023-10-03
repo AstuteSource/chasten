@@ -24,6 +24,7 @@ def test_invalid_directory() -> None:
     directory = pathlib.Path(directory_str)
     confirmation = filesystem.confirm_valid_directory(directory)
     assert confirmation is False
+    assert filesystem.confirm_valid_directory(None) is False
 
 
 def test_valid_file() -> None:
@@ -40,6 +41,13 @@ def test_invalid_file() -> None:
     this_file_not = pathlib.Path(file_str)
     confirmation = filesystem.confirm_valid_file(this_file_not)
     assert confirmation is False
+    assert filesystem.confirm_valid_file(None) is False
+
+
+def test_create_directory_tree_visualization():
+    """Confirms that if there is no tree and path is invalid, returns None."""
+    tree = filesystem.create_directory_tree_visualization("false_path")
+    assert tree is None
 
 
 @given(directory=strategies.builds(pathlib.Path))
