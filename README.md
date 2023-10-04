@@ -276,13 +276,35 @@ interface (TUI). To use TUI-based way to create a complete command-line for
 `chasten` you can type the command `chasten interact`.
 
 ## 📊Log
-`Chasten` has a built-in System Log. While using chasten you can use the command `chasten log` in your terminal. The system log feature allows the user to see events and messages that are produced by `chasten`. In addition, the `chasten log` feature will assist in finding bugs and the events that led to the bug happening.
+`Chasten` has a built-in System Log. While using chasten you can use the command `chasten log` in your terminal. The system log feature allows the user to see events and messages that are produced by `chasten`. In addition, the `chasten log` feature will assist in finding bugs and the events that led to the bug happening. For the `chasten` program to display to the system log you will have to open a separate terminal and use the command `chasten log`. In addtion for each command that is run the `--debug-level <choice of level>` and `--debug-dest SYSLOG` will need to be added.
+
+For example `chasten datasette-serve --debug-level DEBUG --debug-dest SYSLOG 
+< database path to file>` with produce the following output in the system log.
 
 ```
 💫 chasten: Analyze the AST of Python Source Code
 🔗 GitHub: https://github.com/gkapfham/chasten
 ✨ Syslog server for receiving debugging information
+
+Display verbose output? False
+Debug level? DEBUG
+Debug destination? SYSLOG
 ```
+
+In each command in `chasten`, there is an option to add `--debug-level`. The debug level has 5 options debug, info, warning, error, and critical. Each level will show different issues in the system log where debug is the lowest level of issue from the input where critical is the highest level of error. To leverage more info on this you can reference `debug.py` file below:
+
+```
+class DebugLevel(str, Enum):
+    """The predefined levels for debugging."""
+
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+```
+
+
 
 
 ## 🤗 Learning
