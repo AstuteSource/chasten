@@ -1,9 +1,11 @@
 import argparse
 import openai
 import os
+from cryptography.fernet import Fernet
 
 # Initialize the global variable to None
 user_api_key = None
+fernet = None
 genscript = """
 checks:
   - name: "A human-readable name for the check, describing its purpose or objective. For example, 'Class Definition' or 'Function Naming Convention'."
@@ -53,8 +55,19 @@ Example:
       max: 15
 
 """
-# File to store the API key
+
 API_KEY_FILE = "userapikey.txt"
+
+def generate_key():
+    return Fernet.generate_key()
+
+def encrypt_key(api_key, key):
+    fernet = Fernet(key)
+    return fernet.encrypt(api_key.encode()).decode()
+
+def decrypt_key(encrypted_key, key):
+    fernet = Fernet(key)
+    return fernet.decrypt(encrypted_key.encode()).decode()
 
 def is_valid_api_key(api_key):
     try:
@@ -68,21 +81,27 @@ def is_valid_api_key(api_key):
         return False
 
 def get_user_api_key():
-    global user_api_key
+    global user_api_key, fernet
     while True:
         user_api_key = input("Enter your API key: ")
         if is_valid_api_key(user_api_key):
+            key = generate_key()
+            encrypted_key = encrypt_key(user_api_key, key)
             with open(API_KEY_FILE, "w") as f:
-                f.write(user_api_key)
+                f.write(key.decode() + "\n" + encrypted_key)
             break
         else:
             print("Invalid API key. Please enter a valid API key.")
 
 def load_user_api_key():
-    global user_api_key
+    global user_api_key, fernet
     if os.path.isfile(API_KEY_FILE):
         with open(API_KEY_FILE, "r") as f:
-            user_api_key = f.read().strip()
+            lines = f.read().strip().split("\n")
+            if len(lines) == 2:
+                key = lines[0].encode()
+                encrypted_key = lines[1]
+                user_api_key = decrypt_key(encrypted_key, key)
 
 def generate_yaml_config():
     # Use the global variable user_api_key here
@@ -92,9 +111,6 @@ def generate_yaml_config():
 
     try:
         openai.api_key = user_api_key
-        
-        with open("genscript.txt") as f:
-            structure = f.read()
         
         user_input = input("What would you like to check for: ")
         
@@ -117,7 +133,6 @@ def generate_yaml_config():
     
     except openai.error.OpenAIError:
         print("Error: There was an issue with the API key. Make sure you input your API key correctly.")
-
 
 def main():
     parser = argparse.ArgumentParser(description="CLI for OpenAI YAML Generation")
