@@ -12,6 +12,7 @@ from typer.main import get_group
 
 from chasten import (
     checks,
+    configApp,
     configuration,
     constants,
     database,
@@ -28,9 +29,10 @@ from chasten import (
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
-
+app = configApp.config_App()
 # create a small bullet for display in the output
 small_bullet_unicode = constants.markers.Small_Bullet_Unicode
+CHECK_STORAGE = constants.chasten.App_Storage
 
 
 # ---
@@ -292,6 +294,13 @@ def interact(ctx: typer.Context) -> None:
     # cannot be easily tested in an automated fashion
     Trogon(get_group(cli), click_context=ctx).run()
 
+@cli.command()
+def create_config() -> None:
+    """🔧 Interactively specify for checks and have a checks.yml file created"""
+    # creates a textual object for better user interface
+    app.run()
+    result = configApp.ProperSentence(CHECK_STORAGE)
+    output.console.print(result.sentence_structure())
 
 @cli.command()
 def configure(  # noqa: PLR0913
