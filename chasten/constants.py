@@ -10,6 +10,7 @@ class Chasten:
 
     Application_Name: str
     Application_Author: str
+    App_Storage: str
     Chasten_Database_View: str
     Emoji: str
     Executable_Fly: str
@@ -28,6 +29,7 @@ class Chasten:
 chasten = Chasten(
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
+    App_Storage= "check.txt",
     Chasten_Database_View="chasten_complete",
     Emoji=":dizzy:",
     Executable_Fly="fly",
