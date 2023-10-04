@@ -291,9 +291,9 @@ Debug level? DEBUG
 Debug destination? SYSLOG
 ```
 
-In each command in `chasten`, there is an option to add `--debug-level`. The debug level has 5 options debug, info, warning, error, and critical. Each level will show different issues in the system log where debug is the lowest level of issue from the input where critical is the highest level of error. To leverage more info on this you can reference `debug.py` file below:
+In each command in `chasten`, there is an option to add `--debug-level`. The debug level has 5 options debug, info, warning, error, and critical. Each level will show different issues in the system log where debug is the lowest level of issue from the input where critical is the highest level of error. To leverage more info on this you can reference `debug.py` file:
 
-```
+``` python
 class DebugLevel(str, Enum):
     """The predefined levels for debugging."""
 
