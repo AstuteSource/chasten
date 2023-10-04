@@ -3,7 +3,7 @@ import openai
 import os
 from cryptography.fernet import Fernet
 
-# Initialize the global variable to None
+
 user_api_key = None
 fernet = None
 genscript = """
@@ -104,7 +104,7 @@ def load_user_api_key():
                 user_api_key = decrypt_key(encrypted_key, key)
 
 def generate_yaml_config():
-    # Use the global variable user_api_key here
+
     if user_api_key is None or not is_valid_api_key(user_api_key):
         print("Please run '--get-api-key' and provide a valid API key first.")
         return
