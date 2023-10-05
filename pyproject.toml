@@ -15,6 +15,8 @@ typer = {extras = ["all"], version = "^0.9.0"}
 pyastgrep = "^1.2.2"
 trogon = "^0.5.0"
 textual = "^0.38.1"
+openai = "^0.28.1"
+cryptography = "^41.0.4"
 pydantic = "^2.0.3"
 platformdirs = "^3.8.1"
 pyyaml = "^6.0"
