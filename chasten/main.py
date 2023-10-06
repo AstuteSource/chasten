@@ -15,6 +15,7 @@ from chasten import (
     configApp,
     configuration,
     constants,
+    createchecks,
     database,
     debug,
     enumerations,
@@ -295,12 +296,14 @@ def interact(ctx: typer.Context) -> None:
     Trogon(get_group(cli), click_context=ctx).run()
 
 @cli.command()
-def create_config() -> None:
+def create_check() -> None:
     """🔧 Interactively specify for checks and have a checks.yml file created"""
     # creates a textual object for better user interface
+    createchecks.load_user_api_key()
     app.run()
     result = configApp.ProperSentence(CHECK_STORAGE)
-    output.console.print(result.sentence_structure())
+    print(result.sentence_structure())
+    createchecks.generate_yaml_config(result.sentence_structure())
 
 @cli.command()
 def configure(  # noqa: PLR0913

@@ -58,27 +58,32 @@ Example:
 
 API_KEY_FILE = "userapikey.txt"
 
+
 def generate_key():
     return Fernet.generate_key()
+
 
 def encrypt_key(api_key, key):
     fernet = Fernet(key)
     return fernet.encrypt(api_key.encode()).decode()
 
+
 def decrypt_key(encrypted_key, key):
     fernet = Fernet(key)
     return fernet.decrypt(encrypted_key.encode()).decode()
+
 
 def is_valid_api_key(api_key):
     try:
         openai.api_key = api_key
         openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "system", "content": "Test message"}]
+            messages=[{"role": "system", "content": "Test message"}],
         )
         return True
     except openai.error.OpenAIError:
         return False
+
 
 def get_user_api_key():
     global user_api_key, fernet
@@ -93,6 +98,7 @@ def get_user_api_key():
         else:
             print("Invalid API key. Please enter a valid API key.")
 
+
 def load_user_api_key():
     global user_api_key, fernet
     if os.path.isfile(API_KEY_FILE):
@@ -102,52 +108,46 @@ def load_user_api_key():
                 key = lines[0].encode()
                 encrypted_key = lines[1]
                 user_api_key = decrypt_key(encrypted_key, key)
+    else:
+        get_user_api_key()
 
-def generate_yaml_config():
 
+def generate_yaml_config(user_input: str):
     if user_api_key is None or not is_valid_api_key(user_api_key):
         print("Please run '--get-api-key' and provide a valid API key first.")
         return
 
     try:
         openai.api_key = user_api_key
-        
-        user_input = input("What would you like to check for: ")
-        
-        prompts = ["write a file that checks for" + user_input + "in the same format as what is shown below: " + genscript]
-        
+
+
+        prompts = [
+            genscript
+            + "in the same format as what is shown above(do not just generate the example use it as a framework nothing else): "
+            + user_input
+        ]
+
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "system", "content": f"You are a helpful assistant that generates YAML configurations. Your task is to {prompts}"}]
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"You are a helpful assistant that generates YAML configurations. Your task is to {prompts}",
+                }
+            ],
         )
-        
+
         generated_yaml = response.choices[0].message["content"].strip()
-        
+
         if not os.path.isfile("checks.yml"):
             open("checks.yml", "x")
-        
+
         with open("checks.yml", "w") as f:
             outputwrite = f.write(generated_yaml)
-        
+
         print(generated_yaml)
-    
+
     except openai.error.OpenAIError:
-        print("Error: There was an issue with the API key. Make sure you input your API key correctly.")
-
-def main():
-    parser = argparse.ArgumentParser(description="CLI for OpenAI YAML Generation")
-    parser.add_argument('--get-api-key', action='store_true', help='Get and store the API key')
-    parser.add_argument('--generate-yaml', action='store_true', help='Generate YAML configuration')
-    args = parser.parse_args()
-
-    if args.get_api_key:
-        get_user_api_key()
-    elif args.generate_yaml:
-        load_user_api_key()
-        generate_yaml_config()
-    else:
-        load_user_api_key()
-        print("Please specify a valid command.")
-
-if __name__ == "__main__":
-    main()
+        print(
+            "Error: There was an issue with the API key. Make sure you input your API key correctly."
+        )

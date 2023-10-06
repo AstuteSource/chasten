@@ -34,7 +34,7 @@ class ProperSentence:
             if len(check_list) != 0:
                 result = "Make a YAML file that checks for:"
                 for checks in check_list:
-                    quantity = "exactly" if checks[2] == "True" else "at least"
+                    quantity = "exactly" if checks[2] == "True" else "at minimum"
                     result += f"\n - {quantity} {checks[1]} {checks[0]}"
                 return result
             return "[red][ERROR][/red] No checks were supplied"
