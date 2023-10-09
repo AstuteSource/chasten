@@ -686,13 +686,14 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print("\n:joy: All checks passed.")
     #
     #if view_XML is not None:
-    #   xml_rep = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
+    #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
     #   output.console.print("Printing your XML file now! :sparkles:")
-    #   output.console.print(xml_rep)
+    #   output.console.print(xml_element)
+    #alt: output.console.print(xml.tostring(result.xml_element, pretty_print=True).decode("utf-8"))
 
     #elif save_XML is not None:
-    #   xml_rep = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
-    
+    #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
+
 
 
 @cli.command()
