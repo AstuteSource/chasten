@@ -686,6 +686,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print("\n:joy: All checks passed.")
     # dump.py from pyastgrep does the ast_to_xml
     # use match_generator to get ast node
+    # pyastgrep.dump(input_file)
     #if view_XML is not None:
     #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
     #   output.console.print("Printing your XML file now! :sparkles:")
