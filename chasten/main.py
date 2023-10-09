@@ -684,6 +684,10 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
+    #
+    if view_XML is not None:
+
+    elif save_XML is not None:
 
 
 @cli.command()
