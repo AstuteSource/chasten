@@ -684,12 +684,12 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
-    #
+    # dump.py from pyastgrep does the ast_to_xml
     #if view_XML is not None:
     #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
     #   output.console.print("Printing your XML file now! :sparkles:")
     #   output.console.print(xml_element)
-    #alt: output.console.print(xml.tostring(result.xml_element, pretty_print=True).decode("utf-8"))
+    #alt: output.console.print(xml.tostring(result.xml_element).decode("utf-8"))
 
     #elif save_XML is not None:
     #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
