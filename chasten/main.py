@@ -419,6 +419,18 @@ def analyze(  # noqa: PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
+    view_XML: Path = typer.Option(
+        None,
+        "--view-xml",
+        "-v",
+        help="The directory for the XML file(s) to be viewed/edited from."
+    ),
+    save_XML: Path = typer.Option(
+        None,
+        "--save-xml",
+        "-sx",
+        help="The directory for the XML file(s) to be saved in."
+    ),
     config: Path = typer.Option(
         None,
         "--config",
