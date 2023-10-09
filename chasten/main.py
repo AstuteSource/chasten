@@ -685,9 +685,14 @@ def analyze(  # noqa: PLR0913, PLR0915
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
     #
-    if view_XML is not None:
+    #if view_XML is not None:
+    #   xml_rep = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
+    #   output.console.print("Printing your XML file now! :sparkles:")
+    #   output.console.print(xml_rep)
 
-    elif save_XML is not None:
+    #elif save_XML is not None:
+    #   xml_rep = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
+    
 
 
 @cli.command()
