@@ -1,11 +1,13 @@
 """💫 Chasten checks the AST of a Python program."""
 
 import sys
+import os.path
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 import typer
 import yaml
+import pyastgrep
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
@@ -690,14 +692,21 @@ def analyze(  # noqa: PLR0913, PLR0915
     # if input file ends in .py then go back in path -
     # in path (create folder?) save XML
     # tests can if files exist
-    #if view_XML is not None:
-    #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
-    #   output.console.print("Printing your XML file now! :sparkles:")
-    #   output.console.print(xml_element)
-    #alt: output.console.print(xml.tostring(result.xml_element).decode("utf-8"))
+    if view_XML is not None:
+        #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
+        #   output.console.print("Printing your XML file now! :sparkles:")
+        #   output.console.print(xml_element)
+        #alt: output.console.print(xml.tostring(result.xml_element).decode("utf-8"))
+        if str(input_path).endswith(".py"):
+            dir_path = os.path.dirname(str(input_path))
+            dir_path = Path(dir_path)
+            pyastgrep.dump(dir_path)
+        else:
+            pyastgrep.dump(input_path)
 
-    #elif save_XML is not None:
-    #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
+    elif save_XML is not None:
+        #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
+        pyastgrep.dump(input_path)
 
 
 
