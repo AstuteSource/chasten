@@ -1,6 +1,7 @@
 """Define constants with dataclasses for use in chasten."""
 
 from dataclasses import dataclass
+from pathlib import Path
 
 
 # chasten constant
@@ -10,7 +11,7 @@ class Chasten:
 
     Application_Name: str
     Application_Author: str
-    App_Storage: str
+    App_Storage: Path
     Chasten_Database_View: str
     Emoji: str
     Executable_Fly: str
@@ -29,7 +30,7 @@ class Chasten:
 chasten = Chasten(
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
-    App_Storage= "check.txt",
+    App_Storage= Path("check.txt"),
     Chasten_Database_View="chasten_complete",
     Emoji=":dizzy:",
     Executable_Fly="fly",
