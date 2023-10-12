@@ -296,14 +296,16 @@ def interact(ctx: typer.Context) -> None:
     Trogon(get_group(cli), click_context=ctx).run()
 
 @cli.command()
-def create_check() -> None:
+def create_checks() -> None:
     """🔧 Interactively specify for checks and have a checks.yml file created"""
     # creates a textual object for better user interface
-    createchecks.load_user_api_key()
     app.run()
-    result = configApp.ProperSentence(CHECK_STORAGE)
-    print(result.sentence_structure())
-    createchecks.generate_yaml_config(result.sentence_structure())
+    if filesystem.confirm_valid_file(CHECK_STORAGE):
+        result = configApp.write_checks(configApp.split_file(CHECK_STORAGE))
+        output.console.print(result)
+        createchecks.generate_yaml_config(result)
+    else:
+        output.console.print(f"[red][ERROR][/red] No {CHECK_STORAGE} file exists")
 
 @cli.command()
 def configure(  # noqa: PLR0913
