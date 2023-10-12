@@ -1,6 +1,6 @@
 # Import necessary modules and components from the Textual library,
 # as well as other Python modules like os and validation tools.
-import os
+from pathlib import Path
 from typing import List
 
 from textual.app import App, ComposeResult
@@ -10,37 +10,6 @@ from textual.widgets import Button, Input, Pretty, Static
 from chasten import constants
 
 CHECK_STORAGE = constants.chasten.App_Storage
-
-
-class ProperSentence:
-    def __init__(self, file_name: str):
-        """Initialize the ProperSentence object with a file name."""
-        self.file_name = file_name
-
-    def split_file(self) -> List[List[str]]:
-        """Split the file into a list of lists containing comma-separated values."""
-        check_list = []
-        with open(self.file_name) as file:
-            for row in file:
-                strip_row = row.strip()  # Remove leading/trailing white spaces
-                if strip_row:
-                    check_list.append(strip_row.split(","))
-        return check_list
-
-    def sentence_structure(self) -> str:
-        """Generate structured output based on the contents of the file."""
-        if os.path.isfile(CHECK_STORAGE):
-            check_list = self.split_file()
-            if len(check_list) != 0:
-                result = "Make a YAML file that checks for:"
-                for checks in check_list:
-                    quantity = "exactly" if checks[2] == "True" else "at minimum"
-                    result += f"\n - {quantity} {checks[1]} {checks[0]}"
-                return result
-            return "[red][ERROR][/red] No checks were supplied"
-        return f"[red][ERROR][/red] No {CHECK_STORAGE} file exists"
-
-
 # Define default values for checking and exact status
 Check = [
     "",
@@ -53,6 +22,36 @@ CHECK_VALUE = {
     "Check": 0,
     "Matches": 1,
 }
+
+def split_file(file_name: Path) -> List[List[str]]:
+    """Split a csv file into a list of lists."""
+    check_list = []
+    with open(file_name) as file:
+        for row in file:
+            strip_row = row.strip()  # Remove leading/trailing white spaces
+            if strip_row:
+                check_list.append(strip_row.split(","))
+    return check_list
+
+
+def write_checks(check_list: List[List[str]]) -> str:
+    """Generate structured output based on the contents of the file."""
+    if len(check_list) != 0:
+        result = "Make a YAML file that checks for:"
+        for checks in check_list:
+            quantity = "exactly" if checks[2] == "True" else "at minimum"
+            result += f"\n - {quantity} {checks[1]} {checks[0]}"
+        return result
+    return "[red][ERROR][/red] No checks were supplied"
+
+
+def store_in_file(File: Path, Pattern: str, Matches: int, Exact: bool):
+    """Store inputed values into a text file"""
+    File.touch()
+    with open(File, "a") as file:
+        file.write(
+            f"\n{Pattern},{Matches},{Exact}"
+        )  # Append input data to the file
 
 # Define input fields and buttons for the user interface
 Check_Input = Input(placeholder="Check For:", id="Check", name="Check")
@@ -104,7 +103,7 @@ class button_prompts(Static):
         elif Valid:
             if event.button.id == "next":
                 # If "Next Check!" is clicked and input is valid, record the input data to a file
-                self.store_in_file()
+                store_in_file(CHECK_STORAGE,Check[0],Check[1],Check[2])
                 Check = ["", "1", False]
                 # Reset input fields, clear validation messages, and enable the "Exact" button
                 self.query_one(Pretty).update([])  # Clear any validation messages
@@ -114,15 +113,6 @@ class button_prompts(Static):
         else:
             self.query_one(Pretty).update(["Invalid Input Please enter a Integer"])
             Match_Input.value = ""  # Clear the "Matches" input field
-
-    def store_in_file(self):
-        """Store inputed values into a text file"""
-        if not os.path.isfile(CHECK_STORAGE):
-            open(CHECK_STORAGE, "x")  # Create a new file if it doesn't exist
-        with open(CHECK_STORAGE, "a") as file:
-            file.write(
-                f"\n{Check[0]},{Check[1]},{Check[2]}"
-            )  # Append input data to the file
 
     def compose(self) -> ComposeResult:
         """For displaying the user interface"""
