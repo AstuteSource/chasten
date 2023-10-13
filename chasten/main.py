@@ -295,17 +295,46 @@ def interact(ctx: typer.Context) -> None:
     # cannot be easily tested in an automated fashion
     Trogon(get_group(cli), click_context=ctx).run()
 
+
 @cli.command()
 def create_checks() -> None:
     """🔧 Interactively specify for checks and have a checks.yml file created"""
     # creates a textual object for better user interface
     app.run()
+    # Checks if the file storing the wanted checks exists and is valid
     if filesystem.confirm_valid_file(CHECK_STORAGE):
+        # stores the human readable version of the checks
         result = configApp.write_checks(configApp.split_file(CHECK_STORAGE))
-        output.console.print(result)
-        createchecks.generate_yaml_config(result)
+        # Checks if API key storage file exists
+        if filesystem.confirm_valid_file(Path("userapikey.txt")):
+            # prints the human readable checks to the terminal
+            output.console.print(result)
+            # loads the decrypted API Key
+            api_key = createchecks.load_user_api_key()
+            # calls the function to generate the yaml file
+            createchecks.generate_yaml_config(api_key,result)
+        else:
+            # prompts the user to input there API key to the terminal
+            api_key = input("Please Enter your openai API Key:")
+            # checks if it is a valid API key
+            if createchecks.is_valid_api_key(api_key):
+                # stores the API key in a file
+                createchecks.get_user_api_key(api_key)
+                # prints the human readable checks to the terminal
+                output.console.print(result)
+                # gets the decrypted API Key
+                api_key = createchecks.load_user_api_key("userapikey.txt")
+                # prints the generated YAML file to the terminal
+                output.console.print(createchecks.generate_yaml_config(api_key,result))
+            else:
+                # Displays and error message if the API key is not valid
+                output.console.print(
+                    "[red][ERROR][/red] Invalid API key. Please enter a valid API key."
+                )
     else:
+        # displays an error message if the CHECK_STORAGE file does not exist
         output.console.print(f"[red][ERROR][/red] No {CHECK_STORAGE} file exists")
+
 
 @cli.command()
 def configure(  # noqa: PLR0913
