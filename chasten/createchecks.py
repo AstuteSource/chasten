@@ -1,10 +1,8 @@
-import argparse
+
 import openai
-import os
+from pathlib import Path
 from cryptography.fernet import Fernet
 
-
-user_api_key = None
 fernet = None
 genscript = """
 checks:
@@ -85,38 +83,23 @@ def is_valid_api_key(api_key):
         return False
 
 
-def get_user_api_key():
-    global user_api_key, fernet
-    while True:
-        user_api_key = input("Enter your API key: ")
-        if is_valid_api_key(user_api_key):
-            key = generate_key()
-            encrypted_key = encrypt_key(user_api_key, key)
-            with open(API_KEY_FILE, "w") as f:
-                f.write(key.decode() + "\n" + encrypted_key)
-            break
-        else:
-            print("Invalid API key. Please enter a valid API key.")
+def get_user_api_key(user_api_key):
+    key = generate_key()
+    encrypted_key = encrypt_key(user_api_key, key)
+    with open(API_KEY_FILE, "w") as f:
+        f.write(key.decode() + "\n" + encrypted_key)
 
 
-def load_user_api_key():
-    global user_api_key, fernet
-    if os.path.isfile(API_KEY_FILE):
-        with open(API_KEY_FILE, "r") as f:
-            lines = f.read().strip().split("\n")
-            if len(lines) == 2:
-                key = lines[0].encode()
-                encrypted_key = lines[1]
-                user_api_key = decrypt_key(encrypted_key, key)
-    else:
-        get_user_api_key()
+def load_user_api_key(file):
+    with open(file, "r") as f:
+        lines = f.read().strip().split("\n")
+        if len(lines) == 2:
+            key = lines[0].encode()
+            encrypted_key = lines[1]
+    return decrypt_key(encrypted_key, key)
 
 
-def generate_yaml_config(user_input: str):
-    if user_api_key is None or not is_valid_api_key(user_api_key):
-        print("Please run '--get-api-key' and provide a valid API key first.")
-        return
-
+def generate_yaml_config(user_api_key,user_input: str) -> str:
     try:
         openai.api_key = user_api_key
 
@@ -139,15 +122,13 @@ def generate_yaml_config(user_input: str):
 
         generated_yaml = response.choices[0].message["content"].strip()
 
-        if not os.path.isfile("checks.yml"):
-            open("checks.yml", "x")
+        file = Path("checks.yml")
+        file.touch()
 
         with open("checks.yml", "w") as f:
-            outputwrite = f.write(generated_yaml)
+            f.write(generated_yaml)
 
-        print(generated_yaml)
+        return (generated_yaml)
 
     except openai.error.OpenAIError:
-        print(
-            "Error: There was an issue with the API key. Make sure you input your API key correctly."
-        )
+        return "[red][Error][/red] There was an issue with the API key. Make sure you input your API key correctly."
