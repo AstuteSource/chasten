@@ -822,6 +822,7 @@ def datasette_serve(  # noqa: PLR0913
         datasette_port=port,
         datasette_metadata=metadata,
         publish=False,
+        OpSystem=util.get_OS(),
     )
 
 
