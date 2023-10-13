@@ -912,6 +912,15 @@ def log() -> None:
     server.start_syslog_server()
 
 
+@cli.command()
+def version():
+    """🖥️  Display the version of Chasten."""
+    # Get Chasten version from util file
+    version_string = util.get_chasten_version()
+    # output chasten version
+    typer.echo(f"chasten {version_string}")
+
+
 # ---
 # End region: Command-line interface functions }}}
 # ---
