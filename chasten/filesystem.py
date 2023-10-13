@@ -195,11 +195,7 @@ def write_chasten_results(
         results_path_with_file = results_path / complete_results_file_name
         results_json = results_content.model_dump_json(indent=2)
         # use the built-in method with pathlib Path to write the JSON contents
-        try:
-            results_path_with_file.write_text(results_json)
-        except:  # noqa: E722
-            results_path_with_file.write_text(results_json, "utf-8")
-
+        results_path_with_file.write_text(results_json)
         # return the name of the created file for diagnostic purposes
         return complete_results_file_name
     # saving was not enabled and thus this function cannot
