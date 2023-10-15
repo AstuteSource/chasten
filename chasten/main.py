@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
+import multiprocessing
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
@@ -25,6 +26,7 @@ from chasten import (
     util,
     validate,
 )
+
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
@@ -899,17 +901,24 @@ def datasette_publish(  # noqa: PLR0913
 @cli.command()
 def log() -> None:
     """🦚 Start the logging server."""
+    # perform setup for logging and debugging
+    output.setup(debug.DebugLevel.DEBUG, debug.DebugDestination.CONSOLE)
     # display the header
     output.print_header()
     # display details about the server
     output.print_server()
-    # run the server; note that this
+    # TODO: run the server; note that this
     # syslog server receives debugging
     # information from chasten.
     # It must be started in a separate process
     # before running any sub-command
     # of the chasten tool
-    server.start_syslog_server()
+    # Start the syslog server in a separate process
+    server_process = multiprocessing.Process(target=server.start_syslog_server)
+    server_process.daemon = (
+        True  # Daemonize the process to allow it to be terminate with the main program
+    )
+    server_process.start()
 
 
 @cli.command()
