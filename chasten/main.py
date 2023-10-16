@@ -396,11 +396,11 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-e",
         help="Attribute name, value, and match confidence level for exclusion.",
     ),
-    xpath: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
-        (None, None, 0),
-        "--xpath",
-        "-a",
-        help="Runs the xpath version chosen.",
+    xpath: Path = typer.Option(
+        str,
+        "--xpath-version",
+        "-xp",
+        help="Accepts different xpath version, runs xpath version two by default.",
     ),
     input_path: Path = typer.Option(
         filesystem.get_default_directory_list(),
