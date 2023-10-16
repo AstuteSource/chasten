@@ -383,12 +383,7 @@ def configure(  # noqa: PLR0913
 
 @cli.command()
 def analyze(  # noqa: PLR0913, PLR0915
-    project: str = typer.Argument(help="Name of the project."),
-    xpath: str = typer.Option(
-        "2.0",
-        "--xpath",
-        help="Version of xpath specified by user. (1.0 or 2.0).",
-    ), 
+    project: str = typer.Argument(help="Name of the project."), 
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -400,6 +395,12 @@ def analyze(  # noqa: PLR0913, PLR0915
         "--check-exclude",
         "-e",
         help="Attribute name, value, and match confidence level for exclusion.",
+    ),
+    xpath: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
+        (None, None, 0),
+        "--xpath",
+        "-a",
+        help="Version of xpath specified by user. (1.0 or 2.0).",
     ),
     input_path: Path = typer.Option(
         filesystem.get_default_directory_list(),
