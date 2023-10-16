@@ -12,5 +12,5 @@ print(data)  # noqa
 filename = "chasten/util.py"
 covered_lines = set(data.lines(filename))  # type: ignore
 
-print(f"Covered lines in {filename}:")  # noqa
+print(f"Covered lines in {filename}:")   # noqa
 print(covered_lines)  # noqa
