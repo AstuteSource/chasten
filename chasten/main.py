@@ -3,6 +3,7 @@
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
+import time
 
 import typer
 import yaml
@@ -383,7 +384,12 @@ def configure(  # noqa: PLR0913
 
 @cli.command()
 def analyze(  # noqa: PLR0913, PLR0915
-    project: str = typer.Argument(help="Name of the project."), 
+    project: str = typer.Argument(help="Name of the project."),
+    xpath: str = typer.Option(
+        "2.0",
+        "--xpath",
+        help="Version of xpath specified by user. (1.0 or 2.0).",
+    ), 
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -395,12 +401,6 @@ def analyze(  # noqa: PLR0913, PLR0915
         "--check-exclude",
         "-e",
         help="Attribute name, value, and match confidence level for exclusion.",
-    ),
-    xpath: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
-        (None, None, 0),
-        "--xpath",
-        "-a",
-        help="Version of xpath specified by user. (1.0 or 2.0).",
     ),
     input_path: Path = typer.Option(
         filesystem.get_default_directory_list(),
@@ -447,6 +447,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
+    start_time = time.time
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -677,10 +678,12 @@ def analyze(  # noqa: PLR0913, PLR0915
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
+    end_time = time.time
+    elapsed_time = end_time - start_time
     if not all_checks_passed:
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print("\n:joy: All checks passed.")
+    output.console.print(f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds")
 
 
 @cli.command()
