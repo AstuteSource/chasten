@@ -385,10 +385,11 @@ def configure(  # noqa: PLR0913
 @cli.command()
 def analyze(  # noqa: PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
-    xpath: str = typer.Option(
-        "2.0",
-        "--xpath",
-        help="Version of xpath specified by user. (1.0 or 2.0).",
+    xpath: Path = typer.Option(
+        str,
+        "--xpath-version",
+        "-xp",
+        help="Accepts different xpath version, runs xpath version two by default.",
     ), 
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
@@ -447,7 +448,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
-    start_time = time.time
+    start_time = time.time()
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -678,8 +679,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
-    end_time = time.time
+    end_time = time.time()
     elapsed_time = end_time - start_time
+
     if not all_checks_passed:
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
