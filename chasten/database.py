@@ -128,16 +128,28 @@ def display_datasette_details(
     output.console.print()
 
 
-def start_datasette_server(  # noqa: PLR0912
+def executable_name(OpSystem: str = "Linux") -> str:
+    """Get the executable directory depending on OS"""
+    exe_directory = "/bin/"
+    executable_name = constants.datasette.Datasette_Executable
+    # Checks if the OS is windows and changed where to search if true
+    if OpSystem == "Windows":
+        exe_directory = "/Scripts/"
+        executable_name += ".exe"
+    virtual_env_location = sys.prefix
+    return virtual_env_location + exe_directory + executable_name
+
+
+def start_datasette_server(  # noqa: PLR0912, PLR0913
     database_path: Path,
     datasette_metadata: Path,
     datasette_platform: str = enumerations.DatasettePublicationPlatform.FLY.value,
     datasette_port: int = 8001,
     publish: bool = False,
+    OpSystem: str = "Linux",
 ) -> None:
     """Start a local datasette server."""
     # define the name of the executable needed to run the server
-    executable_name = constants.datasette.Datasette_Executable
     # define the name of the file that contains datasette metadata;
     # note that by default the metadata could be None and thus it
     # will not be passed as a -m argument to the datasette program
@@ -147,8 +159,7 @@ def start_datasette_server(  # noqa: PLR0912
     # chasten will exist in a bin directory. For instance, the "datasette"
     # executable that is a dependency of chasten can be found by starting
     # the search from this location for the virtual environment.
-    virtual_env_location = sys.prefix
-    full_executable_name = virtual_env_location + "/bin/" + executable_name
+    full_executable_name = executable_name(OpSystem)
     (found_executable, executable_path) = filesystem.can_find_executable(
         full_executable_name
     )
@@ -162,7 +173,7 @@ def start_datasette_server(  # noqa: PLR0912
         label = ":sparkles: Details for datasette startup:"
     display_datasette_details(
         label,
-        virtual_env_location,
+        sys.prefix,
         str(executable_path),
         full_executable_name,
     )
@@ -170,7 +181,7 @@ def start_datasette_server(  # noqa: PLR0912
     # error message and then exit this function since no further steps are possible
     if not found_executable:
         output.console.print(
-            ":person_shrugging: Was not able to find '{executable_name}'"
+            f":person_shrugging: Was not able to find {constants.datasette.Datasette_Executable}"
         )
         return None
     # run the localhost server because the
