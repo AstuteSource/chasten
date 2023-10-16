@@ -95,6 +95,7 @@ jobs:
             echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
             CURRENT_GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
             echo "$CURRENT_GITHUB_STEP_SUMMARY" >> $GITHUB_STEP_SUMMARY
+<<<<<<< Updated upstream
         # Create the Coverage Badge
         - name: Make Badge
           uses: schneegans/dynamic-badges-action@v1.6.0
@@ -108,3 +109,5 @@ jobs:
             minColorRange: 50
             maxColorRange: 90
             valColorRange: ${{ env.total }}
+=======
+>>>>>>> Stashed changes
