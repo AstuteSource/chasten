@@ -33,3 +33,4 @@ checks:
     pattern: './/FunctionDef/body//If[ancestor::If and not(parent::orelse)]'
     count:
       min: 15
+      max: 300
