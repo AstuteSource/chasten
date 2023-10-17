@@ -741,13 +741,20 @@ def analyze(  # noqa: PLR0913, PLR0915
     if save_XML is not None and os.path.exists(save_XML):
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
         # ask about vaild_directory
-        xml_save_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
-        os.system(xml_save_cmd)
+        # xml_save_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
+        # os.system(xml_save_cmd)
+        contents = Path(input_path).read_bytes()
+        _, ast = pyastgrep.parse_python_file(contents, input_path)
+        xml_root = pyastgrep.ast_to_xml(ast, {})
+
 
     # -- view xml
     if view_XML is not None and os.path.exists(view_XML):
-        xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
-        os.system(xml_view_cmd)
+        # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
+        # os.system(xml_view_cmd)
+        contents = Path(input_path).read_bytes()
+        _, ast = pyastgrep.parse_python_file(contents, input_path)
+        xml_root = pyastgrep.ast_to_xml(ast, {})
         
 
 @cli.command()
