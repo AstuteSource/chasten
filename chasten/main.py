@@ -34,6 +34,7 @@ app = configApp.config_App()
 # create a small bullet for display in the output
 small_bullet_unicode = constants.markers.Small_Bullet_Unicode
 CHECK_STORAGE = constants.chasten.App_Storage
+API_KEY_STORAGE = constants.chasten.API_Key_Storage
 
 
 # ---
@@ -306,13 +307,13 @@ def create_checks() -> None:
         # stores the human readable version of the checks
         result = configApp.write_checks(configApp.split_file(CHECK_STORAGE))
         # Checks if API key storage file exists
-        if filesystem.confirm_valid_file(Path("userapikey.txt")):
+        if filesystem.confirm_valid_file(API_KEY_STORAGE):
             # prints the human readable checks to the terminal
             output.console.print(result)
             # loads the decrypted API Key
-            api_key = createchecks.load_user_api_key()
+            api_key = createchecks.load_user_api_key(API_KEY_STORAGE)
             # calls the function to generate the yaml file
-            createchecks.generate_yaml_config(api_key, result)
+            output.console.print(createchecks.generate_yaml_config(api_key, result))
         else:
             # prompts the user to input there API key to the terminal
             api_key = input("Please Enter your openai API Key:")
@@ -323,7 +324,7 @@ def create_checks() -> None:
                 # prints the human readable checks to the terminal
                 output.console.print(result)
                 # gets the decrypted API Key
-                api_key = createchecks.load_user_api_key("userapikey.txt")
+                api_key = createchecks.load_user_api_key(API_KEY_STORAGE)
                 # prints the generated YAML file to the terminal
                 output.console.print(createchecks.generate_yaml_config(api_key, result))
             else:
