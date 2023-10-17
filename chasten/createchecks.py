@@ -93,7 +93,7 @@ def get_user_api_key(user_api_key):
 def load_user_api_key(file):
     with open(file, "r") as f:
         lines = f.read().strip().split("\n")
-        if len(lines) == 2:
+        if len(lines) == 2:  # noqa: PLR2004
             key = lines[0].encode()
             encrypted_key = lines[1]
     return decrypt_key(encrypted_key, key)
