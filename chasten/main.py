@@ -425,13 +425,13 @@ def analyze(  # noqa: PLR0913, PLR0915
         None,
         "--view-xml",
         "-v",
-        help="The directory for the XML file(s) to be viewed/edited from."
+        help="The directory/file for the XML file(s) to be viewed/edited from."
     ),
     save_XML: Path = typer.Option(
         None,
         "--save-xml",
         "-sx",
-        help="The directory for the XML file(s) to be saved in."
+        help="The directory/file for the XML file(s) to be saved in."
     ),
     config: Path = typer.Option(
         None,
@@ -686,7 +686,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
-    # -- save
+    # --save-xml
     if save_XML is not None and os.path.exists(save_XML):
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
         # ask about vaild_directory
@@ -703,7 +703,7 @@ def analyze(  # noqa: PLR0913, PLR0915
             with open(str(save_XML), "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
 
-    # -- view xml
+    # --view-xml
     if view_XML is not None and os.path.exists(view_XML):
         # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
         # os.system(xml_view_cmd)
