@@ -686,57 +686,6 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
-    # dump.py from pyastgrep does the ast_to_xml
-    # use match_generator to get ast node
-    # pyastgrep.dump(input_file)
-    # if input file ends in .py then go back in path -
-    # in path (create folder?) save XML
-    # tests can if files exist
-    # if view_XML is not None:
-    #     #Print will demonstrate if --view-xml is selected"
-    #     print("The code right here is being selected if user selects '--view-xml'")
-        #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
-        #   output.console.print("Printing your XML file now! :sparkles:")
-        #   output.console.print(xml_element)
-        #alt: output.console.print(xml.tostring(result.xml_element).decode("utf-8"))
-
-        # figure out how to convert input_path into an actual string (putting str in front of the input_path isnt converting it) str doesnt know what to do with the override. 
-        # maybe we can convert input_path to valid_directories (we can go through all valid directories and make use of that) 
-        # using valid_directories we can group them all together and make a dump of all valid_directories
-        # dump cannot be called directly: cal python shells (subprocesses --> os.system)
-        
-    #     if str(input_path).endswith(".py"):
-    #         dir_path = os.path.dirname(str(input_path))
-    #         dir_path = Path(dir_path)
-    #         pyastgrep.dump(dir_path)
-    #     else:
-    #         pyastgrep.dump(input_path)
-
-    # #elif statement will run if the previous statment is false: Changed to an if statement
-    # if save_XML is not None:
-    #     #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
-    #     pyastgrep.dump(input_path)
-
-    #for py_file in list(valid_directories.glob('**/*.py'))):
-
-    # valid_dir = ["file1.py", "file2.py", "file3.py"]  # Replace with list of valid file paths
-
-    # for file in valid_dir:
-    #     cmd = "pyastdump " + str(file) + " > " + str(file).replace(".py",".xml") 
-    #     os.system(cmd)
-
-    # for file in valid_directory:
-    #     # Construct the command to run pyastdump
-    #     xml_cmd = f"pyastdump {file} > {file.replace('.py', '.xml')}"
-    #     # Execute the command
-    #     os.system(xml_cmd)
-
-    # if str(input_path).endswith(".py"):
-    #     dir_path = os.path.dirname(str(input_path))
-    #     dir_path = Path(dir_path)
-    # else:
-    #     dir_path = input_path
-
     # -- save
     if save_XML is not None and os.path.exists(save_XML):
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
