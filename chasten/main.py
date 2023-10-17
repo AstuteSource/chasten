@@ -739,17 +739,15 @@ def analyze(  # noqa: PLR0913, PLR0915
 
     # -- save
     if save_XML is not None and os.path.exists(save_XML):
-        for file in save_XML:
-            # ask here has to be checked what path provided is strpped of directory and writes to current working directory
-            # ask about vaild_directory
-            xml_save_cmd = "pyastdump " + str(file) + " > " + str(file).replace(".py",".xml") 
-            os.system(xml_save_cmd)
+        # ask here has to be checked what path provided is strpped of directory and writes to current working directory
+        # ask about vaild_directory
+        xml_save_cmd = "pyastdump " + str(save_XML) + " > " + str(save_XML).replace(".py",".xml") 
+        os.system(xml_save_cmd)
 
     # -- view xml
     if view_XML is not None and os.path.exists(view_XML):
-        for file in view_XML:
-            xml_view_cmd = "pyastdump " + str(file) 
-            os.system(xml_view_cmd)
+        xml_view_cmd = "pyastdump " + str(view_XML) + " > " + str(view_XML).replace(".py",".xml") 
+        os.system(xml_view_cmd)
         
 
 @cli.command()
