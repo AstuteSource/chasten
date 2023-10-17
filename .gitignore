@@ -366,3 +366,6 @@ coverage.txt
 
 # coverage report
 coverage.json
+
+# bash command history
+.bash_history

@@ -4,6 +4,7 @@ name: build
 # Use more columns for terminal output
 env:
   COLUMNS: 120
+  PYTHONIOENCODING: utf8
 
 # Controls when the action will run
 # Workflow begins with push or PR events
@@ -18,12 +19,18 @@ on:
 # This job performs all necessary checks
 jobs:
   build:
-    # Use the latest version of Ubuntu on Microsoft Azure
-    runs-on: ubuntu-latest
+    # Use the latest version of Ubuntu on MacOS and Windows
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        # Performs all actions on different versions of Python
-        python-version: ['3.11']
+        os: [ubuntu-latest]
+        python-version: ["3.11"]
+        include:
+          - os: macos-latest
+            python-version: "3.11"
+          - os: windows-latest
+            python-version: "3.11"
     # Define the workflow steps
     steps:
     # Checkout the code of the repository
@@ -34,6 +41,7 @@ jobs:
         # Run the mdl linting tool
         # Refers to .mdlrc file in repository
         - name: Run Markdown Linting
+          if: matrix.os == 'ubuntu-latest'
           uses: actionshub/markdownlint@main
         # Setup Python for the current language version
         - name: Setup Python ${{ matrix.python-version }}
@@ -62,11 +70,12 @@ jobs:
           if: always()
           run: |
             poetry run task lint
-        # Run the program
+          # Run the program
         - name: Run program
           if: always()
           run: |
-           poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
+            poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
+
         # Run the tests
         - name: Run Tests
           if: always()
@@ -79,7 +88,7 @@ jobs:
             poetry run task test-coverage-silent > coverage.txt
         # Display the Coverage Report
         - name: Display Coverage
-          if: always()
+          if: always() && matrix.os == 'ubuntu-latest'
           run: |
             export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
             echo "total=$TOTAL" >> $GITHUB_ENV
