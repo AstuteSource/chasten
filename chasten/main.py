@@ -761,12 +761,12 @@ def analyze(  # noqa: PLR0913, PLR0915
         contents = Path(input_path).read_bytes()
         _, ast = pyastgrep.parse_python_file(contents, input_path)
         xml_root = pyastgrep.ast_to_xml(ast, {})
-        if os.path.isdir(save_XML):
-            file_path = str(save_XML) + "/codeXML.xml"
+        if os.path.isdir(view_XML):
+            file_path = str(view_XML) + "/codeXML.xml"
             with open(file_path, "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
         else:
-            with open(str(save_XML), "w") as current_file:
+            with open(str(view_XML), "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
         
 
