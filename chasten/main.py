@@ -704,7 +704,8 @@ def analyze(  # noqa: PLR0913, PLR0915
         else:
             pyastgrep.dump(input_path)
 
-    elif save_XML is not None:
+    #elif statement will run if the previous statment is false: Changed to an if statement
+    if save_XML is not None:
         #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
         pyastgrep.dump(input_path)
 
