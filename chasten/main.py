@@ -731,18 +731,27 @@ def analyze(  # noqa: PLR0913, PLR0915
     #     # Execute the command
     #     os.system(xml_cmd)
 
+    if str(input_path).endswith(".py"):
+        dir_path = os.path.dirname(str(input_path))
+        dir_path = Path(dir_path)
+        pyastgrep.dump(dir_path)
+    else:
+        pyastgrep.dump(input_path)
+
     # We are unsure if each file is its 
     # -- save
-    for file in valid_directory:
-    # ask here has to be checked what path provided is strpped of directory and writes to current working directory
-    # ask about vaild_directory
-    xml_save_cmd = "pyastdump " + str(file) + " > " + str(file).replace(".py",".xml") 
-    os.system(xml_save_cmd)
+    if save_XML is not None:
+        for file in dir_path:
+            # ask here has to be checked what path provided is strpped of directory and writes to current working directory
+            # ask about vaild_directory
+            xml_save_cmd = "pyastdump " + str(file) + " > " + str(file).replace(".py",".xml") 
+            os.system(xml_save_cmd)
 
-   # -- view xml
-    for file in valid_directory:
-        xml_view_cmd = "pyastdump " + str(file) 
-        os.system(xml_view_cmd)
+    # -- view xml
+    if view_XML is not None:
+        for file in dir_path:
+            xml_view_cmd = "pyastdump " + str(file) 
+            os.system(xml_view_cmd)
         
 
 @cli.command()
