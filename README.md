@@ -89,6 +89,25 @@ Follow these steps to install the `chasten` program:
 - Type `pipx list` and confirm that Chasten is installed
 - Type `chasten --help` to learn how to use the tool
 
+## 🐋 Docker
+
+There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
+
+Follow these steps to utilize Docker:
+
+- Install [Docker Desktop](https://docs.docker.com/get-docker/) for your operating system
+- Ensure Docker Desktop is running
+- `cd` into the chasten directory where the `Dockerfile` is located
+- Type `docker build -t chasten .` to build the container
+- Type one of the following commands to run the container:
+    - Windows (Command Prompt) -> `docker run --rm -v "%cd%":/root/src -it chasten`
+    - Windows (Powershell) -> `docker run --rm -v ${pwd}:/root/src -it chasten`
+    - Mac/Ubuntu -> `docker run --rm -v $(pwd):/root/src -it chasten`
+- Inside the container type `poetry install`
+- Outside of the container type `docker ps` to view running container information
+- Outside of the container type `docker commit <your-container-id> <your-image-name>` to save the dependecy installation
+- Now you can use Docker for all of your `chasten` needs!
+
 ## 🪂 Configuration
 
 You can configure `chasten` with two YAML files, normally called `config.yml`

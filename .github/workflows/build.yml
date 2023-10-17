@@ -95,16 +95,3 @@ jobs:
             echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
             CURRENT_GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
             echo "$CURRENT_GITHUB_STEP_SUMMARY" >> $GITHUB_STEP_SUMMARY
-        # Create the Coverage Badge
-        - name: Make Badge
-          uses: schneegans/dynamic-badges-action@v1.6.0
-          with:
-            # GIST_TOKEN is a GitHub personal access token with scope "gist".
-            auth: ${{ secrets.GIST_TOKEN }}
-            gistID: 5300aa276fa9261b2b21b96c3141b3ad
-            filename: covbadge.json
-            label: Coverage
-            message: ${{ env.total }}%
-            minColorRange: 50
-            maxColorRange: 90
-            valColorRange: ${{ env.total }}
