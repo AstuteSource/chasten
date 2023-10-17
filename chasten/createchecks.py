@@ -1,6 +1,6 @@
+from pathlib import Path
 
 import openai
-from pathlib import Path
 from cryptography.fernet import Fernet
 
 fernet = None
@@ -99,10 +99,9 @@ def load_user_api_key(file):
     return decrypt_key(encrypted_key, key)
 
 
-def generate_yaml_config(user_api_key,user_input: str) -> str:
+def generate_yaml_config(user_api_key, user_input: str) -> str:
     try:
         openai.api_key = user_api_key
-
 
         prompts = [
             genscript
@@ -128,7 +127,7 @@ def generate_yaml_config(user_api_key,user_input: str) -> str:
         with open("checks.yml", "w") as f:
             f.write(generated_yaml)
 
-        return (generated_yaml)
+        return generated_yaml
 
     except openai.error.OpenAIError:
         return "[red][Error][/red] There was an issue with the API key. Make sure you input your API key correctly."

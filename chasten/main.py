@@ -312,7 +312,7 @@ def create_checks() -> None:
             # loads the decrypted API Key
             api_key = createchecks.load_user_api_key()
             # calls the function to generate the yaml file
-            createchecks.generate_yaml_config(api_key,result)
+            createchecks.generate_yaml_config(api_key, result)
         else:
             # prompts the user to input there API key to the terminal
             api_key = input("Please Enter your openai API Key:")
@@ -325,7 +325,7 @@ def create_checks() -> None:
                 # gets the decrypted API Key
                 api_key = createchecks.load_user_api_key("userapikey.txt")
                 # prints the generated YAML file to the terminal
-                output.console.print(createchecks.generate_yaml_config(api_key,result))
+                output.console.print(createchecks.generate_yaml_config(api_key, result))
             else:
                 # Displays and error message if the API key is not valid
                 output.console.print(

@@ -23,6 +23,7 @@ CHECK_VALUE = {
     "Matches": 1,
 }
 
+
 def split_file(file_name: Path) -> List[List[str]]:
     """Split a csv file into a list of lists."""
     check_list = []
@@ -49,9 +50,8 @@ def store_in_file(File: Path, Pattern: str, Matches: int, Exact: bool):
     """Store inputed values into a text file"""
     File.touch()
     with open(File, "a") as file:
-        file.write(
-            f"\n{Pattern},{Matches},{Exact}"
-        )  # Append input data to the file
+        file.write(f"\n{Pattern},{Matches},{Exact}")  # Append input data to the file
+
 
 # Define input fields and buttons for the user interface
 Check_Input = Input(placeholder="Check For:", id="Check", name="Check")
@@ -103,7 +103,7 @@ class button_prompts(Static):
         elif Valid:
             if event.button.id == "next":
                 # If "Next Check!" is clicked and input is valid, record the input data to a file
-                store_in_file(CHECK_STORAGE,Check[0],Check[1],Check[2])
+                store_in_file(CHECK_STORAGE, Check[0], Check[1], Check[2])
                 Check = ["", "1", False]
                 # Reset input fields, clear validation messages, and enable the "Exact" button
                 self.query_one(Pretty).update([])  # Clear any validation messages

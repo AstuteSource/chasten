@@ -30,7 +30,7 @@ class Chasten:
 chasten = Chasten(
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
-    App_Storage= Path("check.txt"),
+    App_Storage=Path("check.txt"),
     Chasten_Database_View="chasten_complete",
     Emoji=":dizzy:",
     Executable_Fly="fly",
