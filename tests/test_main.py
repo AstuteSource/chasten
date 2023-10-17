@@ -54,7 +54,7 @@ checks:
     pattern: './/ClassDef'
     count:
       min: 1
-      max: 10
+      max: null
   - name: "all-function-definition"
     code: "AFD"
     id: "F001"
