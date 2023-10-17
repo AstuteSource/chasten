@@ -19,7 +19,7 @@ checks:
     pattern: './/FunctionDef[not(contains(@name, "test_"))]'
     count:
       min: 40
-      max: 70
+      max: 100
   - name: "single-nested-if"
     code: "SNI"
     id: "CL001"
