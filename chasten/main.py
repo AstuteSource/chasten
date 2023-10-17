@@ -734,9 +734,8 @@ def analyze(  # noqa: PLR0913, PLR0915
     if str(input_path).endswith(".py"):
         dir_path = os.path.dirname(str(input_path))
         dir_path = Path(dir_path)
-        pyastgrep.dump(dir_path)
     else:
-        pyastgrep.dump(input_path)
+        dir_path = input_path
 
     # We are unsure if each file is its 
     # -- save
