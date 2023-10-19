@@ -728,6 +728,8 @@ def integrate(  # noqa: PLR0913
     output.print_list_contents(json_path)
     # extract all of the JSON dictionaries from the specified files
     json_dicts = filesystem.get_json_results(json_path)
+    count = len (json_path)
+    output.console.print(f"\n:sparkles: Total of {count} files in all directories.")
     # combine all of the dictionaries into a single string
     combined_json_dict = process.combine_dicts(json_dicts)
     # write the combined JSON file string to the filesystem
