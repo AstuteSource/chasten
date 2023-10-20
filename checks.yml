@@ -1,0 +1,22 @@
+checks:
+  - name: "for-loops"
+    code: "FL"
+    id: "L001"
+    pattern: './/For'
+    count:
+      min: 5
+      max: 5
+  - name: "while-loops"
+    code: "WL"
+    id: "L002"
+    pattern: './/While'
+    count:
+      min: 10
+      max: null
+  - name: "test-function"
+    code: "TF"
+    id: "F001"
+    pattern: './/FunctionDef[@name="test_function"]'
+    count:
+      min: 1
+      max: 1
