@@ -689,7 +689,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         _, ast = pyastgrep.parse_python_file(contents, input_path)
         xml_root = pyastgrep.ast_to_xml(ast, {})
         if os.path.isdir(save_XML):
-            file_path = str(save_XML) + "/codeXML.xml"
+            file_path = save_XML / Path("/codeXML.xml")
             with open(file_path, "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
         else:
@@ -705,7 +705,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         if os.path.isdir(view_XML):
             # for for loop - check for folders and files inside those folders for the nested feature
             # so that the xml is made in output directory that mirrors initial directory
-            file_path = str(view_XML) + "/codeXML.xml"
+            file_path = view_XML / Path("/codeXML.xml")
             with open(file_path, "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
         else:
