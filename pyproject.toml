@@ -29,9 +29,9 @@ datasette-search-all = "^1.1.1"
 sqlite-utils = "^3.34"
 sqlean-py = "^0.21.5.3"
 datasette-sqlite-regex = "^0.2.3"
-pysqlite3 = "^0.5.1"
 sqlite-regex = "^0.2.3"
 datasette-publish-vercel = "^0.14.2"
+purl = "^1.6"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"

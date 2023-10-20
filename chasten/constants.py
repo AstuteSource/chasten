@@ -15,6 +15,7 @@ class Chasten:
     Executable_Fly: str
     Executable_Vercel: str
     Https: str
+    Http: str
     Name: str
     Programming_Language: str
     Separator: str
@@ -33,6 +34,7 @@ chasten = Chasten(
     Executable_Fly="fly",
     Executable_Vercel="vercel",
     Https="https://",
+    Http="http://",
     Name="chasten",
     Programming_Language="python",
     Separator="/",
@@ -284,3 +286,5 @@ server = Server(
     Port=2525,
     Utf8_Encoding="utf-8",
 )
+
+

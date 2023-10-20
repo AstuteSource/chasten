@@ -1,7 +1,10 @@
 """💫 Chasten checks the AST of a Python program."""
 
 import sys
+import sqlite3
+from sqlite3 import Error
 from pathlib import Path
+from purl import URL
 from typing import Any, Dict, List, Tuple, Union
 
 import typer
@@ -79,29 +82,45 @@ def display_configuration_directory(
     output.opt_print_log(verbose, empty="")
 
 
-def extract_configuration_details(
+def extract_configuration_details_from_config_dir(
     chasten_user_config_dir_str: str,
     configuration_file: str = constants.filesystem.Main_Configuration_File,
 ) -> Tuple[bool, str, str, Dict[str, Dict[str, Any]]]:
-    """Display details about the configuration."""
+    """Display details about the configuration given a config directory."""
     # create the name of the main configuration file
-    configuration_file_str = f"{chasten_user_config_dir_str}/{configuration_file}"
+    configuration_file_path_str = f"{chasten_user_config_dir_str}/{configuration_file}"
     # load the text of the main configuration file
-    configuration_file_path = Path(configuration_file_str)
+    configuration_file_path = Path(configuration_file_path_str)
     # the configuration file does not exist and thus
     # the extraction process cannot continue, the use of
     # these return values indicates that the extraction
     # failed and any future steps cannot continue
     if not configuration_file_path.exists():
         return (False, None, None, None)  # type: ignore
-    configuration_file_yml = configuration_file_path.read_text()
+    configuration_file_yaml_str = configuration_file_path.read_text()
+
+    with open(configuration_file_path_str) as user_configuration_file_text:
+        (yaml_success, yaml_data) = convert_configuration_text_to_yaml(user_configuration_file_text)
+        # return success status, filename, file contents, and yaml parsed data upon success
+        if yaml_success:
+            return (True, configuration_file_path_str, configuration_file_yaml_str, yaml_data)
+        # return none types upon failure in yaml parsing
+        else:
+            return (False, None, None, None) # type: ignore
+
+
+def convert_configuration_text_to_yaml(
+    configuration_file_contents_str: str
+) -> Tuple[bool, Dict[str, Dict[str, Any]]]:
+    """Return details about the configuration."""
     # load the contents of the main configuration file
     yaml_data = None
-    with open(configuration_file_str) as user_configuration_file:
-        yaml_data = yaml.safe_load(user_configuration_file)
-    # return the file name, the textual contents of the configuration file, and
-    # a dict-based representation of the configuration file
-    return (True, configuration_file_str, configuration_file_yml, yaml_data)
+    try:
+        yaml_data = yaml.safe_load(configuration_file_contents_str)
+    except Exception:
+        # yaml parsing has failed and we will indicate the input is invalid
+        return (False, None)
+    return (True, yaml_data)
 
 
 def validate_file(
@@ -143,7 +162,14 @@ def validate_configuration_files(
     if config:
         # the configuration file exists and thus it should
         # be used instead of the platform-specific directory
-        if config.exists():
+        if (util.is_url(str(config))):
+            # re-parse input config so it is of type URL
+            config = URL(str(config))
+            chasten_user_config_url_str = str(config)
+        # test if input configuration is valid file path
+        elif (Path(str(config)).exists()):
+            # re-parse input config so it is of type Path
+            config = Path(str(config))
             chasten_user_config_dir_str = str(config)
         # the configuration file does not exist and thus,
         # since config was explicit, it is not possible
@@ -172,7 +198,7 @@ def validate_configuration_files(
         configuration_file_str,
         configuration_file_yml,
         yml_data_dict,
-    ) = extract_configuration_details(chasten_user_config_dir_str)
+    ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str)
     # it was not possible to extract the configuration details and
     # thus this function should return immediately with False
     # to indicate the failure and an empty configuration dictionary
@@ -214,7 +240,7 @@ def validate_configuration_files(
             configuration_file_str,
             configuration_file_yml,
             yml_data_dict,
-        ) = extract_configuration_details(chasten_user_config_dir_str, checks_file_name)
+        ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str, checks_file_name)
         # the checks file could not be extracted in a valid
         # fashion and thus there is no need to continue the
         # validation of this file or any of the other check file
@@ -298,11 +324,11 @@ def configure(  # noqa: PLR0913
     task: enumerations.ConfigureTask = typer.Argument(
         enumerations.ConfigureTask.VALIDATE.value
     ),
-    config: Path = typer.Option(
+    config: Union[Path, URL] = typer.Option(
         None,
         "--config",
         "-c",
-        help="A directory with configuration file(s).",
+        help="A directory or URL with configuration file(s).",
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
@@ -406,7 +432,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         dir_okay=True,
         readable=True,
         resolve_path=True,
-    ),
+    ), 
     output_directory: Path = typer.Option(
         None,
         "--save-directory",
@@ -419,7 +445,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
-    config: Path = typer.Option(
+    config: Union[Path, URL] = typer.Option(
         None,
         "--config",
         "-c",
@@ -675,6 +701,70 @@ def analyze(  # noqa: PLR0913, PLR0915
 
 
 @cli.command()
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+
+    return conn
+
+@cli.command()
+def create_table(conn, create_table_sql):
+    """ create a table from the create_table_sql statement
+    :param conn: Connection object
+    :param create_table_sql: a CREATE TABLE statement
+    :return:
+    """
+    try:
+        c = conn.cursor()
+        c.execute(create_table_sql)
+    except Error as e:
+        print(e)
+
+@cli.command()
+def sqlitetable():
+    database = r"C:\sqlite\db\pythonsqlite.db"
+
+    sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS projects (
+                                        id integer PRIMARY KEY,
+                                        name text NOT NULL,
+                                        begin_date text,
+                                        end_date text
+                                    ); """
+
+    sql_create_tasks_table = """CREATE TABLE IF NOT EXISTS tasks (
+                                    id integer PRIMARY KEY,
+                                    name text NOT NULL,
+                                    priority integer,
+                                    status_id integer NOT NULL,
+                                    project_id integer NOT NULL,
+                                    begin_date text NOT NULL,
+                                    end_date text NOT NULL,
+                                    FOREIGN KEY (project_id) REFERENCES projects (id)
+                                );"""
+
+    # create a database connection
+    conn = create_connection(database)
+
+    # create tables
+    if conn is not None:
+        # create projects table
+        create_table(conn, sql_create_projects_table)
+
+        # create tasks table
+        create_table(conn, sql_create_tasks_table)
+    else:
+        print("Error! cannot create the database connection.")
+
+@cli.command()
 def integrate(  # noqa: PLR0913
     project: str = typer.Argument(help="Name of the project."),
     json_path: List[Path] = typer.Argument(
@@ -744,6 +834,7 @@ def integrate(  # noqa: PLR0913
         output_directory,
         project,
     )
+    print(create_connection(combined_flattened_directory))
     # output the name of the saved file if saving successfully took place
     if combined_flattened_directory:
         output.console.print(
@@ -754,6 +845,7 @@ def integrate(  # noqa: PLR0913
         )
         output.console.print()
         output.console.print(combined_directory_tree)
+        output.console.print(create_connection(combined_directory_tree))
 
 
 @cli.command()
@@ -798,6 +890,7 @@ def datasette_serve(  # noqa: PLR0913
         help="Specify the destination for debugging output.",
     ),
     verbose: bool = typer.Option(False, help="Display verbose debugging output"),
+    
 ) -> None:
     """🏃 Start a local datasette server."""
     # output the preamble, including extra parameters specific to this function

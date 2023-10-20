@@ -1,5 +1,7 @@
 """Extract and analyze details about specific checks."""
 
+import sqlite3
+from sqlite3 import Error
 from typing import Dict, List, Tuple, Union
 
 from chasten import constants, enumerations, util
@@ -120,3 +122,15 @@ def fix_check_criterion(
         else:
             new_criterion = criterion  # type: ignore
     return new_criterion
+
+def create_connection(db_file):
+    """ create a database connection to a SQLite database """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print(sqlite3.version)
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()

@@ -2,8 +2,11 @@
 
 import hypothesis.strategies as st
 import pytest
+import sqilte3
 from hypothesis import HealthCheck, given, settings
 from hypothesis_jsonschema import from_schema
+from sqlite3 import Error
+
 
 from chasten.checks import (
     check_match_count,
