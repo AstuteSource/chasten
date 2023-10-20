@@ -390,7 +390,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         "--xpath-version",
         "-xp",
         help="Accepts different xpath version, runs xpath version two by default.",
-    ), 
+    ),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -552,9 +552,13 @@ def analyze(  # noqa: PLR0913, PLR0915
         # this looks for matches across all path(s) in the specified source path
 
         if xpath == "1.0":
-            match_generator = pyastgrepsearch.search_python_files(paths=valid_directories, expression=current_xpath_pattern, xpath2=False)
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=False
+            )
         else:
-            match_generator = pyastgrepsearch.search_python_files(paths=valid_directories, expression=current_xpath_pattern, xpath2=True)
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+            )
 
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
@@ -685,7 +689,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     if not all_checks_passed:
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print(f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds")
+    output.console.print(
+        f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds"
+    )
 
 
 @cli.command()
