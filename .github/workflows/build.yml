@@ -53,7 +53,7 @@ jobs:
         - name: Install Pip
           if: always()
           run: |
-            pip install -U pip
+            python -m pip install --upgrade pip
         # Install poetry
         - name: Install Poetry
           if: always()
