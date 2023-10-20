@@ -679,13 +679,6 @@ def analyze(  # noqa: PLR0913, PLR0915
     # output the name of the saved file if saving successfully took place
     if saved_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
-    # confirm whether or not all of the checks passed
-    # and then display the appropriate diagnostic message
-    all_checks_passed = all(check_status_list)
-    if not all_checks_passed:
-        output.console.print("\n:sweat: At least one check did not pass.")
-        sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print("\n:joy: All checks passed.")
     # --save-xml
     if save_XML is not None and os.path.exists(save_XML):
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
@@ -702,7 +695,6 @@ def analyze(  # noqa: PLR0913, PLR0915
         else:
             with open(str(save_XML), "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
-
     # --view-xml
     if view_XML is not None and os.path.exists(view_XML):
         # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
@@ -719,7 +711,13 @@ def analyze(  # noqa: PLR0913, PLR0915
         else:
             with open(str(view_XML), "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
-        
+    # confirm whether or not all of the checks passed
+    # and then display the appropriate diagnostic message
+    all_checks_passed = all(check_status_list)
+    if not all_checks_passed:
+        output.console.print("\n:sweat: At least one check did not pass.")
+        sys.exit(constants.markers.Non_Zero_Exit)
+    output.console.print("\n:joy: All checks passed.")
 
 @cli.command()
 def integrate(  # noqa: PLR0913
