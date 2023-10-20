@@ -681,6 +681,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
     # --save-xml
     if save_XML is not None and os.path.exists(save_XML):
+        print("Saving XML")
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
         # ask about vaild_directory
         # xml_save_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
@@ -697,6 +698,7 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
     # --view-xml
     if view_XML is not None and os.path.exists(view_XML):
+        print("Viewing XML")
         # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
         # os.system(xml_view_cmd)
         contents = Path(input_path).read_bytes()
