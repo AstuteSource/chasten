@@ -3,7 +3,6 @@ from pathlib import Path
 import openai
 from cryptography.fernet import Fernet
 
-fernet = None
 genscript = """
 checks:
   - name: "A human-readable name for the check, describing its purpose or objective. For example, 'Class Definition' or 'Function Naming Convention'."
@@ -56,19 +55,21 @@ Example:
 
 API_KEY_FILE = "userapikey.txt"
 
-
-def generate_key():
-    return Fernet.generate_key()
-
-
-def encrypt_key(api_key, key):
+def save_user_api_key(user_api_key):
+    key = Fernet.generate_key()
     fernet = Fernet(key)
-    return fernet.encrypt(api_key.encode()).decode()
+    encrypted_key = fernet.encrypt(user_api_key.encode()).decode()
+    with open(API_KEY_FILE, "w") as f:
+        f.write(key.decode() + "\n" + encrypted_key)
 
-
-def decrypt_key(encrypted_key, key):
-    fernet = Fernet(key)
-    return fernet.decrypt(encrypted_key.encode()).decode()
+def load_user_api_key(file):
+    with open(file, "r") as f:
+        lines = f.read().strip().split("\n")
+        if len(lines) == 2:
+            key = lines[0].encode()
+            encrypted_key = lines[1]
+        fernet = Fernet(key)
+        return fernet.decrypt(encrypted_key.encode()).decode()
 
 
 def is_valid_api_key(api_key):
@@ -81,22 +82,6 @@ def is_valid_api_key(api_key):
         return True
     except openai.error.OpenAIError:
         return False
-
-
-def get_user_api_key(user_api_key):
-    key = generate_key()
-    encrypted_key = encrypt_key(user_api_key, key)
-    with open(API_KEY_FILE, "w") as f:
-        f.write(key.decode() + "\n" + encrypted_key)
-
-
-def load_user_api_key(file):
-    with open(file, "r") as f:
-        lines = f.read().strip().split("\n")
-        if len(lines) == 2:  # noqa: PLR2004
-            key = lines[0].encode()
-            encrypted_key = lines[1]
-    return decrypt_key(encrypted_key, key)
 
 
 def generate_yaml_config(user_api_key, user_input: str) -> str:
@@ -121,13 +106,14 @@ def generate_yaml_config(user_api_key, user_input: str) -> str:
 
         generated_yaml = response.choices[0].message["content"].strip()
 
-        file = Path("checks.yml")
+        file = Path("generated_checks.yml")
         file.touch()
 
-        with open("checks.yml", "w") as f:
+        with open("generated_checks.yml", "w") as f:
             f.write(generated_yaml)
 
         return generated_yaml
 
     except openai.error.OpenAIError:
         return "[red][Error][/red] There was an issue with the API key. Make sure you input your API key correctly."
+    

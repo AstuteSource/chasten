@@ -1,0 +1,8 @@
+checks:
+  - name: "for-loop"
+    code: "FL"
+    id: "C001"
+    pattern: ".//For"
+    count:
+      min: 4
+      max: 4

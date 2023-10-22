@@ -320,7 +320,7 @@ def create_checks() -> None:
             # checks if it is a valid API key
             if createchecks.is_valid_api_key(api_key):
                 # stores the API key in a file
-                createchecks.get_user_api_key(api_key)
+                createchecks.save_user_api_key(api_key)
                 # prints the human readable checks to the terminal
                 output.console.print(result)
                 # gets the decrypted API Key
