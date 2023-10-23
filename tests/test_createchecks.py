@@ -1,4 +1,3 @@
-import pytest
 from hypothesis import given, strategies as st
 from chasten.createchecks import is_valid_api_key, API_KEY_FILE
 
@@ -11,7 +10,7 @@ def test_save_and_load_user_api_key():
 
 @given(api_key=api_key_strategy)
 def test_is_valid_api_key(api_key):
-    assert is_valid_api_key(api_key) is True
+    assert is_valid_api_key(api_key)
 
 
 def test_generate_yaml_config():
