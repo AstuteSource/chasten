@@ -657,7 +657,7 @@ def analyze(  # noqa: PLR0913, PLR0915
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
         output.console.print(
-            f"   = Total"
+            f"   = {len(matches_list)} total matches"
         )
         output.console.print()
     # display all of the analysis results if verbose output is requested
