@@ -668,14 +668,14 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     # output the name of the saved file if saving successfully took place
     if saved_file_name:
-        output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
+        output.console.print(f":sparkles: Saved the file '{saved_file_name}'")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
     if not all_checks_passed:
-        output.console.print("\n:sweat: At least one check did not pass.")
+        output.console.print(":sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print("\n:joy: All checks passed.")
+    output.console.print(":joy: All checks passed.")
 
 
 @cli.command()
