@@ -55,12 +55,14 @@ Example:
 
 API_KEY_FILE = "userapikey.txt"
 
+
 def save_user_api_key(user_api_key):
     key = Fernet.generate_key()
     fernet = Fernet(key)
     encrypted_key = fernet.encrypt(user_api_key.encode()).decode()
     with open(API_KEY_FILE, "w") as f:
         f.write(key.decode() + "\n" + encrypted_key)
+
 
 def load_user_api_key(file):
     with open(file, "r") as f:
@@ -116,4 +118,3 @@ def generate_yaml_config(user_api_key, user_input: str) -> str:
 
     except openai.error.OpenAIError:
         return "[red][Error][/red] There was an issue with the API key. Make sure you input your API key correctly."
-    
