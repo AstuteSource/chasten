@@ -298,8 +298,10 @@ def interact(ctx: typer.Context) -> None:
 
 
 @cli.command()
-def create_checks() -> None:
-    """🔧 Interactively specify for checks and have a checks.yml file created"""
+def create_checks(
+    filename: Path = typer.Option("checks.yml", help="YAML file name")
+) -> None:
+    """🔧 Interactively specify for checks and have a checks.yml file created(Requires API key)"""
     # creates a textual object for better user interface
     app.run()
     # Checks if the file storing the wanted checks exists and is valid
@@ -313,28 +315,33 @@ def create_checks() -> None:
             # loads the decrypted API Key
             api_key = createchecks.load_user_api_key(API_KEY_STORAGE)
             # calls the function to generate the yaml file
-            output.console.print(createchecks.generate_yaml_config(api_key, result))
+            output.console.print(
+                createchecks.generate_yaml_config(filename, api_key, result)
+            )
         else:
             # prompts the user to input there API key to the terminal
             api_key = input("Please Enter your openai API Key:")
-            # checks if it is a valid API key
-            if createchecks.is_valid_api_key(api_key):
-                # stores the API key in a file
-                createchecks.save_user_api_key(api_key)
-                # prints the human readable checks to the terminal
-                output.console.print(result)
-                # gets the decrypted API Key
-                api_key = createchecks.load_user_api_key(API_KEY_STORAGE)
-                # prints the generated YAML file to the terminal
-                output.console.print(createchecks.generate_yaml_config(api_key, result))
-            else:
-                # Displays and error message if the API key is not valid
+            # If not a valid API key prompts user again
+            while not createchecks.is_valid_api_key(api_key):
                 output.console.print(
                     "[red][ERROR][/red] Invalid API key. Please enter a valid API key."
                 )
+                api_key = input("Please Enter your openai API Key:")
+            # stores the API key in a file
+            createchecks.save_user_api_key(api_key)
+            # prints the human readable checks to the terminal
+            output.console.print(result)
+            # gets the decrypted API Key
+            api_key = createchecks.load_user_api_key(API_KEY_STORAGE)
+            # prints the generated YAML file to the terminal
+            output.console.print(
+                createchecks.generate_yaml_config(filename, api_key, result)
+            )
     else:
         # displays an error message if the CHECK_STORAGE file does not exist
-        output.console.print(f"[red][ERROR][/red] No {CHECK_STORAGE} file exists")
+        output.console.print(
+            f"[red][ERROR][/red] No {CHECK_STORAGE} file exists\n  - Rerun the command and specify checks"
+        )
 
 
 @cli.command()
