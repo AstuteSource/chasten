@@ -310,3 +310,26 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
         ],
     )
     assert result.exit_code == 0
+
+def test_analyze_store_results(cwd,tmpdir):
+    """Makes sure analyze doesn't crash when using markdown storage."""
+    test_store = tmpdir.mkdir("test_store")
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            test_store,
+        ],
+    )
+    assert result.exit_code == 0
+    assert "✨ Results saved in:" in result.output
