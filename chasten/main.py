@@ -1,5 +1,6 @@
 """💫 Chasten checks the AST of a Python program."""
 
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
@@ -31,6 +32,7 @@ cli = typer.Typer(no_args_is_help=True)
 
 # create a small bullet for display in the output
 small_bullet_unicode = constants.markers.Small_Bullet_Unicode
+ANALYSIS_FILE = constants.chasten.Analyze_Storage
 
 
 # ---
@@ -419,6 +421,18 @@ def analyze(  # noqa: PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
+    store_result: Path = typer.Option(
+        None,
+        "--markdown-storage",
+        "-r",
+        help="A directory for storing results in a markdown file",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
     config: Path = typer.Option(
         None,
         "--config",
@@ -526,6 +540,15 @@ def analyze(  # noqa: PLR0913, PLR0915
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
     # iterate through and perform each of the checks
+    if store_result:
+        # creates an empty string for storing results temporarily
+        analysis_result = ""
+        analysis_file_dir = Path(str(store_result) + "/" + str(ANALYSIS_FILE))
+        # clears markdown file of results if it exists and new results are to be store
+        if filesystem.confirm_valid_file(analysis_file_dir):
+            analysis_file_dir.write_text("")
+        # creates file if doesn't exist already
+        analysis_file_dir.touch()
     for current_check in check_list:
         # extract the pattern for the current check
         current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
@@ -580,6 +603,19 @@ def analyze(  # noqa: PLR0913, PLR0915
             f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'"
             + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}"
         )
+        if store_result:
+            # makes the check marks or x's appear as words instead for markdown
+            check_pass = (
+                "PASSED:"
+                if check_status_symbol == "[green]\u2713[/green]"
+                else "FAILED:"
+            )
+            # stores check type in a string to stored in file later
+            analysis_result += (
+                f"{check_pass} id: '{check_id}', name: '{check_name}'"
+                + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}\n"
+            )
+
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         current_result_source = results.Source(
@@ -616,6 +652,9 @@ def analyze(  # noqa: PLR0913, PLR0915
             output.console.print(
                 f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
             )
+            if store_result:
+                # stores details of checks in string to be stored later
+                analysis_result += f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches\n"
             # extract the lines of source code for this file; note that all of
             # these matches are organized for the same file and thus it is
             # acceptable to extract the lines of the file from the first match
@@ -670,8 +709,20 @@ def analyze(  # noqa: PLR0913, PLR0915
     all_checks_passed = all(check_status_list)
     if not all_checks_passed:
         output.console.print("\n:sweat: At least one check did not pass.")
+        if store_result:
+            # writes results of analyze into a markdown file
+            analysis_file_dir.write_text(analysis_result, encoding="utf-8")
+            output.console.print(
+                f"\n:sparkles: Results saved in: {os.path.abspath(analysis_file_dir)}\n"
+            )
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
+    if store_result:
+        # writes results of analyze into a markdown file
+        analysis_file_dir.write_text(analysis_result, encoding="utf-8")
+        output.console.print(
+            f"\n:sparkles: Results saved in: {os.path.abspath(analysis_file_dir)}\n"
+        )
 
 
 @cli.command()
@@ -738,7 +789,7 @@ def integrate(  # noqa: PLR0913
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
-    # create the SQLite3 database and then configure the database for use in datasett
+    # create the SQLite3 database and then configure the database for use in datasette
     combined_flattened_directory = filesystem.write_flattened_csv_and_database(
         combined_json_file_name,
         output_directory,
