@@ -384,7 +384,7 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0913, PLR0915
+def analyze(  # noqa: PLR0913, PLR0915, PLR0912
     project: str = typer.Argument(help="Name of the project."),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
