@@ -311,7 +311,8 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
     )
     assert result.exit_code == 0
 
-def test_analyze_store_results(cwd,tmpdir):
+
+def test_analyze_store_results(cwd, tmpdir):
     """Makes sure analyze doesn't crash when using markdown storage."""
     test_store = tmpdir.mkdir("test_store")
     project_name = "testing"
