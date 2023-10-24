@@ -86,7 +86,7 @@ def is_valid_api_key(api_key):
         return False
 
 
-def generate_yaml_config(user_api_key, user_input: str) -> str:
+def generate_yaml_config(file: Path, user_api_key, user_input: str) -> str:
     try:
         openai.api_key = user_api_key
 
@@ -107,8 +107,6 @@ def generate_yaml_config(user_api_key, user_input: str) -> str:
         )
 
         generated_yaml = response.choices[0].message["content"].strip()
-
-        file = Path("generated_checks.yml")
         file.touch()
 
         with open("generated_checks.yml", "w") as f:
