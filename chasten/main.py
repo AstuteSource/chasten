@@ -656,10 +656,11 @@ def analyze(  # noqa: PLR0913, PLR0915
                     current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
-        output.console.print(
-            f"   = {len(matches_list)} total matches"
-        )
+        # add the amount of total matches in each check to the end of each checks output
+        output.console.print(f"   = {len(match_generator_list)} total matches")
+        # add constant space between check outputs and end output
         output.console.print()
+    output.console.print({chasten_results_save.sources})
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
