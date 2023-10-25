@@ -11,18 +11,16 @@ from chasten.checks import (
     is_in_closed_interval,
 )
 
+from chasten.validate import JSON_SCHEMA_CHECKS
+
 JSON_SCHEMA_COUNT = {
     "type": "object",
     "properties": {
-        "count": {
-            "type": "object",
-            "properties": {
-                "min": {"type": "integer", "minimum": 1, "maximum": 10},
-                "max": {"type": "integer", "minimum": 1, "maximum": 10},
-            },
-        }
+        **JSON_SCHEMA_CHECKS["properties"]["checks"]["items"]["properties"]["count"]
     },
 }
+
+print(JSON_SCHEMA_COUNT)
 
 
 def test_extract_min_max():
