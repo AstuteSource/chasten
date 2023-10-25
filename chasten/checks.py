@@ -81,13 +81,13 @@ def check_match_count(
     if min_value is not None and max_value is not None:
         return is_in_closed_interval(count, min_value, max_value)
     # at this point, only one of the values might not be None
-    # if min_value is not None, then confirm that it is less than or equal
+    # if min_value is not None, then confirm that it is greater than or equal
     if min_value is not None:
-        if count <= min_value:
+        if count >= min_value:
             return True
-    # if max_value is not None, then confirm that it is greater than or equal
+    # if max_value is not None, then confirm that it is less than or equal
     if max_value is not None:
-        if count >= max_value:
+        if count <= max_value:
             return True
     # if none of those conditions were true, then the count is not
     # between the minimum and the maximum value, inclusively
