@@ -206,8 +206,9 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
             opt_print_log(verbose, blank=constants.markers.Empty_String)
             opt_print_log(
                 verbose,
-                label=f":tada: Found a total of {len(current_check._matches)} matches for '{check_name}' in {current_source.filename}",
+                label=f":tada: Found a total of {len(current_check._matches)} matches for '{check_name}' in {current_source.filename}, and {len(current_check.subtotals)} subtotals for '{check_name}' in {current_source.filename}",
             )
+            
             # iterate through each of the matches and display all of their details
             for current_match in current_check._matches:  # type: ignore
                 if isinstance(current_match, pyastgrepsearch.Match):  # type: ignore
@@ -260,3 +261,5 @@ def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> N
                             title=f"{current_match.path}:{position_end}:{column_offset}",
                         ),
                     )
+                    opt_print_log("Sub-total for the number of matches:")
+                    opt_print_log((current_check._matches))
