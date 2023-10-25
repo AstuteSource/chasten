@@ -312,9 +312,9 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
     assert result.exit_code == 0
 
 
-def test_analyze_store_results(cwd, tmpdir):
+def test_analyze_store_results_file_does_not_exist(cwd, tmpdir):
     """Makes sure analyze doesn't crash when using markdown storage."""
-    test_store = tmpdir.mkdir("test_store")
+    tmp_dir = Path(tmpdir)
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
@@ -329,8 +329,75 @@ def test_analyze_store_results(cwd, tmpdir):
             "--config",
             configuration_directory,
             "--markdown-storage",
-            test_store,
+            tmp_dir,
         ],
     )
+    assert result.exit_code == 0
+    assert "✨ Results saved in:" in result.output
+
+
+def test_analyze_store_results_file_exists_no_force(cwd, tmpdir):
+    """Make sure Analyze acts accordingly when file exists and their is no force"""
+    tmp_dir = Path(tmpdir)
+    # creates a temporary directory to store markdown file
+    file = tmp_dir / "analysis.md"
+    # creates file if does not exist
+    file.touch()
+    # makes sure the file exists
+    assert file.exists()
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    # runs the CLI with the specified commands
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            tmp_dir,
+        ],
+    )
+    # assert that the code crashes and that the proper message is displayed
+    assert result.exit_code == 1
+    assert (
+        "File already exists: use --force to recreate markdown directory."
+        in result.output
+    )
+
+
+def test_analyze_store_results_file_exists_force(cwd, tmpdir):
+    tmp_dir = Path(tmpdir)
+    # creates a temporary directory to store markdown file
+    file = tmp_dir / "analysis.md"
+    # creates file if does not exist
+    file.touch()
+    # makes sure the file exists
+    assert file.exists()
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    # runs the CLI with the specified commands
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            tmp_dir,
+            "--force",
+        ],
+    )
+    # assert that the code crashes and that the proper message is displayed
     assert result.exit_code == 0
     assert "✨ Results saved in:" in result.output
