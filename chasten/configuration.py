@@ -137,6 +137,9 @@ def validate_configuration_files(
         # since config was explicit, it is not possible
         # to validate the configuration file
         else:
+            output.logger.warn(
+                "\nGiven configuration was not a valid Path or URL.\n"
+            )
             return (False, {})
     # there is no configuration file specified and thus
     # this function should access the platform-specific
@@ -297,6 +300,9 @@ def extract_configuration_details_from_config_dir(
     # these return values indicates that the extraction
     # failed and any future steps cannot continue
     if not configuration_file_path.exists():
+        output.logger.warn(
+            f"\nFinding config or check file Path failed for {configuration_file_path}.\n"
+        )
         return (False, None, None, None)  # type: ignore
     configuration_file_yaml_str = configuration_file_path.read_text()
     # load the contents of the main configuration file
@@ -314,6 +320,9 @@ def extract_configuration_details_from_config_dir(
             )
         # return none types upon failure in yaml parsing
         else:
+            output.logger.warn(
+                f"\nParsing YAML from config or check file Path failed for {configuration_file_path}.\n"
+            )
             return (False, None, None, None)  # type: ignore
 
 
@@ -332,6 +341,9 @@ def extract_configuration_details_from_config_url(
         configuration_file_yaml_str = response.text
     # the URL indicates a problem with the response
     else:
+        output.logger.warn(
+            f"\nLoading config or check file URL failed for {chasten_user_config_url}.\n"
+        )
         return (False, None, None)  # type: ignore
     (yaml_success, yaml_data) = convert_configuration_text_to_yaml(
         configuration_file_yaml_str
@@ -340,6 +352,9 @@ def extract_configuration_details_from_config_url(
     if yaml_success:
         return (True, configuration_file_yaml_str, yaml_data)
     else:
+        output.logger.warn(
+            f"\nParsing YAML from config or check file URL failed for {chasten_user_config_url}.\n"
+        )
         return (False, None, None)  # type: ignore
 
 
