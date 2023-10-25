@@ -10,8 +10,8 @@ from chasten.checks import (
     extract_min_max,
     is_in_closed_interval,
 )
-
 from chasten.validate import JSON_SCHEMA_CHECKS
+
 
 JSON_SCHEMA_COUNT = {
     "type": "object",
@@ -21,8 +21,6 @@ JSON_SCHEMA_COUNT = {
         }
     },
 }
-
-print(JSON_SCHEMA_COUNT)
 
 
 def test_extract_min_max():
