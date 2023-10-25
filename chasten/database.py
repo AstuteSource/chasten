@@ -276,3 +276,14 @@ def start_datasette_server(  # noqa: PLR0912, PLR0913
         # there is debugging output in the console to indicate this option.
         proc = subprocess.Popen(cmd)
         proc.wait()
+
+
+def display_results_frog_mouth(result_file):
+    """Run frogmouth as a subprocess of chasten"""
+    cmd = [
+        "frogmouth",
+        result_file,
+    ]
+    # run frogmouth with specified path
+    proc = subprocess.Popen(cmd)
+    proc.wait()
