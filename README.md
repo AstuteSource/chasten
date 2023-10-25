@@ -132,7 +132,7 @@ first executable line of non-test and test-case functions in a Python project.
 Note that the `pattern` attribute specifies the XPath version 2.0 expression
 that `chasten` will use to detect the specified type of Python function. You can
 type `chasten configure validate --config <path to chasten-configuration/
-directory>` after filling in `<path to chasten-configuration>` with the
+directory | config url>` after filling in `<path to chasten-configuration/directory | config url>` with the
 fully-qualified name of your configuration directory and the tool will confirm
 that your configuration meets the tool's specification. You can also use the
 command `chasten configure create` command to automatically generate a starting
@@ -172,7 +172,7 @@ program:
 
 ```shell
 chasten analyze lazytracker \
-        --config <path to the chasten-configuration/ directory> \
+        --config <path to the chasten-configuration/ directory | config url> \
         --search-path <path to the lazytracker/ directory> \
         --save-directory <path to the subject-data/lazytracker/ directory> \
         --save
@@ -193,7 +193,7 @@ program:
 
 ```shell
 chasten analyze multicounter \
-        --config <path to the chasten-configuration/ directory> \
+        --config <path to the chasten-configuration/ directory | config url> \
         --search-path <path to the multicounter/ directory> \
         --save-directory <path to the subject-data/lazytracker/ directory> \
         --save
