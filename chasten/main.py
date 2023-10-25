@@ -126,7 +126,8 @@ def validate_file(
     else:
         output.opt_print_log(verbose, newline="")
         output.opt_print_log(
-            verbose, label=f":sparkles: Contents of {configuration_file_str}:\n"
+            verbose,
+            label=f":sparkles: Contents of {configuration_file_str}:\n",
         )
         output.opt_print_log(verbose, config_file=configuration_file_yml)
     return validated
@@ -136,7 +137,8 @@ def validate_configuration_files(
     config: Path,
     verbose: bool = False,
 ) -> Tuple[
-    bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
+    bool,
+    Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]],
 ]:
     """Validate the configuration."""
     # there is a specified configuration directory path;
@@ -359,7 +361,8 @@ def configure(  # noqa: PLR0913
             )
             # write the configuration file for the chasten tool in the created directory
             filesystem.create_configuration_file(
-                created_directory_path, constants.filesystem.Main_Configuration_File
+                created_directory_path,
+                constants.filesystem.Main_Configuration_File,
             )
             # write the check file for the chasten tool in the created directory
             filesystem.create_configuration_file(
@@ -451,10 +454,31 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
         "-t",
         help="Specify the destination for debugging output.",
     ),
+    display: bool = typer.Option(False, help="Display results using frogmouth"),
     verbose: bool = typer.Option(False, help="Enable verbose mode output."),
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
+    force: bool = typer.Option(False, help="Force creation of new markdown file"),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
+    if store_result:
+        # creates an empty string for storing results temporarily
+        analysis_result = ""
+        analysis_file_dir = store_result / ANALYSIS_FILE
+        # clears markdown file of results if it exists and new results are to be store
+        if filesystem.confirm_valid_file(analysis_file_dir):
+            if not force:
+                if display:
+                    database.display_results_frog_mouth(analysis_file_dir)
+                    sys.exit(0)
+                else:
+                    output.console.print(
+                        "File already exists: use --force to recreate markdown directory."
+                    )
+                    sys.exit(constants.markers.Non_Zero_Exit)
+            else:
+                analysis_file_dir.write_text("")
+        # creates file if doesn't exist already
+        analysis_file_dir.touch()
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -540,18 +564,11 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
     # iterate through and perform each of the checks
-    if store_result:
-        # creates an empty string for storing results temporarily
-        analysis_result = ""
-        analysis_file_dir = Path(str(store_result) + "/" + str(ANALYSIS_FILE))
-        # clears markdown file of results if it exists and new results are to be store
-        if filesystem.confirm_valid_file(analysis_file_dir):
-            analysis_file_dir.write_text("")
-        # creates file if doesn't exist already
-        analysis_file_dir.touch()
     for current_check in check_list:
         # extract the pattern for the current check
-        current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
+        current_xpath_pattern = str(
+            current_check[constants.checks.Check_Pattern]
+        )  # type: ignore
         # extract the minimum and maximum values for the checks, if they exist
         # note that this function will return None for a min or a max if
         # that attribute does not exist inside of the current_check; importantly,
@@ -566,7 +583,9 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
         match_generator = pyastgrepsearch.search_python_files(
-            paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+            paths=valid_directories,
+            expression=current_xpath_pattern,
+            xpath2=True,
         )
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
@@ -612,8 +631,8 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
             )
             # stores check type in a string to stored in file later
             analysis_result += (
-                f"{check_pass} id: '{check_id}', name: '{check_name}'"
-                + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}\n"
+                f"\n# {check_pass} **ID:** '{check_id}', **Name:** '{check_name}'"
+                + f", **Pattern:** '{current_xpath_pattern_escape}', min={min_count}, max={max_count}\n\n"
             )
 
         # for each potential match, log and, if verbose model is enabled,
@@ -654,7 +673,7 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
             )
             if store_result:
                 # stores details of checks in string to be stored later
-                analysis_result += f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches\n"
+                analysis_result += f"    - {file_name} - {len(matches_list)} matches\n"
             # extract the lines of source code for this file; note that all of
             # these matches are organized for the same file and thus it is
             # acceptable to extract the lines of the file from the first match
@@ -684,7 +703,10 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
                         ),
                         linematch_context=util.join_and_preserve(
                             current_match.file_lines,
-                            max(0, position_end - constants.markers.Code_Context),
+                            max(
+                                0,
+                                position_end - constants.markers.Code_Context,
+                            ),
                             position_end + constants.markers.Code_Context,
                         ),
                     )
@@ -692,7 +714,9 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
                     # pyastgrepsearch.Match for verbose debugging output as needed
                     current_check_save._matches.append(current_match)
                     # add the match to the listing of matches for the current check
-                    current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
+                    current_check_save.matches.append(
+                        current_match_for_current_check_save
+                    )  # type: ignore
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
     # display all of the analysis results if verbose output is requested
@@ -719,10 +743,11 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
     output.console.print("\n:joy: All checks passed.")
     if store_result:
         # writes results of analyze into a markdown file
+        result_path = os.path.abspath(analysis_file_dir)
         analysis_file_dir.write_text(analysis_result, encoding="utf-8")
-        output.console.print(
-            f"\n:sparkles: Results saved in: {os.path.abspath(analysis_file_dir)}\n"
-        )
+        output.console.print(f"\n:sparkles: Results saved in: {result_path}\n")
+        if display:
+            database.display_results_frog_mouth(result_path)
 
 
 @cli.command()
