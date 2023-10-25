@@ -48,19 +48,43 @@ JSON_SCHEMA_CHECKS = {
                         "anyOf": [
                             {
                                 "type": "object",
-                                "properties": {"min": {"type": "integer"}},
+                                "properties": {
+                                    "min": {
+                                        "anyOf": [
+                                            {"type": "integer"},
+                                            {"type": "null"},
+                                        ]
+                                    }
+                                },
                                 "required": ["min"],
                             },
                             {
                                 "type": "object",
-                                "properties": {"max": {"type": "integer"}},
+                                "properties": {
+                                    "max": {
+                                        "anyOf": [
+                                            {"type": "integer"},
+                                            {"type": "null"},
+                                        ]
+                                    }
+                                },
                                 "required": ["max"],
                             },
                             {
                                 "type": "object",
                                 "properties": {
-                                    "min": {"type": "integer"},
-                                    "max": {"type": "integer"},
+                                    "min": {
+                                        "anyOf": [
+                                            {"type": "integer"},
+                                            {"type": "null"},
+                                        ]
+                                    },
+                                    "max": {
+                                        "anyOf": [
+                                            {"type": "integer"},
+                                            {"type": "null"},
+                                        ]
+                                    },
                                 },
                                 "required": ["min", "max"],
                             },
