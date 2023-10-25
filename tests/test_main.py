@@ -402,10 +402,11 @@ def test_analyze_store_results_file_exists_force(cwd, tmpdir):
     assert result.exit_code == 0
     assert "✨ Results saved in:" in result.output
 
+
 @given(directory=strategies.builds(Path))
 @settings(deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture])
 @pytest.mark.fuzz
-def test_analyze_store_results_valid_path(directory,cwd):
+def test_analyze_store_results_valid_path(directory, cwd):
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
