@@ -697,13 +697,13 @@ def analyze(  # noqa: PLR0913, PLR0915
             with open(str(save_XML), "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
 
-    # -- view xml
+    # Check if 'view_XML' is not None and if the file specified by 'view_XML' exists
     if view_XML is not None and os.path.exists(view_XML):
         print("Viewing XML")
         # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
         # os.system(xml_view_cmd)
        
-        # read the bytes of input path and stores it into contents variable
+         # Read the bytes of the input path and store them in the 'contents' variable
         contents = Path(input_path).read_bytes()
          # Use pyastgrep to parse the contents of the Python file at 'input_path'
         _, ast = pyastgrep.parse_python_file(contents, input_path)
