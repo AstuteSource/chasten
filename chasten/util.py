@@ -72,9 +72,8 @@ def is_url(url: str) -> bool:
             "://",
             url_parsed.netloc(),
             port_character,
-            str(
-                (url_parsed.port() is not None) or ""
-            ),  # to handle if port() is `None` type
+            # to handle if port() is `None` type
+            str(url_parsed.port() if (url_parsed.port() is not None) else ""),
             url_parsed.path(),
             query_character,
             url_parsed.query(),
