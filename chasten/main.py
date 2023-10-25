@@ -425,13 +425,13 @@ def analyze(  # noqa: PLR0913, PLR0915
         None,
         "--view-xml",
         "-v",
-        help="The directory for the XML file(s) to be viewed/edited from."
+        help="The directory/file for the XML file(s) to be viewed/edited from."
     ),
     save_XML: Path = typer.Option(
         None,
         "--save-xml",
         "-sx",
-        help="The directory for the XML file(s) to be saved in."
+        help="The directory/file for the XML file(s) to be saved in."
     ),
     config: Path = typer.Option(
         None,
@@ -679,66 +679,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     # output the name of the saved file if saving successfully took place
     if saved_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
-    # confirm whether or not all of the checks passed
-    # and then display the appropriate diagnostic message
-    all_checks_passed = all(check_status_list)
-    if not all_checks_passed:
-        output.console.print("\n:sweat: At least one check did not pass.")
-        sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print("\n:joy: All checks passed.")
-    # dump.py from pyastgrep does the ast_to_xml
-    # use match_generator to get ast node
-    # pyastgrep.dump(input_file)
-    # if input file ends in .py then go back in path -
-    # in path (create folder?) save XML
-    # tests can if files exist
-    # if view_XML is not None:
-    #     #Print will demonstrate if --view-xml is selected"
-    #     print("The code right here is being selected if user selects '--view-xml'")
-        #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
-        #   output.console.print("Printing your XML file now! :sparkles:")
-        #   output.console.print(xml_element)
-        #alt: output.console.print(xml.tostring(result.xml_element).decode("utf-8"))
-
-        # figure out how to convert input_path into an actual string (putting str in front of the input_path isnt converting it) str doesnt know what to do with the override. 
-        # maybe we can convert input_path to valid_directories (we can go through all valid directories and make use of that) 
-        # using valid_directories we can group them all together and make a dump of all valid_directories
-        # dump cannot be called directly: cal python shells (subprocesses --> os.system)
-        
-    #     if str(input_path).endswith(".py"):
-    #         dir_path = os.path.dirname(str(input_path))
-    #         dir_path = Path(dir_path)
-    #         pyastgrep.dump(dir_path)
-    #     else:
-    #         pyastgrep.dump(input_path)
-
-    # #elif statement will run if the previous statment is false: Changed to an if statement
-    # if save_XML is not None:
-    #     #   xml_element = pyastgrep.ast_to_xml(INPUT, INPUT, INPUT)
-    #     pyastgrep.dump(input_path)
-
-    #for py_file in list(valid_directories.glob('**/*.py'))):
-
-    # valid_dir = ["file1.py", "file2.py", "file3.py"]  # Replace with list of valid file paths
-
-    # for file in valid_dir:
-    #     cmd = "pyastdump " + str(file) + " > " + str(file).replace(".py",".xml") 
-    #     os.system(cmd)
-
-    # for file in valid_directory:
-    #     # Construct the command to run pyastdump
-    #     xml_cmd = f"pyastdump {file} > {file.replace('.py', '.xml')}"
-    #     # Execute the command
-    #     os.system(xml_cmd)
-
-    # if str(input_path).endswith(".py"):
-    #     dir_path = os.path.dirname(str(input_path))
-    #     dir_path = Path(dir_path)
-    # else:
-    #     dir_path = input_path
-
-    # -- save
+    # --save-xml
     if save_XML is not None and os.path.exists(save_XML):
+        print("Saving XML")
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
         # ask about vaild_directory
         # xml_save_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
@@ -747,7 +690,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         _, ast = pyastgrep.parse_python_file(contents, input_path)
         xml_root = pyastgrep.ast_to_xml(ast, {})
         if os.path.isdir(save_XML):
-            file_path = str(save_XML) + "/codeXML.xml"
+            file_path = save_XML / Path("/codeXML.xml")
             with open(file_path, "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
         else:
@@ -755,9 +698,8 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
 
     # -- view xml
-     # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
-
     if view_XML is not None and os.path.exists(view_XML):
+        print("Viewing XML")
         # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
         # os.system(xml_view_cmd)
        
@@ -769,13 +711,21 @@ def analyze(  # noqa: PLR0913, PLR0915
         xml_root = pyastgrep.ast_to_xml(ast, {})
         # Convert the XML to a string and write it to a file
         if os.path.isdir(view_XML):
-            file_path = str(view_XML) + "/codeXML.xml"
+            # for for loop - check for folders and files inside those folders for the nested feature
+            # so that the xml is made in output directory that mirrors initial directory
+            file_path = view_XML / Path("/codeXML.xml")
             with open(file_path, "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
         else:
             with open(str(view_XML), "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
-        
+    # confirm whether or not all of the checks passed
+    # and then display the appropriate diagnostic message
+    all_checks_passed = all(check_status_list)
+    if not all_checks_passed:
+        output.console.print("\n:sweat: At least one check did not pass.")
+        sys.exit(constants.markers.Non_Zero_Exit)
+    output.console.print("\n:joy: All checks passed.")
 
 @cli.command()
 def integrate(  # noqa: PLR0913
