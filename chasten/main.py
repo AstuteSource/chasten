@@ -460,25 +460,6 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
     force: bool = typer.Option(False, help="Force creation of new markdown file"),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
-    if store_result:
-        # creates an empty string for storing results temporarily
-        analysis_result = ""
-        analysis_file_dir = store_result / ANALYSIS_FILE
-        # clears markdown file of results if it exists and new results are to be store
-        if filesystem.confirm_valid_file(analysis_file_dir):
-            if not force:
-                if display:
-                    database.display_results_frog_mouth(analysis_file_dir)
-                    sys.exit(0)
-                else:
-                    output.console.print(
-                        "File already exists: use --force to recreate markdown directory."
-                    )
-                    sys.exit(constants.markers.Non_Zero_Exit)
-            else:
-                analysis_file_dir.write_text("")
-        # creates file if doesn't exist already
-        analysis_file_dir.touch()
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -552,6 +533,25 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
             "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
+    if store_result:
+        # creates an empty string for storing results temporarily
+        analysis_result = ""
+        analysis_file_dir = store_result / ANALYSIS_FILE
+        # clears markdown file of results if it exists and new results are to be store
+        if filesystem.confirm_valid_file(analysis_file_dir):
+            if not force:
+                if display:
+                    database.display_results_frog_mouth(analysis_file_dir)
+                    sys.exit(0)
+                else:
+                    output.console.print(
+                        "File already exists: use --force to recreate markdown directory."
+                    )
+                    sys.exit(constants.markers.Non_Zero_Exit)
+            else:
+                analysis_file_dir.write_text("")
+        # creates file if doesn't exist already
+        analysis_file_dir.touch()
     # create the list of directories
     valid_directories = [input_path]
     # output the list of directories subject to checking
