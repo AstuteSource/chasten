@@ -147,8 +147,9 @@ def print_list_contents(container: List[Path]) -> None:
     for directory, files in grouped_files.items():
         console.print(f"{small_bullet_unicode} Directory: {directory}")
         for file_name in files:
-            console.print(
-                f"  {small_bullet_unicode} File: '{shorten_file_name(file_name, 120)}'"
+            filecount =+ 1
+            console.print(f"  {small_bullet_unicode} File: '{shorten_file_name(file_name, 120)}'")
+            console.print(f"  {small_bullet_unicode} file(s) {int(filecount)} in this directory")
             )
 
 
