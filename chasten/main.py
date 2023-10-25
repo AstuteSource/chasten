@@ -755,12 +755,19 @@ def analyze(  # noqa: PLR0913, PLR0915
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
 
     # -- view xml
+     # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
+
     if view_XML is not None and os.path.exists(view_XML):
         # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
         # os.system(xml_view_cmd)
+       
+        # read the bytes of input path and stores it into contents variable
         contents = Path(input_path).read_bytes()
+         # Use pyastgrep to parse the contents of the Python file at 'input_path'
         _, ast = pyastgrep.parse_python_file(contents, input_path)
+         # Convert the Abstract Syntax Tree (AST) into an XML representation
         xml_root = pyastgrep.ast_to_xml(ast, {})
+        # Convert the XML to a string and write it to a file
         if os.path.isdir(view_XML):
             file_path = str(view_XML) + "/codeXML.xml"
             with open(file_path, "w") as current_file:
