@@ -401,3 +401,27 @@ def test_analyze_store_results_file_exists_force(cwd, tmpdir):
     # assert that the code crashes and that the proper message is displayed
     assert result.exit_code == 0
     assert "✨ Results saved in:" in result.output
+
+@given(directory=strategies.builds(Path))
+@settings(deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture])
+@pytest.mark.fuzz
+def test_analyze_store_results_valid_path(directory,cwd):
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            directory,
+            "--force",
+        ],
+    )
+    assert result.exit_code == 0
