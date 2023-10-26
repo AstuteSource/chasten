@@ -16,7 +16,7 @@ on:
     branches: [ master ]
 
 # Create one single job
-# This job performs all necessary checks
+# This job performs all of the necessary checks
 jobs:
   build:
     # Use the latest version of Ubuntu, MacOS, and Windows
