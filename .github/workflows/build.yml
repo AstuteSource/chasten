@@ -88,13 +88,15 @@ jobs:
           if: always()
           run: |
             poetry run task test
-        # Run the test coverage monitoring
-        - name: Run Test Coverage
-          if: always()
+        # Run and collect the test coverage
+        # Important: only run and collect test coverage monitoring on Linux
+        - name: Run and Collect Test Coverage
+          if: always() && matrix.os == 'ubuntu-latest'
           run: |
             poetry run task test-coverage-silent > coverage.txt
         # Display the Coverage Report
-        - name: Display Coverage
+        # Important: only report the monitored test coverage on Linux
+        - name: Display Collected Test Coverage
           if: always() && matrix.os == 'ubuntu-latest'
           run: |
             export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
@@ -102,3 +104,13 @@ jobs:
             echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
             CURRENT_GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
             echo "$CURRENT_GITHUB_STEP_SUMMARY" >> $GITHUB_STEP_SUMMARY
+        # Run and display the test coverage
+        # If the current operating system is not Linux, then only run test
+        # coverage monitoring and display it inside of the GitHub Actions
+        # panel. This allows for test coverage to be calculated for each
+        # operating system. However, coverage is only reported for Linux
+        # through the badge and through the GitHub job summary.
+        - name: Run and Report Test Coverage
+          if: always() && matrix.os != 'ubuntu-latest'
+          run: |
+            poetry run task test-coverage
