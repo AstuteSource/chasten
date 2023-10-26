@@ -71,7 +71,7 @@ jobs:
           if: always()
           run: |
             poetry run task lint
-          # Run the program
+        # Run the program
         - name: Run program
           if: always()
           run: |
