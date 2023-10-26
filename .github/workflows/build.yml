@@ -76,7 +76,6 @@ jobs:
           if: always()
           run: |
             poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
-
         # Run the tests
         - name: Run Tests
           if: always()
