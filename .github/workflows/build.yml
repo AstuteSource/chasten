@@ -19,7 +19,8 @@ on:
 # This job performs all necessary checks
 jobs:
   build:
-    # Use the latest version of Ubuntu on MacOS and Windows
+    # Use the latest version of Ubuntu, MacOS, and Windows
+    # Use the latest and most stable version of Python
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
