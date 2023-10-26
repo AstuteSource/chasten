@@ -21,6 +21,13 @@ jobs:
   build:
     # Use the latest version of Ubuntu, MacOS, and Windows
     # Use the latest and most stable version of Python
+    # Important: test coverage monitoring and reporting
+    # through a badge and the GitHub Actions job summary
+    # only takes place with the Linux operating system.
+    # Important: the MacOS and Windows operating systems
+    # have test coverage calculation take place but they
+    # do not report the test coverage beyond its display
+    # inside of the GitHub Actions panel for that job.
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
