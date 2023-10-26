@@ -90,13 +90,13 @@ jobs:
             poetry run task test
         # Run and collect the test coverage
         # Important: only run and collect test coverage monitoring on Linux
-        - name: Run and Collect Test Coverage
+        - name: Run and Collect Test Coverage - Linux Only
           if: always() && matrix.os == 'ubuntu-latest'
           run: |
             poetry run task test-coverage-silent > coverage.txt
         # Display the Coverage Report
         # Important: only report the monitored test coverage on Linux
-        - name: Display Collected Test Coverage
+        - name: Display Collected Test Coverage - Linux Only
           if: always() && matrix.os == 'ubuntu-latest'
           run: |
             export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
@@ -110,7 +110,7 @@ jobs:
         # panel. This allows for test coverage to be calculated for each
         # operating system. However, coverage is only reported for Linux
         # through the badge and through the GitHub job summary.
-        - name: Run and Report Test Coverage
+        - name: Run and Report Test Coverage - MacOS and Windows Only
           if: always() && matrix.os != 'ubuntu-latest'
           run: |
             poetry run task test-coverage
