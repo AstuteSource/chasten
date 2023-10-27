@@ -1,9 +1,9 @@
 """💫 Chasten checks the AST of a Python program."""
 
 import sys
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
-import time
 
 import typer
 import yaml
