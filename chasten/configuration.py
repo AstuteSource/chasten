@@ -137,9 +137,7 @@ def validate_configuration_files(
         # since config was explicit, it is not possible
         # to validate the configuration file
         else:
-            output.logger.error(
-                "\nGiven configuration was not a valid Path or URL.\n"
-            )
+            output.logger.error("\nGiven configuration was not a valid Path or URL.\n")
             return (False, {})
     # there is no configuration file specified and thus
     # this function should access the platform-specific
