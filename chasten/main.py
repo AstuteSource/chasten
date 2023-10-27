@@ -550,15 +550,17 @@ def analyze(  # noqa: PLR0913, PLR0915
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
-
-        #if xpath == "1.0":
-        #    match_generator = pyastgrepsearch.search_python_files(
-        #        paths=valid_directories, expression=current_xpath_pattern, xpath2=False
-        #    )
-        #else:
-        #    match_generator = pyastgrepsearch.search_python_files(
-        #        paths=valid_directories, expression=current_xpath_pattern, xpath2=True
-        #    )
+        match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+        )
+        # if xpath == "1.0":
+        #     match_generator = pyastgrepsearch.search_python_files(
+        #         paths=valid_directories, expression=current_xpath_pattern, xpath2=False
+        #     )
+        # else:
+        #     match_generator = pyastgrepsearch.search_python_files(
+        #         paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+        #     )
 
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
