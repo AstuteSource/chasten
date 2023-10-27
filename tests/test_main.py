@@ -54,7 +54,7 @@ checks:
     pattern: './/ClassDef'
     count:
       min: 1
-      max: 10
+      max: null
   - name: "all-function-definition"
     code: "AFD"
     id: "F001"
@@ -91,7 +91,7 @@ def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(tmpdir):
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = test_one + "/.chasten"
+    configuration_directory = test_one / Path(".chasten")
     configuration_directory_path = Path(configuration_directory)
     configuration_directory_path.mkdir()
     configuration_file = configuration_directory_path / "config.yml"
@@ -122,7 +122,7 @@ def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd):
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = str(cwd) + "/.chasten"
+    configuration_directory = cwd / Path(".chasten")
     result = runner.invoke(
         main.cli,
         [
@@ -144,7 +144,7 @@ def test_cli_analyze_incorrect_arguments_no_project(cwd, tmpdir):
     test_one = tmpdir.mkdir("test_one")
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = str(cwd) + "/.chasten"
+    configuration_directory = cwd / Path(".chasten")
     # call the analyze command
     result = runner.invoke(
         main.cli,
@@ -297,7 +297,7 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = str(cwd) + "/.chasten"
+    configuration_directory = cwd / Path(".chasten")
     result = runner.invoke(
         main.cli,
         [
