@@ -541,7 +541,9 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
         if filesystem.confirm_valid_file(analysis_file_dir):
             if not force:
                 if display:
-                    database.display_results_frog_mouth(analysis_file_dir)
+                    database.display_results_frog_mouth(
+                        analysis_file_dir, util.get_OS()
+                    )
                     sys.exit(0)
                 else:
                     output.console.print(
@@ -747,7 +749,7 @@ def analyze(  # noqa: PLR0913, PLR0915, PLR0912
         analysis_file_dir.write_text(analysis_result, encoding="utf-8")
         output.console.print(f"\n:sparkles: Results saved in: {result_path}\n")
         if display:
-            database.display_results_frog_mouth(result_path)
+            database.display_results_frog_mouth(result_path, util.get_OS())
 
 
 @cli.command()
