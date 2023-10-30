@@ -2,6 +2,7 @@
 
 import importlib.metadata
 import platform
+import sys
 
 from chasten import constants
 
@@ -23,6 +24,17 @@ def get_OS() -> str:
     """Gets the Operating system of the user."""
     OpSystem = platform.system()
     return OpSystem
+
+
+def executable_name(executable_name: str, OpSystem: str = "Linux") -> str:
+    """Get the executable directory depending on OS"""
+    exe_directory = "/bin/"
+    # Checks if the OS is windows and changed where to search if true
+    if OpSystem == "Windows":
+        exe_directory = "/Scripts/"
+        executable_name += ".exe"
+    virtual_env_location = sys.prefix
+    return virtual_env_location + exe_directory + executable_name
 
 
 def get_symbol_boolean(answer: bool) -> str:
