@@ -295,10 +295,17 @@ interface (TUI). To use TUI-based way to create a complete command-line for
 `chasten` you can type the command `chasten interact`.
 
 ## 📊Log
-`Chasten` has a built-in system log. While using chasten you can use the command `chasten log` in your terminal. The system log feature allows the user to see events and messages that are produced by `chasten`. In addition, the `chasten log` feature will assist in finding bugs and the events that led to the bug happening. For the `chasten` program to display to the system log you will have to open a separate terminal and use the command `chasten log`. In addition for each command that is run the `--debug-level <choice of level>` and `--debug-dest SYSLOG` will need to be added.
+`Chasten` has a built-in system log. While using chasten you can use the command
+`chasten log` in your terminal. The system log feature allows the user to see
+events and messages that are produced by `chasten`. In addition, the `chasten log`
+feature will assist in finding bugs and the events that led to the bug happening.
+For the `chasten` program to display to the system log you will have to open a
+separate terminal and use the command `chasten log`. In addition for each command
+that is run the `--debug-level <choice of level>` and `--debug-dest SYSLOG` will
+need to be added.
 
-For example `chasten datasette-serve --debug-level DEBUG --debug-dest SYSLOG 
-< database path to file>` with produce the following output in the system log.
+For example, `chasten datasette-serve --debug-level DEBUG --debug-dest SYSLOG 
+< database path to file>` will produce the following output in the system log.
 
 ```
 💫 chasten: Analyze the AST of Python Source Code
