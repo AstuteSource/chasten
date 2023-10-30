@@ -1,6 +1,7 @@
 """Pytest test suite for the filesystem module."""
 
 import pathlib
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -12,7 +13,7 @@ from chasten import constants, filesystem
 
 def test_valid_directory() -> None:
     """Confirm that a valid directory is found."""
-    directory_str = "./tests/"
+    directory_str = str(Path("./tests/"))
     directory = pathlib.Path(directory_str)
     confirmation = filesystem.confirm_valid_directory(directory)
     assert confirmation is True
@@ -20,7 +21,7 @@ def test_valid_directory() -> None:
 
 def test_invalid_directory() -> None:
     """Confirm that a valid directory is found."""
-    directory_str = "./testsNOT/"
+    directory_str = str(Path("./testsNOT/"))
     directory = pathlib.Path(directory_str)
     confirmation = filesystem.confirm_valid_directory(directory)
     assert confirmation is False
@@ -28,7 +29,7 @@ def test_invalid_directory() -> None:
 
 def test_valid_file() -> None:
     """Confirm that a valid directory is found."""
-    file_str = "./tests/test_filesystem.py"
+    file_str = str(Path("./tests") / Path("test_filesystem.py"))
     this_file = pathlib.Path(file_str)
     confirmation = filesystem.confirm_valid_file(this_file)
     assert confirmation is True
@@ -36,7 +37,7 @@ def test_valid_file() -> None:
 
 def test_invalid_file() -> None:
     """Confirm that a valid directory is found."""
-    file_str = "./tests/test_filesystemNOT.py"
+    file_str = str(Path("./tests") / Path("test_filesystemNOT.py.py"))
     this_file_not = pathlib.Path(file_str)
     confirmation = filesystem.confirm_valid_file(this_file_not)
     assert confirmation is False
