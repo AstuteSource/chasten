@@ -2,11 +2,9 @@
 
 import sys
 from pathlib import Path
-from purl import URL
-from typing import Any, Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 import typer
-import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
@@ -24,7 +22,6 @@ from chasten import (
     results,
     server,
     util,
-    validate,
 )
 
 # create a Typer object to support the command-line interface
