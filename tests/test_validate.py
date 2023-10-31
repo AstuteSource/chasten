@@ -1,8 +1,7 @@
 """Pytest test suite for the validate module."""
 
 import pytest
-from hypothesis import given
-from hypothesis import strategies
+from hypothesis import HealthCheck, given, settings, strategies
 from hypothesis_jsonschema import from_schema
 
 from chasten.validate import JSON_SCHEMA_CONFIG
@@ -46,6 +45,7 @@ def test_validate_empty_config(config):
 
 
 @given(from_schema(JSON_SCHEMA_CONFIG))
+@settings(suppress_health_check=[HealthCheck.too_slow])
 @pytest.mark.fuzz
 def test_integers(config):
     """Use Hypothesis and the JSON schema plugin to confirm validation works for all possible valid instances."""
