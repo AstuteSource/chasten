@@ -425,13 +425,13 @@ def analyze(  # noqa: PLR0913, PLR0915
         None,
         "--view-xml",
         "-v",
-        help="The directory/file for the XML file(s) to be viewed/edited from."
+        help="The directory/file for the XML file(s) to be viewed/edited from.",
     ),
     save_XML: Path = typer.Option(
         None,
         "--save-xml",
         "-sx",
-        help="The directory/file for the XML file(s) to be saved in."
+        help="The directory/file for the XML file(s) to be saved in.",
     ),
     config: Path = typer.Option(
         None,
@@ -684,7 +684,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         print("Saving XML...")
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
         # ask about vaild_directory
-        # xml_save_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
+        # xml_save_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml")
         # os.system(xml_save_cmd)
         if os.path.isdir(input_path):
             for each_file in os.listdir(input_path):
@@ -713,7 +713,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     # Check if 'view_XML' is not None and if the file specified by 'view_XML' exists
     if view_XML is not None and os.path.exists(view_XML):
         print("Viewing XML...")
-        # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml") 
+        # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml")
         # os.system(xml_view_cmd)
         # Read the bytes of the input path and store them in the 'contents' variable
         # Use pyastgrep to parse the contents of the Python file at 'input_path'
@@ -730,7 +730,11 @@ def analyze(  # noqa: PLR0913, PLR0915
                     file_path = view_XML / Path(str(each_file) + ".xml")
                     with open(file_path, "w") as current_file:
                         current_file.write(xml_root)
-                    print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                    print(
+                        pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
+                            "utf-8"
+                        )
+                    )
                 else:
                     for sub_file in os.listdir(each_file):
                         contents = Path(sub_file).read_bytes()
@@ -739,14 +743,20 @@ def analyze(  # noqa: PLR0913, PLR0915
                         file_path = view_XML / Path(str(sub_file) + ".xml")
                         with open(file_path, "w") as current_file:
                             current_file.write(xml_root)
-                        print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                        print(
+                            pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
+                                "utf-8"
+                            )
+                        )
         else:
             contents = Path(input_path).read_bytes()
             _, ast = pyastgrep.parse_python_file(contents, input_path)
             xml_root = pyastgrep.ast_to_xml(ast, {})
             file_path = view_XML / Path(str(input_path) + ".xml")
             with open(file_path, "w") as current_file:
-                current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                current_file.write(
+                    pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
+                )
             print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
@@ -755,6 +765,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print("\n:sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
+
 
 @cli.command()
 def integrate(  # noqa: PLR0913
