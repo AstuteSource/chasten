@@ -4,6 +4,7 @@ import importlib.metadata
 import platform
 
 from chasten import constants
+from typing import List
 from urllib3.util import parse_url
 
 checkmark_unicode = "\u2713"
@@ -62,12 +63,15 @@ def is_url(url: str) -> bool:
     # parse input url
     url_parsed = parse_url(url)
     # only input characters for initiatig query and/or fragments if necessary
-    query_character = "?" if url_parsed.query else ""
-    fragment_character = "#" if url_parsed.fragment else ""
+    port_character = ":" if url_parsed.port != None else ""
+    query_character = "?" if url_parsed.query != None else ""
+    fragment_character = "#" if url_parsed.fragment != None else ""
     url_pieces = [
         url_parsed.scheme,
         "://",
-        url_parsed.netloc,
+        url_parsed.host,
+        port_character,
+        url_parsed.port,
         url_parsed.path,
         query_character,
         url_parsed.query,
@@ -77,9 +81,8 @@ def is_url(url: str) -> bool:
     # function to sweep through url_pieces and
     # prepare each item as a string
     f_empty_string_if_none = lambda x: str(x) if x != None else ""
-    # convert every item to a string
-    url_pieces = map(f_empty_string_if_none, url_pieces)
-    # piece the url back together to make sure it matches what was input
-    url_reassembled = "".join(url_pieces)
+    # convert every item to a string and piece the url back together
+    # to make sure it matches what was given
+    url_reassembled = "".join(list(map(f_empty_string_if_none, url_pieces)))
     # determine if parsed and reconstructed url matches original
-    return url.lower() == url_reassembled.lower()
+    return str(parse_url(url)).lower() == url_reassembled.lower()

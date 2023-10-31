@@ -6,7 +6,7 @@ import logging.handlers
 import sys
 from typing import Any, Dict, List, Tuple, Union
 from pathlib import Path
-from purl import URL
+from urllib3.util import parse_url, Url
 
 import platformdirs
 from rich.logging import RichHandler
@@ -116,6 +116,8 @@ def validate_configuration_files(
     bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
 ]:
     """Validate the configuration."""
+    chasten_user_config_url_str = ""
+    chasten_user_config_dir_str = ""
     # there is a specified configuration directory path or url;
     # this overrides the use of the configuration files that
     # may exist inside of the platform-specific directory
@@ -126,13 +128,11 @@ def validate_configuration_files(
         # input configuration is valid URL
         if util.is_url(config):
             # re-parse input config so it is of type URL
-            config = URL(str(config))
-            chasten_user_config_url_str = str(config)
+            chasten_user_config_url_str = str(parse_url(config))
         # input configuration is valid file path
         elif Path(config).exists():
             # re-parse input config so it is of type Path
-            config = Path(str(config))
-            chasten_user_config_dir_str = str(config)
+            chasten_user_config_dir_str = str(Path(config))
         # the configuration file does not exist and thus,
         # since config was explicit, it is not possible
         # to validate the configuration file
@@ -145,13 +145,13 @@ def validate_configuration_files(
     else:
         # detect and store the platform-specific user
         # configuration directory by default
-        chasten_user_config_dir_str = configuration.user_config_dir(
+        chasten_user_config_dir_str = user_config_dir(
             application_name=constants.chasten.Application_Name,
             application_author=constants.chasten.Application_Author,
         )
 
     # input config is a URL
-    if isinstance(config, URL):
+    if chasten_user_config_url_str:
         output.console.print(
             ":sparkles: Configuration URL:"
             + constants.markers.Space
@@ -166,7 +166,7 @@ def validate_configuration_files(
         ) = extract_configuration_details_from_config_url(chasten_user_config_url_str)
         configuration_file_source = chasten_user_config_url_str
     # input config is a Path
-    elif isinstance(config, Path):
+    elif chasten_user_config_dir_str:
         output.console.print(
             ":sparkles: Configuration directory:"
             + constants.markers.Space
@@ -233,7 +233,7 @@ def validate_configuration_files(
         else:
             # will not support checks files being local paths
             # if config file is a URL
-            if isinstance(config, URL):
+            if isinstance(config, Url):
                 return (False, {})
             # extract the configuration details
             (
@@ -325,7 +325,7 @@ def extract_configuration_details_from_config_dir(
 
 
 def extract_configuration_details_from_config_url(
-    chasten_user_config_url: URL,
+    chasten_user_config_url: Url,
 ) -> Tuple[bool, str, Dict[str, Dict[str, Any]]]:
     """Extract details from the configuration given a config URL.
 
