@@ -274,11 +274,13 @@ def display_results_frog_mouth(result_file, OpSystem) -> None:
         "frogmouth",
         result_file,
     ]
-    executable = util.executable_name("fogmouth", OpSystem)
+    executable = util.executable_name("frogmouth", OpSystem)
     exec_found, executable_path = filesystem.can_find_executable(executable)
     if exec_found:
         # run frogmouth with specified path
-        output.console.print(f"executable at {executable_path}")
+        output.console.print("\n🐸 Frogmouth Information\n")
+        output.console.print(f" {small_bullet_unicode} Venv: {sys.prefix}")
+        output.console.print(f" {small_bullet_unicode} Program: {executable_path}")
         proc = subprocess.Popen(cmd)
         proc.wait()
     else:
