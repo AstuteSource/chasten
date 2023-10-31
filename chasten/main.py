@@ -1,32 +1,34 @@
 """💫 Chasten checks the AST of a Python program."""
 
-import sys
 import os.path
+import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
+import pyastgrep  # type: ignore
 import typer
 import yaml
-import pyastgrep  # type: ignore
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    database,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    results,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import database
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import results
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
@@ -757,7 +759,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                 current_file.write(
                     pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
                 )
-            output.console.print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+            output.console.print(
+                pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
+            )
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
