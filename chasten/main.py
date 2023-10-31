@@ -441,7 +441,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
-    # add logger
+        # add logger
     output.setup(debug_level, debug_destination)
     output.logger.debug(f"Display verbose output? {verbose}")
     output.logger.debug(f"Debug level? {debug_level.value}")
