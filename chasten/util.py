@@ -64,18 +64,22 @@ def is_url(url: str) -> bool:
     # only input characters for initiatig query and/or fragments if necessary
     query_character = "?" if url_parsed.query else ""
     fragment_character = "#" if url_parsed.fragment else ""
+    url_pieces = [
+        url_parsed.scheme,
+        "://",
+        url_parsed.netloc,
+        url_parsed.path,
+        query_character,
+        url_parsed.query,
+        fragment_character,
+        url_parsed.fragment,
+    ]
+    # function to sweep through url_pieces and
+    # prepare each item as a string
+    f_empty_string_if_none = lambda x: str(x) if x != None else ""
+    # convert every item to a string
+    url_pieces = map(f_empty_string_if_none, url_pieces)
     # piece the url back together to make sure it matches what was input
-    url_reassembled = "".join(
-        [
-            url_parsed.scheme,
-            "://",
-            url_parsed.netloc,
-            url_parsed.path,
-            query_character,
-            url_parsed.query,
-            fragment_character,
-            url_parsed.fragment,
-        ]
-    )
+    url_reassembled = "".join(url_pieces)
     # determine if parsed and reconstructed url matches original
-    return url == url_reassembled
+    return url.lower() == url_reassembled.lower()
