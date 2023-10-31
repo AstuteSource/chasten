@@ -1,7 +1,10 @@
 """Pytest test suite for the validate module."""
 
 import pytest
-from hypothesis import HealthCheck, given, settings, strategies
+from hypothesis import HealthCheck
+from hypothesis import given
+from hypothesis import settings
+from hypothesis import strategies
 from hypothesis_jsonschema import from_schema
 
 from chasten.validate import JSON_SCHEMA_CONFIG
