@@ -163,7 +163,9 @@ def validate_configuration_files(
             configuration_valid,
             configuration_file_yaml_str,
             yaml_data_dict,
-        ) = extract_configuration_details_from_config_url(chasten_user_config_url_str)
+        ) = extract_configuration_details_from_config_url(
+            parse_url(chasten_user_config_url_str)
+        )
         configuration_file_source = chasten_user_config_url_str
     # input config is a Path
     elif chasten_user_config_dir_str:
@@ -179,7 +181,9 @@ def validate_configuration_files(
             configuration_file_path_str,
             configuration_file_yaml_str,
             yaml_data_dict,
-        ) = extract_configuration_details_from_config_dir(chasten_user_config_dir_str)
+        ) = extract_configuration_details_from_config_dir(
+            Path(chasten_user_config_dir_str)
+        )
         # it was not possible to extract the configuration details and
         # thus this function should return immediately with False
         # to indicate the failure and an empty configuration dictionary
