@@ -694,7 +694,7 @@ def analyze(  # noqa: PLR0913, PLR0915
                     xml_root = pyastgrep.ast_to_xml(ast, {})
                     file_path = save_XML / Path(str(each_file) + ".xml")
                     with open(file_path, "w") as current_file:
-                        current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                        current_file.write(xml_root)
                 else:
                     for sub_file in os.listdir(each_file):
                         contents = Path(sub_file).read_bytes()
@@ -702,14 +702,14 @@ def analyze(  # noqa: PLR0913, PLR0915
                         xml_root = pyastgrep.ast_to_xml(ast, {})
                         file_path = save_XML / Path(str(sub_file) + ".xml")
                         with open(file_path, "w") as current_file:
-                            current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                            current_file.write(xml_root)
         else:
             contents = Path(input_path).read_bytes()
             _, ast = pyastgrep.parse_python_file(contents, input_path)
             xml_root = pyastgrep.ast_to_xml(ast, {})
             file_path = save_XML / Path(str(input_path) + ".xml")
             with open(file_path, "w") as current_file:
-                current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                current_file.write(xml_root)
     # Check if 'view_XML' is not None and if the file specified by 'view_XML' exists
     if view_XML is not None and os.path.exists(view_XML):
         print("Viewing XML...")
@@ -729,7 +729,8 @@ def analyze(  # noqa: PLR0913, PLR0915
                     xml_root = pyastgrep.ast_to_xml(ast, {})
                     file_path = view_XML / Path(str(each_file) + ".xml")
                     with open(file_path, "w") as current_file:
-                        current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                        current_file.write(xml_root)
+                    print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
                 else:
                     for sub_file in os.listdir(each_file):
                         contents = Path(sub_file).read_bytes()
@@ -737,7 +738,8 @@ def analyze(  # noqa: PLR0913, PLR0915
                         xml_root = pyastgrep.ast_to_xml(ast, {})
                         file_path = view_XML / Path(str(sub_file) + ".xml")
                         with open(file_path, "w") as current_file:
-                            current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                            current_file.write(xml_root)
+                        print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
         else:
             contents = Path(input_path).read_bytes()
             _, ast = pyastgrep.parse_python_file(contents, input_path)
@@ -745,6 +747,7 @@ def analyze(  # noqa: PLR0913, PLR0915
             file_path = view_XML / Path(str(input_path) + ".xml")
             with open(file_path, "w") as current_file:
                 current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+            print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
