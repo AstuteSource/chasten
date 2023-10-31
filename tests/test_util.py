@@ -38,7 +38,7 @@ datasette_exec = constants.datasette.Datasette_Executable
 
 def test_executable_name() -> None:
     """Test if executable name gets correct file name"""
-    # makes sure the executable is where expected
+    # makes sure the datasette executable is where expected
     assert shutil.which(util.executable_name(datasette_exec, OpSystem))
-    # makes sure the executable is where expected
+    # makes sure the frogmouth executable is where expected
     assert shutil.which(util.executable_name("frogmouth", OpSystem))
