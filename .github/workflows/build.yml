@@ -105,12 +105,14 @@ jobs:
             CURRENT_GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
             echo "$CURRENT_GITHUB_STEP_SUMMARY" >> $GITHUB_STEP_SUMMARY
         # Run and display the test coverage
-        # If the current operating system is not Linux, then only run test
+        # If the current operating system is MacOS, then only run test
         # coverage monitoring and display it inside of the GitHub Actions
         # panel. This allows for test coverage to be calculated for each
         # operating system. However, coverage is only reported for Linux
-        # through the badge and through the GitHub job summary.
-        - name: Run and Report Test Coverage - MacOS and Windows Only
+        # through the badge and through the GitHub job summary. Do not
+        # run any test coverage monitoring in Windows because it seems
+        # to be much slower and cause hypothesis-based tests to fail.
+        - name: Run and Report Test Coverage - MacOS Only
           if: always() && matrix.os == 'macOS'
           run: |
             poetry run task test-coverage
