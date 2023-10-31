@@ -3,11 +3,7 @@
 import os.path
 import sys
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Tuple, Union
 
 import pyastgrep  # type: ignore
 import typer
@@ -16,19 +12,21 @@ from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import checks
-from chasten import configuration
-from chasten import constants
-from chasten import database
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import process
-from chasten import results
-from chasten import server
-from chasten import util
-from chasten import validate
+from chasten import (
+    checks,
+    configuration,
+    constants,
+    database,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    process,
+    results,
+    server,
+    util,
+    validate,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)

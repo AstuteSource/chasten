@@ -6,10 +6,7 @@ from pathlib import Path
 
 from sqlite_utils import Database
 
-from chasten import constants
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
+from chasten import constants, enumerations, filesystem, output
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT

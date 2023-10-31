@@ -1,8 +1,6 @@
 """Pytest test suite for the database module."""
 
-from chasten import database
-from chasten import filesystem
-from chasten import util
+from chasten import database, filesystem, util
 
 
 def test_executable_name() -> None:
