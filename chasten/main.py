@@ -456,6 +456,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     # extract the current version of the program
     chasten_version = util.get_chasten_version()
+    output.logger.debug(f"Current version of chasten: {chasten_version}")
     # create the include and exclude criteria
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
@@ -485,6 +486,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print()
     # validate the configuration
     (validated, checks_dict) = validate_configuration_files(config, verbose)
+    output.logger.debug(f"Validate the configuration: {config}")
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:
@@ -542,6 +544,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
+        output.logger.debug(f"check id: {check_id}")
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
@@ -550,6 +553,7 @@ def analyze(  # noqa: PLR0913, PLR0915
         match_generator = pyastgrepsearch.search_python_files(
             paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         )
+        output.logger.debug(f"Match Generator {match_generator}")
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
         # indicate that the analysis completed for each located file
