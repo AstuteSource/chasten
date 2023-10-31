@@ -146,11 +146,12 @@ def print_list_contents(container: List[Path]) -> None:
     # --> display the name of each file stored in this directory
     for directory, files in grouped_files.items():
         console.print(f"{small_bullet_unicode} Directory: {directory}")
+        filecount = 0
         for file_name in files:
             filecount =+ 1
             console.print(f"  {small_bullet_unicode} File: '{shorten_file_name(file_name, 120)}'")
             console.print(f"  {small_bullet_unicode} file(s) {int(filecount)} in this directory")
-            )
+            
 
 
 def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> None:
