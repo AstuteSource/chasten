@@ -681,7 +681,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
     # --save-xml
     if save_XML is not None and os.path.exists(save_XML):
-        print("Saving XML...")
+        output.console.print("Saving XML...")
         # ask here has to be checked what path provided is strpped of directory and writes to current working directory
         # ask about vaild_directory
         # xml_save_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml")
@@ -712,7 +712,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                 current_file.write(xml_root)
     # Check if 'view_XML' is not None and if the file specified by 'view_XML' exists
     if view_XML is not None and os.path.exists(view_XML):
-        print("Viewing XML...")
+        output.console.print("Viewing XML...")
         # xml_view_cmd = "pyastdump " + str(input_path) + " > " + str(input_path).replace(".py",".xml")
         # os.system(xml_view_cmd)
         # Read the bytes of the input path and store them in the 'contents' variable
@@ -730,7 +730,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                     file_path = view_XML / Path(str(each_file) + ".xml")
                     with open(file_path, "w") as current_file:
                         current_file.write(xml_root)
-                    print(
+                    output.console.print(
                         pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
                             "utf-8"
                         )
@@ -743,7 +743,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                         file_path = view_XML / Path(str(sub_file) + ".xml")
                         with open(file_path, "w") as current_file:
                             current_file.write(xml_root)
-                        print(
+                        output.console.print(
                             pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
                                 "utf-8"
                             )
@@ -757,7 +757,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                 current_file.write(
                     pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
                 )
-            print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+            output.console.print(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
