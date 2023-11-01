@@ -55,11 +55,12 @@ def join_and_preserve(data, start, end):
     """Join and preserve lines inside of a list."""
     return constants.markers.Newline.join(data[start:end])
 
-def total_amount_passed(analyze_result) -> tuple[int,int,float]:
+
+def total_amount_passed(analyze_result) -> tuple[int, int, float]:
     """Calculate amount of checks passed in analyze"""
     # iterate through check sources to find checks passed
     list_checks = [x.check.passed for x in analyze_result.sources]
     # set variables to count true checks and total counts
-    count_true,count_total = list_checks.count(True),len(list_checks)/2 
-    # return tuple of checks passed, total checks, percentage of checks passed 
-    return (count_true,int(count_total),(count_true / count_total) * 100)
+    count_true, count_total = list_checks.count(True), len(list_checks) / 2
+    # return tuple of checks passed, total checks, percentage of checks passed
+    return (count_true, int(count_total), (count_true / count_total) * 100)

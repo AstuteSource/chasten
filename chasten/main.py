@@ -661,7 +661,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     # calculate the final count of matches found
     total_result = util.total_amount_passed(chasten_results_save)
     # display checks passed, total amount of checks, and percentage of checks passed
-    output.console.print(f":computer: {total_result[0]} / {total_result[1]} checks passed ({total_result[2]}%)\n")
+    output.console.print(
+        f":computer: {total_result[0]} / {total_result[1]} checks passed ({total_result[2]}%)\n"
+    )
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
