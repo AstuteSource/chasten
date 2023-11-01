@@ -394,13 +394,13 @@ the cli interface as efficient as possible for a broad range of users. By using 
 like typer and rich, these allow for chasten to be very easily understood within the
 cli. Commands available to use for the cli interface for Chasten are as follows…
 
-analyze               💫 Analyze the AST of Python source code
-configure             🪂 Manage chasten's configuration
-datasette-publish     🌎 Publish a datasette to Fly or Vercel
-datasette-serve       🏃 Start a local datasette server
-integrate             🚧 Integrate files and make a database
-interact              🚀 Interactively configure and run
-log                  🦚 Start the logging server.
+- analyze               💫 Analyze the AST of Python source code
+- configure             🪂 Manage chasten's configuration
+- datasette-publish     🌎 Publish a datasette to Fly or Vercel
+- datasette-serve       🏃 Start a local datasette server
+- integrate             🚧 Integrate files and make a database
+- interact              🚀 Interactively configure and run
+- log                  🦚 Start the logging server.
 
 A command like chasten analyze, will create a similar output as the symbex tool, but
 the command is much simpler due to the use of different tools
