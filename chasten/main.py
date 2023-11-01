@@ -5,10 +5,13 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 import typer
+import json
 import yaml
+import sqlite3
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
+from chasten import database
 
 from chasten import (
     checks,
@@ -673,70 +676,69 @@ def analyze(  # noqa: PLR0913, PLR0915
         sys.exit(constants.markers.Non_Zero_Exit)
     output.console.print("\n:joy: All checks passed.")
 
-@cli.command()
-def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by db_file
-    :param db_file: database file
-    :return: Connection object or None
-    """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        return conn
-    except Error as e:
-        print(e)
+# @cli.command()
+# def create_connection(db_file):
+#     """ create a database connection to the SQLite database
+#         specified by db_file
+#     :param db_file: database file
+#     :return: Connection object or None
+#     """
+#     conn = None
+#     try:
+#         conn = sqlite3.connect(db_file)
+#         return conn
+#     except:
+#         print('Error', file = sys.stderr)
 
-    return conn
+#     return conn
 
-@cli.command()
-def create_table(conn, create_table_sql):
-    """ create a table from the create_table_sql statement
-    :param conn: Connection object
-    :param create_table_sql: a CREATE TABLE statement
-    :return:
-    """
-    try:
-        c = conn.cursor()
-        c.execute(create_table_sql)
-    except Error as e:
-        print(e)
+# @cli.command()
+# def create_table(conn, create_table_sql):
+#     """ create a table from the create_table_sql statement
+#     :param conn: Connection object
+#     :param create_table_sql: a CREATE TABLE statement
+#     :return:
+#     """
+#     try:
+#         c = conn.cursor()
+#         c.execute(create_table_sql)
+#     except:
+#         print('Error', file = sys.stderr)
 
-@cli.command()
-def sqlitetable():
-    database = r"C:\sqlite\db\pythonsqlite.db"
+# @cli.command()
+# def sqlitetable():
 
-    sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS projects (
-                                        id integer PRIMARY KEY,
-                                        name text NOT NULL,
-                                        begin_date text,
-                                        end_date text
-                                    ); """
+#     sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS projects (
+#                                         id integer PRIMARY KEY,
+#                                         name text NOT NULL,
+#                                         begin_date text,
+#                                         end_date text
+#                                     ); """
 
-    sql_create_tasks_table = """CREATE TABLE IF NOT EXISTS tasks (
-                                    id integer PRIMARY KEY,
-                                    name text NOT NULL,
-                                    priority integer,
-                                    status_id integer NOT NULL,
-                                    project_id integer NOT NULL,
-                                    begin_date text NOT NULL,
-                                    end_date text NOT NULL,
-                                    FOREIGN KEY (project_id) REFERENCES projects (id)
-                                );"""
+#     sql_create_tasks_table = """CREATE TABLE IF NOT EXISTS tasks (
+#                                     id integer PRIMARY KEY,
+#                                     name text NOT NULL,
+#                                     priority integer,
+#                                     status_id integer NOT NULL,
+#                                     project_id integer NOT NULL,
+#                                     begin_date text NOT NULL,
+#                                     end_date text NOT NULL,
+#                                     FOREIGN KEY (project_id) REFERENCES projects (id)
+#                                 );"""
 
-    # create a database connection
-    conn = create_connection(database)
+#     # create a database connection
+#     conn = create_connection(database)
 
-    # create tables
-    if conn is not None:
-        # create projects table
-        output.conn.commit()
-        create_table(conn, sql_create_projects_table)
+#     # create tables
+#     if conn is not None:
+#         # create projects table
+#         output.conn.commit()
+#         create_table(conn, sql_create_projects_table)
 
-        # create tasks table
-        create_table(conn, sql_create_tasks_table)
-    else:
-        print("Error! cannot create the database connection.")
+#         # create tasks table
+#         create_table(conn, sql_create_tasks_table)
+#     else:
+#         print("Error! cannot create the database connection.")
 
 @cli.command()
 def integrate(  # noqa: PLR0913
@@ -790,6 +792,7 @@ def integrate(  # noqa: PLR0913
     output.console.print(":sparkles: Combining data file(s) in:")
     output.console.print()
     output.print_list_contents(json_path)
+    # table_create = create_connection(database)
     # extract all of the JSON dictionaries from the specified files
     json_dicts = filesystem.get_json_results(json_path)
     # combine all of the dictionaries into a single string
@@ -801,6 +804,7 @@ def integrate(  # noqa: PLR0913
     # output the name of the saved file if saving successfully took place
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
+        # output.console.print(table_create)
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
     # create the SQLite3 database and then configure the database for use in datasett
     combined_flattened_directory = filesystem.write_flattened_csv_and_database(
@@ -818,6 +822,11 @@ def integrate(  # noqa: PLR0913
         )
         output.console.print()
         output.console.print(combined_directory_tree)
+        # itterate through dictionary dont open
+        read_file = open(combined_json_dict)
+        data = json.load(read_file)
+        for i in data['checkinclude']:
+            output.console.print(i)
 
 
 @cli.command()
