@@ -383,7 +383,7 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0913, PLR0915
+def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
     xpath: Path = typer.Option(
         str,
