@@ -238,6 +238,20 @@ CSV files that correspond to each of the tables inside of the database.
 You can learn more about the `integrate` sub-command by typing `chasten
 integrate --help`.
 
+## 💠 Verbose Output
+
+You can see the verbose output when running various functions, you can include `--verbose` to return more information about the program execution. Here is an example with `chasten analyze lazytracker`:
+
+```shell
+chasten analyze lazytracker \
+        --config <path to the chasten-configuration/ directory> \
+        --search-path <path to the lazytracker/ directory> \
+        --save-directory <path to the subject-data/lazytracker/ directory> \
+        --save
+        --verbose
+ ```
+
+
 ## 🌄 Results
 
 If you want to create an interactive analysis dashboard that uses 📦
