@@ -660,7 +660,9 @@ def analyze(  # noqa: PLR0913, PLR0915
         output.console.print(f"   = {len(match_generator_list)} total matches")
         # add constant space between check outputs and end output
         output.console.print()
-    output.console.print({chasten_results_save.sources})
+    # display the final count of matches found
+    output.console.print([x.check.passed for x in chasten_results_save.sources])
+    output.console.print()
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
