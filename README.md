@@ -367,3 +367,42 @@ class DebugLevel(str, Enum):
 wiki](https://github.com/AstuteSource/chasten/wiki)!
 - Want to discuss ways to use the tool? [Participate in
 discussions](https://github.com/AstuteSource/chasten/discussions/2)!
+
+## 🤓Comparisons
+
+Chasten is very similar to a tool called symbex which was created by a top software
+engineer by the name of Simon Willison. Its original use was to be able to search for
+names of functions and classes that appear in a file. The biggest difference is when
+looking at the cli interface. Symbex uses many abbreviations, looking at this command
+the -s is looking for signatures and the -f is looking for functions. So in all it
+is checking for function signatures in the file test_debug.py and this is what the
+output would look like.
+```python
+command :symbex -s -f symbex/test_debug.py
+    def test_debug_level_values():
+    def test_debug_level_isinstance():
+    def test_debug_level_iteration():
+    def test_debug_destination_values():
+    def test_debug_destination_isinstance():
+    def test_debug_destination_iteration():
+    def test_level_destination_invalid():
+    def test_debug_destination_invalid():
+```
+
+Compared to Chasten, which uses and leverages many different python packages to make
+the cli interface as efficient as possible for a broad range of users. By using packages
+like typer and rich, these allow for chasten to be very easily understood within the
+cli. Commands available to use for the cli interface for Chasten are as follows…
+
+analyze               💫 Analyze the AST of Python source code
+configure             🪂 Manage chasten's configuration
+datasette-publish     🌎 Publish a datasette to Fly or Vercel
+datasette-serve       🏃 Start a local datasette server
+integrate             🚧 Integrate files and make a database
+interact              🚀 Interactively configure and run
+log                  🦚 Start the logging server.
+
+A command like chasten analyze, will create a similar output as the symbex tool, but
+the command is much simpler due to the use of different tools
+
+
