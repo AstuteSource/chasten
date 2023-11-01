@@ -54,3 +54,9 @@ def get_chasten_version() -> str:
 def join_and_preserve(data, start, end):
     """Join and preserve lines inside of a list."""
     return constants.markers.Newline.join(data[start:end])
+
+def total_amount_passed(analyze_result) -> tuple[int,int,int]:
+    """Calculate amount of checks passed in analyze"""
+    list_checks = [x.check.passed for x in analyze_result.sources]
+    count_true,count_total = list_checks.count(True),len(list_checks)/2 
+    return (count_true,count_total,(count_true / count_total) * 100)
