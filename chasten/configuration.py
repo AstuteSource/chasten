@@ -230,7 +230,9 @@ def validate_configuration_files(
                 checks_file_extracted_valid,
                 configuration_file_yaml_str,
                 yaml_data_dict,
-            ) = extract_configuration_details_from_config_url(checks_file_name)
+            ) = extract_configuration_details_from_config_url(
+                parse_url(checks_file_name)
+            )
             # name of checks file is a url and thus can be used for logging
             checks_file_source = checks_file_name
         # assume check file name is a file path
@@ -284,8 +286,8 @@ def validate_configuration_files(
 
 
 def extract_configuration_details_from_config_dir(
-    chasten_user_config_dir_str: str,
-    configuration_file: str = constants.filesystem.Main_Configuration_File,
+    chasten_user_config_dir_str: Path,
+    configuration_file: Path = constants.filesystem.Main_Configuration_File,
 ) -> Tuple[bool, str, str, Dict[str, Dict[str, Any]]]:
     """Extract details from the configuration given a config directory.
 
@@ -294,9 +296,7 @@ def extract_configuration_details_from_config_dir(
     """
     # create the name of the main configuration file
     # load the text of the main configuration file
-    configuration_file_path = Path(chasten_user_config_dir_str) / Path(
-        configuration_file
-    )
+    configuration_file_path = chasten_user_config_dir_str / Path(configuration_file)
     # the configuration file does not exist and thus
     # the extraction process cannot continue, the use of
     # these return values indicates that the extraction
