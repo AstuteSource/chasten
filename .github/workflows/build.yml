@@ -19,7 +19,8 @@ on:
 # This job performs all necessary checks
 jobs:
   build:
-    # Use the latest version of Ubuntu on MacOS and Windows
+    # Use the latest version of Ubuntu, MacOS, and Windows
+    # Use the latest and most stable version of Python
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -53,7 +54,7 @@ jobs:
         - name: Install Pip
           if: always()
           run: |
-            pip install -U pip
+            python -m pip install --upgrade pip
         # Install poetry
         - name: Install Poetry
           if: always()
@@ -75,7 +76,6 @@ jobs:
           if: always()
           run: |
             poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
-
         # Run the tests
         - name: Run Tests
           if: always()
@@ -95,16 +95,3 @@ jobs:
             echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
             CURRENT_GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
             echo "$CURRENT_GITHUB_STEP_SUMMARY" >> $GITHUB_STEP_SUMMARY
-        # Create the Coverage Badge
-        - name: Make Badge
-          uses: schneegans/dynamic-badges-action@v1.6.0
-          with:
-            # GIST_TOKEN is a GitHub personal access token with scope "gist".
-            auth: ${{ secrets.GIST_TOKEN }}
-            gistID: 5300aa276fa9261b2b21b96c3141b3ad
-            filename: covbadge.json
-            label: Coverage
-            message: ${{ env.total }}%
-            minColorRange: 50
-            maxColorRange: 90
-            valColorRange: ${{ env.total }}
