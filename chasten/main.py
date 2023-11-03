@@ -441,12 +441,17 @@ def analyze(  # noqa: PLR0913, PLR0915
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
+    # add name of project
+    output.logger.debug(f"Analyze the AST of project {project} ")
     # add logger for debug
     output.setup(debug_level, debug_destination)
     output.logger.debug(f"Display verbose output? {verbose}")
     output.logger.debug(f"Debug level? {debug_level.value}")
     output.logger.debug(f"Debug destination? {debug_destination.value}")
-
+    # add logger for path
+    output.logger.debug(f"Input path {input_path}")
+    output.logger.debug(f"Save file in {output_directory}")
+    output.logger.debug(f"Config path: {config}")
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -489,7 +494,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     (validated, checks_dict) = validate_configuration_files(config, verbose)
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
-    
+
     if not validated:
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
