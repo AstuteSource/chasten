@@ -657,6 +657,7 @@ def analyze(  # noqa: PLR0913, PLR0915
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
         # add the amount of total matches in each check to the end of each checks output
+        output.console.print(len(checks_dict))
         output.console.print(f"   = {len(match_generator_list)} total matches\n")
     # calculate the final count of matches found
     total_result = util.total_amount_passed(chasten_results_save)
