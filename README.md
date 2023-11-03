@@ -251,7 +251,7 @@ chasten analyze lazytracker \
         --verbose
  ```
 
-
+You will notice that the output return `✨ Matching source code:` comparing the source code with checked patterns and finding detailed match of different check, for example: `🎉 Found a total of 1 matches for 'single-nested-if-anywhere-in-module' in`.
 
 ## 🌄 Results
 
