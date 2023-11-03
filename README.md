@@ -240,7 +240,7 @@ integrate --help`.
 
 ## 💠 Verbose Output
 
-You can see the verbose output when running various functions, you can include `--verbose` to return more information about the program execution. Here is an example with `chasten analyze lazytracker`:
+By adding the `--verbose` flag to the `chasten analyze lazytracker` command, you will receive more detailed information about the program execution. This can be useful for troubleshooting and understanding how the tool is working behind the scenes Here is an example with `chasten analyze lazytracker`:
 
 ```shell
 chasten analyze lazytracker \
@@ -250,6 +250,7 @@ chasten analyze lazytracker \
         --save
         --verbose
  ```
+
 
 
 ## 🌄 Results
