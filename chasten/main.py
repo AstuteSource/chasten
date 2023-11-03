@@ -441,11 +441,12 @@ def analyze(  # noqa: PLR0913, PLR0915
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
-        # add logger
+    # add logger for debug
     output.setup(debug_level, debug_destination)
     output.logger.debug(f"Display verbose output? {verbose}")
     output.logger.debug(f"Debug level? {debug_level.value}")
     output.logger.debug(f"Debug destination? {debug_destination.value}")
+
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -486,9 +487,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print()
     # validate the configuration
     (validated, checks_dict) = validate_configuration_files(config, verbose)
-    output.logger.debug(f"Validate the configuration: {config}")
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
+    
     if not validated:
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
@@ -541,10 +542,10 @@ def analyze(  # noqa: PLR0913, PLR0915
         # that attribute does not exist inside of the current_check; importantly,
         # having a count or a min or a max is all optional in a checks file
         (min_count, max_count) = checks.extract_min_max(current_check)
+        output.logger.debug(f"{min_count},{max_count}")
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
-        output.logger.debug(f"check id: {check_id}")
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
@@ -553,7 +554,6 @@ def analyze(  # noqa: PLR0913, PLR0915
         match_generator = pyastgrepsearch.search_python_files(
             paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         )
-        output.logger.debug(f"Match Generator {match_generator}")
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
         # indicate that the analysis completed for each located file
