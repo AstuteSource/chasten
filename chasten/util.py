@@ -78,11 +78,13 @@ def is_url(url: str) -> bool:
         fragment_character,
         url_parsed.fragment,
     ]
-    # function to sweep through url_pieces and
-    # prepare each item as a string
-    f_empty_string_if_none = lambda x: str(x) if x != None else ""
     # convert every item to a string and piece the url back together
     # to make sure it matches what was given
-    url_reassembled = "".join(list(map(f_empty_string_if_none, url_pieces)))
+    for i, url_piece in enumerate(url_pieces):
+        if url_piece == None:
+            url_pieces[i] = ""
+        else:
+            url_pieces[i] = str(url_piece)
+    url_reassembled = "".join(url_pieces)
     # determine if parsed and reconstructed url matches original
     return str(parse_url(url)).lower() == url_reassembled.lower()

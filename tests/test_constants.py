@@ -12,7 +12,7 @@ from chasten import constants
 def test_filesystem_constants():
     """Confirm default values of constants."""
     assert constants.filesystem.Current_Directory == "."
-    assert constants.filesystem.Main_Configuration_File == "config.yml"
+    assert constants.filesystem.Main_Configuration_File == Path("config.yml")
     assert constants.humanreadable.Yes == "Yes"
     assert constants.humanreadable.No == "No"
 

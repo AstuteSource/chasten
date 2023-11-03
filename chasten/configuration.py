@@ -236,7 +236,7 @@ def validate_configuration_files(
             # name of checks file is a url and thus can be used for logging
             checks_file_source = checks_file_name
         # assume check file name is a file path
-        elif Path(checks_file_name).exists():
+        elif (Path(chasten_user_config_dir_str) / Path(checks_file_name)).exists():
             # will not support checks files being local paths
             # if config file is a URL
             if isinstance(config, Url):
@@ -305,7 +305,7 @@ def extract_configuration_details_from_config_dir(
     """
     # create the name of the main configuration file
     # load the text of the main configuration file
-    configuration_file_path = chasten_user_config_dir_str / Path(configuration_file)
+    configuration_file_path = chasten_user_config_dir_str / configuration_file
     # the configuration file does not exist and thus
     # the extraction process cannot continue, the use of
     # these return values indicates that the extraction
