@@ -108,7 +108,7 @@ class Filesystem:
     Dash: str
     Dot: str
     Main_Configuration_File: Path
-    Main_Checks_File: str
+    Main_Checks_File: Path
     Main_Results_File_Name: str
     Main_Results_Combined_File_Name: str
     Main_Results_Flattened_Directory_Name: str
@@ -120,7 +120,7 @@ filesystem = Filesystem(
     Dash="-",
     Dot=".",
     Main_Configuration_File=Path("config.yml"),
-    Main_Checks_File="checks.yml",
+    Main_Checks_File=Path("checks.yml"),
     Main_Results_File_Name="chasten-results",
     Main_Results_Combined_File_Name="chasten-integrated-results",
     Main_Results_Flattened_Directory_Name="chasten-flattened-csvs-sqlite-db",

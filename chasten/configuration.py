@@ -236,10 +236,13 @@ def validate_configuration_files(
             # name of checks file is a url and thus can be used for logging
             checks_file_source = checks_file_name
         # assume check file name is a file path
-        else:
+        elif Path(checks_file_name).exists():
             # will not support checks files being local paths
             # if config file is a URL
             if isinstance(config, Url):
+                output.logger.error(
+                    f"\nChecks file directive was a Path when config was a URL (given: '{checks_file_name}')\n"
+                )
                 return (False, {})
             # extract the configuration details
             (
@@ -248,10 +251,16 @@ def validate_configuration_files(
                 configuration_file_yaml_str,
                 yaml_data_dict,
             ) = extract_configuration_details_from_config_dir(
-                chasten_user_config_dir_str, checks_file_name
+                Path(chasten_user_config_dir_str), Path(checks_file_name)
             )
             # configuration path returned from extraction function can be used for logging
             checks_file_source = configuration_file_path_str
+        else:
+            # checks file was not valid
+            output.logger.error(
+                f"\nChecks file directive was not a valid Path or URL (given: '{checks_file_name}')\n"
+            )
+            # FIXME: print error or something
         # the checks file could not be extracted in a valid
         # fashion and thus there is no need to continue the
         # validation of this file or any of the other check file
@@ -310,7 +319,7 @@ def extract_configuration_details_from_config_dir(
     # load the contents of the main configuration file
     with open(str(configuration_file_path)) as user_configuration_file_text:
         (yaml_success, yaml_data) = convert_configuration_text_to_yaml(
-            user_configuration_file_text
+            user_configuration_file_text.read()
         )
         # return success status, filename, file contents, and yaml parsed data upon success
         if yaml_success:
@@ -369,7 +378,7 @@ def convert_configuration_text_to_yaml(
         yaml_data = yaml.safe_load(configuration_file_contents_str)
     except Exception:
         # yaml parsing has failed and we will indicate the input is invalid
-        return (False, None)
+        return (False, None)  # type: ignore
     # return the file name, the textual contents of the configuration file, and
     # a dict-based representation of the configuration file
     return (True, yaml_data)

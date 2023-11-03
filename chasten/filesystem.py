@@ -106,7 +106,7 @@ def create_configuration_directory(
 
 
 def create_configuration_file(
-    config: Path, config_file_name: str = constants.filesystem.Main_Configuration_File
+    config: Path, config_file_name: Path = constants.filesystem.Main_Configuration_File
 ) -> None:
     """Create the main configuration file in the configuration directory."""
     # detect the configuration directory
@@ -118,7 +118,7 @@ def create_configuration_file(
     # create the file (if it does not exist)
     chasten_user_config_main_file.touch()
     # write the default contents of the file
-    file_contents = FILE_CONTENTS_LOOKUP[config_file_name]
+    file_contents = FILE_CONTENTS_LOOKUP[str(config_file_name)]
     chasten_user_config_main_file.write_text(file_contents)
 
 

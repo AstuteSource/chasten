@@ -169,7 +169,7 @@ def configure(  # noqa: PLR0913
             # specified by the config parameter (if it exists) or it will be
             # the one in the platform-specific directory given by platformdirs
             created_directory_path = filesystem.create_configuration_directory(
-                config, force
+                Path(config), force
             )
             # write the configuration file for the chasten tool in the created directory
             filesystem.create_configuration_file(
@@ -282,7 +282,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     chasten_configuration = results.Configuration(
         chastenversion=chasten_version,
         projectname=project,
-        configdirectory=config,
+        configdirectory=Path(config),
         searchpath=input_path,
         debuglevel=debug_level,
         debugdestination=debug_destination,
