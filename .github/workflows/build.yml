@@ -16,10 +16,18 @@ on:
     branches: [ master ]
 
 # Create one single job
-# This job performs all necessary checks
+# This job performs all of the necessary checks
 jobs:
   build:
-    # Use the latest version of Ubuntu on MacOS and Windows
+    # Use the latest version of Ubuntu, MacOS, and Windows
+    # Use the latest and most stable version of Python
+    # Important: test coverage monitoring and reporting
+    # through a badge and the GitHub Actions job summary
+    # only takes place with the Linux operating system.
+    # Important: the MacOS and Windows operating systems
+    # have test coverage calculation take place but they
+    # do not report the test coverage beyond its display
+    # inside of the GitHub Actions panel for that job.
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -53,7 +61,7 @@ jobs:
         - name: Install Pip
           if: always()
           run: |
-            pip install -U pip
+            python -m pip install --upgrade pip
         # Install poetry
         - name: Install Poetry
           if: always()
@@ -70,24 +78,25 @@ jobs:
           if: always()
           run: |
             poetry run task lint
-          # Run the program
+        # Run the program
         - name: Run program
           if: always()
           run: |
             poetry run chasten analyze chasten --config $PWD/.chasten/ --debug-level ERROR --debug-dest CONSOLE --search-path .
-
         # Run the tests
         - name: Run Tests
           if: always()
           run: |
             poetry run task test
-        # Run the test coverage monitoring
-        - name: Run Test Coverage
-          if: always()
+        # Run and collect the test coverage
+        # Important: only run and collect test coverage monitoring on Linux
+        - name: Run and Collect Test Coverage - Linux Only
+          if: always() && matrix.os == 'ubuntu-latest'
           run: |
             poetry run task test-coverage-silent > coverage.txt
         # Display the Coverage Report
-        - name: Display Coverage
+        # Important: only report the monitored test coverage on Linux
+        - name: Display Collected Test Coverage - Linux Only
           if: always() && matrix.os == 'ubuntu-latest'
           run: |
             export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
@@ -95,3 +104,15 @@ jobs:
             echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
             CURRENT_GITHUB_STEP_SUMMARY="\`\`\`\n$(cat coverage.txt)\n\`\`\`"
             echo "$CURRENT_GITHUB_STEP_SUMMARY" >> $GITHUB_STEP_SUMMARY
+        # Run and display the test coverage
+        # If the current operating system is MacOS, then only run test
+        # coverage monitoring and display it inside of the GitHub Actions
+        # panel. This allows for test coverage to be calculated for each
+        # operating system. However, coverage is only reported for Linux
+        # through the badge and through the GitHub job summary. Do not
+        # run any test coverage monitoring in Windows because it seems
+        # to be much slower and cause hypothesis-based tests to fail.
+        - name: Run and Report Test Coverage - MacOS Only
+          if: always() && matrix.os == 'macOS'
+          run: |
+            poetry run task test-coverage
