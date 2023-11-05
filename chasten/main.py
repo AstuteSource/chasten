@@ -1,6 +1,7 @@
 """💫 Chasten checks the AST of a Python program."""
 
 import sys
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
@@ -382,8 +383,14 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0913, PLR0915
+def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
+    xpath: Path = typer.Option(
+        str,
+        "--xpath-version",
+        "-xp",
+        help="Accepts different xpath version, runs xpath version two by default.",
+    ),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -441,6 +448,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
+    start_time = time.time()
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -542,9 +550,18 @@ def analyze(  # noqa: PLR0913, PLR0915
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
-        match_generator = pyastgrepsearch.search_python_files(
-            paths=valid_directories, expression=current_xpath_pattern, xpath2=True
-        )
+        # match_generator = pyastgrepsearch.search_python_files(
+        #         paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+        # )
+        if xpath == "1.0":
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=False
+            )
+        else:
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+            )
+
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
         # indicate that the analysis completed for each located file
@@ -676,10 +693,15 @@ def analyze(  # noqa: PLR0913, PLR0915
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
     if not all_checks_passed:
         output.console.print(":sweat: At least one check did not pass.")
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print(":joy: All checks passed.")
+    output.console.print(
+        f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds"
+    )
 
 
 @cli.command()
