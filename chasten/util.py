@@ -56,15 +56,15 @@ def join_and_preserve(data, start, end):
     return constants.markers.Newline.join(data[start:end])
 
 
-def total_amount_passed(analyze_result) -> tuple[int, int, float]:
+def total_amount_passed(analyze_result, count_total) -> tuple[int, int, float]:
     """Calculate amount of checks passed in analyze"""
     try:
         # iterate through check sources to find checks passed
-        list_checks = [x.check.passed for x in analyze_result.sources]
+        list_passed = [x.check.passed for x in analyze_result.sources]
         # set variables to count true checks and total counts
-        count_true, count_total = list_checks.count(True), len(list_checks)
+        count_true = list_passed.count(True)
         # return tuple of checks passed, total checks, percentage of checks passed
-        return (count_true, int(count_total), (count_true / count_total) * 100)
-    # return exception for basline results when empty analyze
+        return (count_true, count_total, (count_true / count_total) * 100)
+    # return exception when dividing by zero
     except ZeroDivisionError:
         return (0,0,0) 
