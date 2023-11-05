@@ -67,4 +67,4 @@ def total_amount_passed(analyze_result, count_total) -> tuple[int, int, float]:
         return (count_true, count_total, (count_true / count_total) * 100)
     # return exception when dividing by zero
     except ZeroDivisionError:
-        return (0,0,0) 
+        return (0, 0, 0.0)
