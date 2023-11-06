@@ -244,6 +244,91 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
     assert "Cannot perform analysis due to configuration" in result.output
 
 
+def test_cli_analyze_url_config(FIXME):
+    """Confirm that using the command-line interface correctly handles a valid URL configuration."""
+    # FIXME
+    config_url = "FIXME"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            test_one,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_url_config_invalid_checks_files(FIXME):
+    """Confirm that using the command-line interface aborts execution when given a URL config that uses local file paths to specify checks files."""
+    # FIXME
+    config_url = "FIXME"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            test_one,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
+    assert "Cannot perform analysis due to configuration" in result.output
+
+
+def test_cli_analyze_correct_config_but_url_based_checks_files(FIXME):
+    """Confirm that using the command-line interface correctly handles a local config that references URL endpoints for each checks file."""
+    # FIXME
+    config_url = "FIXME"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            test_one,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_correct_config_but_url_and_filesystem_checks_files(FIXME):
+    """Confirm that using the command-line interface correctly handles a local config that references a combination of URL endpoints and local files for each checks file."""
+    # FIXME
+    config_url = "FIXME"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            test_one,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
 @patch("chasten.configuration.user_config_dir")
 def test_cli_configure_create_config_when_does_not_exist(
     mock_user_config_dir, tmp_path
