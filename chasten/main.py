@@ -481,7 +481,6 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print()
     # validate the configuration
     (validated, checks_dict) = validate_configuration_files(config, verbose)
-    output.logger.debug(f"Validate the configuration: {config}")
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:
