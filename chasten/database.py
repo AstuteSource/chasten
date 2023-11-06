@@ -6,7 +6,7 @@ from pathlib import Path
 
 from sqlite_utils import Database
 
-from chasten import constants, enumerations, filesystem, output
+from chasten import constants, enumerations, filesystem, output, util
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
@@ -128,18 +128,6 @@ def display_datasette_details(
     output.console.print()
 
 
-def executable_name(OpSystem: str = "Linux") -> str:
-    """Get the executable directory depending on OS"""
-    exe_directory = "/bin/"
-    executable_name = constants.datasette.Datasette_Executable
-    # Checks if the OS is windows and changed where to search if true
-    if OpSystem == "Windows":
-        exe_directory = "/Scripts/"
-        executable_name += ".exe"
-    virtual_env_location = sys.prefix
-    return virtual_env_location + exe_directory + executable_name
-
-
 def start_datasette_server(  # noqa: PLR0912, PLR0913
     database_path: Path,
     datasette_metadata: Path,
@@ -159,7 +147,9 @@ def start_datasette_server(  # noqa: PLR0912, PLR0913
     # chasten will exist in a bin directory. For instance, the "datasette"
     # executable that is a dependency of chasten can be found by starting
     # the search from this location for the virtual environment.
-    full_executable_name = executable_name(OpSystem)
+    full_executable_name = util.executable_name(
+        constants.datasette.Datasette_Executable, OpSystem
+    )
     (found_executable, executable_path) = filesystem.can_find_executable(
         full_executable_name
     )
@@ -275,3 +265,25 @@ def start_datasette_server(  # noqa: PLR0912, PLR0913
         # there is debugging output in the console to indicate this option.
         proc = subprocess.Popen(cmd)
         proc.wait()
+
+
+def display_results_frog_mouth(result_file, OpSystem) -> None:
+    """Run frogmouth as a subprocess of chasten"""
+    cmd = [
+        "frogmouth",
+        result_file,
+    ]
+    executable = util.executable_name("frogmouth", OpSystem)
+    exec_found, executable_path = filesystem.can_find_executable(executable)
+    if exec_found:
+        # run frogmouth with specified path
+        output.console.print("\n🐸 Frogmouth Information\n")
+        output.console.print(f" {small_bullet_unicode} Venv: {sys.prefix}")
+        output.console.print(f" {small_bullet_unicode} Program: {executable_path}")
+        proc = subprocess.Popen(cmd)
+        proc.wait()
+    else:
+        output.console.print(
+            ":person_shrugging: Was not able to find frogmouth executable try installing it separately"
+        )
+        return None
