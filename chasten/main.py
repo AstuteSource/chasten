@@ -547,7 +547,6 @@ def analyze(  # noqa: PLR0913, PLR0915
         match_generator = pyastgrepsearch.search_python_files(
             paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         )
-        output.logger.debug(f"Match Generator {match_generator}")
         # materialize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
         # indicate that the analysis completed for each located file
