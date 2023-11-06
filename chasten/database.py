@@ -224,7 +224,7 @@ def start_datasette_server(  # noqa: PLR0912, PLR0913
         # datasette-publish-fly plugin) and thus need to exit and not proceed
         if not found_publish_platform_executable:
             output.console.print(
-                ":person_shrugging: Was not able to find '{datasette_platform}'"
+                f":person_shrugging: Was not able to find '{datasette_platform}'"
             )
             return None
         # was able to find the fly or vercel executable that will support the
