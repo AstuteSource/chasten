@@ -240,7 +240,7 @@ integrate --help`.
 
 ## 💠 Verbose Output
 
-Adding the `--verbose` flag to the `chasten` command can be useful for troubleshooting and understanding how the tool is working behind the scenes Here is an example with `chasten analyze lazytracker`:
+When utilizing the `chasten` command, appending this `--verbose` flag can significantly enhance your troubleshooting experience and provide a detailed understanding of the tool's functionality. Here is an example with `chasten analyze lazytracker`:
 
 ```shell
 chasten analyze lazytracker \
@@ -251,7 +251,7 @@ chasten analyze lazytracker \
         --verbose
  ```
 
-You will notice that the output return `✨ Matching source code:` comparing the source code with checked patterns and finding detailed match of different check, for example: `🎉 Found a total of 1 matches for 'single-nested-if-anywhere-in-module' in`.
+Upon executing this command, you can expect the output to contain informative messages such as `✨ Matching source code:` indicating that the tool is actively comparing the source code against the specified patterns. Additionally, you will receive detailed match results, providing insights into the identified checks.
 
 ## 🌄 Results
 
