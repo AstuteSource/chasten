@@ -251,7 +251,7 @@ def validate_configuration_files(
                 configuration_file_yaml_str,
                 yaml_data_dict,
             ) = extract_configuration_details_from_config_dir(
-                Path(chasten_user_config_dir_str), Path(checks_file_name)
+                Path(chasten_user_config_dir_str), checks_file_name
             )
             # configuration path returned from extraction function can be used for logging
             checks_file_source = configuration_file_path_str
@@ -296,7 +296,7 @@ def validate_configuration_files(
 
 def extract_configuration_details_from_config_dir(
     chasten_user_config_dir_str: Path,
-    configuration_file: Path = constants.filesystem.Main_Configuration_File,
+    configuration_file: str = constants.filesystem.Main_Configuration_File,
 ) -> Tuple[bool, str, str, Dict[str, Dict[str, Any]]]:
     """Extract details from the configuration given a config directory.
 

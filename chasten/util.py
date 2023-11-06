@@ -63,9 +63,9 @@ def is_url(url: str) -> bool:
     # parse input url
     url_parsed = parse_url(url)
     # only input characters for initiatig query and/or fragments if necessary
-    port_character = ":" if url_parsed.port != None else ""
-    query_character = "?" if url_parsed.query != None else ""
-    fragment_character = "#" if url_parsed.fragment != None else ""
+    port_character = ":" if url_parsed.port is not None else ""
+    query_character = "?" if url_parsed.query is not None else ""
+    fragment_character = "#" if url_parsed.fragment is not None else ""
     url_pieces = [
         url_parsed.scheme,
         "://",
@@ -80,11 +80,9 @@ def is_url(url: str) -> bool:
     ]
     # convert every item to a string and piece the url back together
     # to make sure it matches what was given
-    for i, url_piece in enumerate(url_pieces):
-        if url_piece == None:
-            url_pieces[i] = ""
-        else:
-            url_pieces[i] = str(url_piece)
-    url_reassembled = "".join(url_pieces)
+    url_reassembled = ""
+    for url_piece in url_pieces:
+        if url_piece is not None:
+            url_reassembled += str(url_piece)
     # determine if parsed and reconstructed url matches original
     return str(parse_url(url)).lower() == url_reassembled.lower()

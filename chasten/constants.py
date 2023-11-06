@@ -1,7 +1,6 @@
 """Define constants with dataclasses for use in chasten."""
 
 from dataclasses import dataclass
-from pathlib import Path
 
 
 # chasten constant
@@ -107,8 +106,8 @@ class Filesystem:
     Current_Directory: str
     Dash: str
     Dot: str
-    Main_Configuration_File: Path
-    Main_Checks_File: Path
+    Main_Configuration_File: str
+    Main_Checks_File: str
     Main_Results_File_Name: str
     Main_Results_Combined_File_Name: str
     Main_Results_Flattened_Directory_Name: str
@@ -119,8 +118,8 @@ filesystem = Filesystem(
     Current_Directory=".",
     Dash="-",
     Dot=".",
-    Main_Configuration_File=Path("config.yml"),
-    Main_Checks_File=Path("checks.yml"),
+    Main_Configuration_File="config.yml",
+    Main_Checks_File="checks.yml",
     Main_Results_File_Name="chasten-results",
     Main_Results_Combined_File_Name="chasten-integrated-results",
     Main_Results_Flattened_Directory_Name="chasten-flattened-csvs-sqlite-db",
