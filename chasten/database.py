@@ -66,7 +66,6 @@ def enable_full_text_search(chasten_database_name: str) -> None:
     database["sources"].enable_fts(
         [
             "filename",
-            "filelines",
             "check_id",
             "check_name",
             "check_description",
