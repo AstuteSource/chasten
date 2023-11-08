@@ -1,6 +1,8 @@
 """💫 Chasten checks the AST of a Python program."""
 
+import os
 import sys
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
@@ -29,6 +31,7 @@ cli = typer.Typer(no_args_is_help=True)
 
 # create a small bullet for display in the output
 small_bullet_unicode = constants.markers.Small_Bullet_Unicode
+ANALYSIS_FILE = constants.chasten.Analyze_Storage
 
 
 # ---
@@ -122,7 +125,8 @@ def validate_file(
     else:
         output.opt_print_log(verbose, newline="")
         output.opt_print_log(
-            verbose, label=f":sparkles: Contents of {configuration_file_str}:\n"
+            verbose,
+            label=f":sparkles: Contents of {configuration_file_str}:\n",
         )
         output.opt_print_log(verbose, config_file=configuration_file_yml)
     return validated
@@ -132,7 +136,8 @@ def validate_configuration_files(
     config: Path,
     verbose: bool = False,
 ) -> Tuple[
-    bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
+    bool,
+    Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]],
 ]:
     """Validate the configuration."""
     # there is a specified configuration directory path;
@@ -343,7 +348,8 @@ def configure(  # noqa: PLR0913
             )
             # write the configuration file for the chasten tool in the created directory
             filesystem.create_configuration_file(
-                created_directory_path, constants.filesystem.Main_Configuration_File
+                created_directory_path,
+                constants.filesystem.Main_Configuration_File,
             )
             # write the check file for the chasten tool in the created directory
             filesystem.create_configuration_file(
@@ -368,8 +374,14 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0913, PLR0915
+def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
+    xpath: Path = typer.Option(
+        str,
+        "--xpath-version",
+        "-xp",
+        help="Accepts different xpath version, runs xpath version two by default.",
+    ),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -405,6 +417,18 @@ def analyze(  # noqa: PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
+    store_result: Path = typer.Option(
+        None,
+        "--markdown-storage",
+        "-r",
+        help="A directory for storing results in a markdown file",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
     config: Path = typer.Option(
         None,
         "--config",
@@ -423,10 +447,13 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-t",
         help="Specify the destination for debugging output.",
     ),
+    display: bool = typer.Option(False, help="Display results using frogmouth"),
     verbose: bool = typer.Option(False, help="Enable verbose mode output."),
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
+    force: bool = typer.Option(False, help="Force creation of new markdown file"),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
+    start_time = time.time()
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -500,6 +527,27 @@ def analyze(  # noqa: PLR0913, PLR0915
             "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
+    if store_result:
+        # creates an empty string for storing results temporarily
+        analysis_result = ""
+        analysis_file_dir = store_result / ANALYSIS_FILE
+        # clears markdown file of results if it exists and new results are to be store
+        if filesystem.confirm_valid_file(analysis_file_dir):
+            if not force:
+                if display:
+                    database.display_results_frog_mouth(
+                        analysis_file_dir, util.get_OS()
+                    )
+                    sys.exit(0)
+                else:
+                    output.console.print(
+                        "File already exists: use --force to recreate markdown directory."
+                    )
+                    sys.exit(constants.markers.Non_Zero_Exit)
+            else:
+                analysis_file_dir.write_text("")
+        # creates file if doesn't exist already
+        analysis_file_dir.touch()
     # create the list of directories
     valid_directories = [input_path]
     # output the list of directories subject to checking
@@ -514,7 +562,9 @@ def analyze(  # noqa: PLR0913, PLR0915
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
-        current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
+        current_xpath_pattern = str(
+            current_check[constants.checks.Check_Pattern]
+        )  # type: ignore
         # extract the minimum and maximum values for the checks, if they exist
         # note that this function will return None for a min or a max if
         # that attribute does not exist inside of the current_check; importantly,
@@ -528,10 +578,18 @@ def analyze(  # noqa: PLR0913, PLR0915
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
-        match_generator = pyastgrepsearch.search_python_files(
-            paths=valid_directories, expression=current_xpath_pattern, xpath2=True
-        )
-        # materialize a list from the generator of (potential) matches;
+        # match_generator = pyastgrepsearch.search_python_files(
+        #         paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+        # )
+        if xpath == "1.0":
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=False
+            )
+        else:
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+            )
+        # materia>>> mastlize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
         # indicate that the analysis completed for each located file
         match_generator_list = list(match_generator)
@@ -566,6 +624,19 @@ def analyze(  # noqa: PLR0913, PLR0915
             f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'"
             + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}"
         )
+        if store_result:
+            # makes the check marks or x's appear as words instead for markdown
+            check_pass = (
+                "PASSED:"
+                if check_status_symbol == "[green]\u2713[/green]"
+                else "FAILED:"
+            )
+            # stores check type in a string to stored in file later
+            analysis_result += (
+                f"\n# {check_pass} **ID:** '{check_id}', **Name:** '{check_name}'"
+                + f", **Pattern:** '{current_xpath_pattern_escape}', min={min_count}, max={max_count}\n\n"
+            )
+
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         current_result_source = results.Source(
@@ -602,6 +673,9 @@ def analyze(  # noqa: PLR0913, PLR0915
             output.console.print(
                 f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
             )
+            if store_result:
+                # stores details of checks in string to be stored later
+                analysis_result += f"    - {file_name} - {len(matches_list)} matches\n"
             # extract the lines of source code for this file; note that all of
             # these matches are organized for the same file and thus it is
             # acceptable to extract the lines of the file from the first match
@@ -631,7 +705,10 @@ def analyze(  # noqa: PLR0913, PLR0915
                         ),
                         linematch_context=util.join_and_preserve(
                             current_match.file_lines,
-                            max(0, position_end - constants.markers.Code_Context),
+                            max(
+                                0,
+                                position_end - constants.markers.Code_Context,
+                            ),
                             position_end + constants.markers.Code_Context,
                         ),
                     )
@@ -639,7 +716,9 @@ def analyze(  # noqa: PLR0913, PLR0915
                     # pyastgrepsearch.Match for verbose debugging output as needed
                     current_check_save._matches.append(current_match)
                     # add the match to the listing of matches for the current check
-                    current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
+                    current_check_save.matches.append(
+                        current_match_for_current_check_save
+                    )  # type: ignore
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
     # display all of the analysis results if verbose output is requested
@@ -654,10 +733,28 @@ def analyze(  # noqa: PLR0913, PLR0915
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
     if not all_checks_passed:
         output.console.print("\n:sweat: At least one check did not pass.")
+        if store_result:
+            # writes results of analyze into a markdown file
+            analysis_file_dir.write_text(analysis_result, encoding="utf-8")
+            output.console.print(
+                f"\n:sparkles: Results saved in: {os.path.abspath(analysis_file_dir)}\n"
+            )
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print("\n:joy: All checks passed.")
+    output.console.print(
+        f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds"
+    )
+    if store_result:
+        # writes results of analyze into a markdown file
+        result_path = os.path.abspath(analysis_file_dir)
+        analysis_file_dir.write_text(analysis_result, encoding="utf-8")
+        output.console.print(f"\n:sparkles: Results saved in: {result_path}\n")
+        if display:
+            database.display_results_frog_mouth(result_path, util.get_OS())
 
 
 @cli.command()
@@ -724,7 +821,7 @@ def integrate(  # noqa: PLR0913
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
-    # create the SQLite3 database and then configure the database for use in datasett
+    # create the SQLite3 database and then configure the database for use in datasette
     combined_flattened_directory = filesystem.write_flattened_csv_and_database(
         combined_json_file_name,
         output_directory,
