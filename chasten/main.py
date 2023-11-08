@@ -735,6 +735,14 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
                     )  # type: ignore
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
+        # add the amount of total matches in each check to the end of each checks output
+        output.console.print(f"   = {len(match_generator_list)} total matches\n")
+    # calculate the final count of matches found
+    total_result = util.total_amount_passed(chasten_results_save, len(check_list))
+    # display checks passed, total amount of checks, and percentage of checks passed
+    output.console.print(
+        f":computer: {total_result[0]} / {total_result[1]} checks passed ({total_result[2]}%)\n"
+    )
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
@@ -743,7 +751,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     )
     # output the name of the saved file if saving successfully took place
     if saved_file_name:
-        output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
+        output.console.print(f":sparkles: Saved the file '{saved_file_name}'")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
