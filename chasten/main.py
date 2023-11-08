@@ -483,6 +483,8 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     )
     # extract the current version of the program
     chasten_version = util.get_chasten_version()
+    # display current chasten version
+    output.logger.debug(f"Current Chasten version {chasten_version}")
     # create the include and exclude criteria
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
