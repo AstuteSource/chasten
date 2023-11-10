@@ -833,9 +833,11 @@ def integrate(  # noqa: PLR0913
         json_path=json_path,
         force=force,
     )
+    output.logger.debug("Integrate function started.")
     # output the list of directories subject to checking
     output.console.print()
     output.console.print(":sparkles: Combining data file(s) in:")
+    output.logger.debug(":sparkles: Combining data file(s) in:")
     output.console.print()
     output.print_list_contents(json_path)
     # extract all of the JSON dictionaries from the specified files
@@ -849,6 +851,7 @@ def integrate(  # noqa: PLR0913
     # output the name of the saved file if saving successfully took place
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
+        output.logger.debug(f"Saved the file '{combined_json_file_name}'.")
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
     # create the SQLite3 database and then configure the database for use in datasette
     combined_flattened_directory = filesystem.write_flattened_csv_and_database(
@@ -856,6 +859,7 @@ def integrate(  # noqa: PLR0913
         output_directory,
         project,
     )
+    output.logger.debug("Flattened JSON and created SQLite database.")
     # output the name of the saved file if saving successfully took place
     if combined_flattened_directory:
         output.console.print(
@@ -866,6 +870,7 @@ def integrate(  # noqa: PLR0913
         )
         output.console.print()
         output.console.print(combined_directory_tree)
+        output.logger.debug("Integrate function completed successfully.")
 
 
 @cli.command()
