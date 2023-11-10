@@ -35,7 +35,7 @@ def test_generate_yaml_config():
 
     result = generate_yaml_config(file_path, valid_api_key, test_genscript)
 
-    assert result is not None 
+    assert result is not None
     assert file_path.is_file()
 
     # Check the content of the generated file
