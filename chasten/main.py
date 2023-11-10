@@ -337,6 +337,11 @@ def configure(  # noqa: PLR0913
         config=config,
         force=force,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     # display the configuration directory and its contents
     if task == enumerations.ConfigureTask.VALIDATE:
         # validate the configuration files:
@@ -926,6 +931,11 @@ def datasette_serve(  # noqa: PLR0913
         datasette_port=port,
         metadata=metadata,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     # display diagnostic information about the datasette instance
     label = ":sparkles: Starting a local datasette instance:"
     display_serve_or_publish_details(
@@ -995,6 +1005,11 @@ def datasette_publish(  # noqa: PLR0913
         database=database_path,
         metadata=metadata,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     output.console.print()
     output.console.print(
         f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
@@ -1034,6 +1049,7 @@ def version():
     """🖥️  Display the version of Chasten."""
     # Get Chasten version from util file
     version_string = util.get_chasten_version()
+    output.logger.debug(f"Chasten version: {version_string}")
     # output chasten version
     typer.echo(f"chasten {version_string}")
 
