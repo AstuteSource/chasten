@@ -105,7 +105,7 @@ hypothesis = { cmd = "{hypothesis-test-command}", help = "Run the hypothesis-bas
 hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the hypothesis-based test cases", use_vars = true }
 test = { cmd = "pytest -x -s -vv -n auto -k 'not test_createchecks'", help = "Run the pytest test suite using order randomization and test distribution excluding test_createchecks.py" }
 test-not-randomly = { cmd = "pytest -x -s -vv -p no:randomly -k 'not test_createchecks'", help = "Run the pytest test suite without order randomization excluding test_createchecks.py" }
-test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist", help = "Run the pytest test suite without order randomization" }
+test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist -k 'not test_createchecks'", help = "Run the pytest test suite without order randomization excluding test_createchecks.py" }
 test-silent = { cmd = "pytest -x --show-capture=no -n auto", help = "Run the pytest test suite without showing output" }
 test-silent-not-randomly = { cmd = "pytest -x --show-capture=no -p no:randomly", help = "Run the pytest test suite without showing output and order randomization" }
 test-silent-not-xdist = { cmd = "pytest -x --show-capture=no -p no:xdist", help = "Run the pytest test suite without showing output and test distribution" }
