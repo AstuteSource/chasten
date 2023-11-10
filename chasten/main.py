@@ -473,6 +473,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     output.logger.debug(f"Debug level? {debug_level.value}")
     output.logger.debug(f"Debug destination? {debug_destination.value}")
     start_time = time.time()
+    output.logger.debug("Analysis Started.")
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -520,6 +521,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
         )
+        output.logger.debug("Cannot perform analysis due to configuration error(s)")
         sys.exit(constants.markers.Non_Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
@@ -605,10 +607,12 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         #         paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         # )
         if xpath == "1.0":
+            output.logger.debug("Using XPath version 1.0")
             match_generator = pyastgrepsearch.search_python_files(
                 paths=valid_directories, expression=current_xpath_pattern, xpath2=False
             )
         else:
+            output.logger.debug("Using XPath version 2.0")
             match_generator = pyastgrepsearch.search_python_files(
                 paths=valid_directories, expression=current_xpath_pattern, xpath2=True
             )
@@ -761,6 +765,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
 
     if not all_checks_passed:
         output.console.print("\n:sweat: At least one check did not pass.")
+        output.logger.debug("\n:sweat: At least one check did not pass.")
         if store_result:
             # writes results of analyze into a markdown file
             analysis_file_dir.write_text(analysis_result, encoding="utf-8")
@@ -771,6 +776,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     output.console.print(
         f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds"
     )
+    output.logger.debug("\n:joy: All checks passes. Analysis complete.")
     if store_result:
         # writes results of analyze into a markdown file
         result_path = os.path.abspath(analysis_file_dir)
