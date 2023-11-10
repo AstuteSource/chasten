@@ -106,7 +106,7 @@ hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the 
 test = { cmd = "pytest -x -s -vv -n auto -k 'not test_createchecks'", help = "Run the pytest test suite using order randomization and test distribution excluding test_createchecks.py" }
 test-not-randomly = { cmd = "pytest -x -s -vv -p no:randomly -k 'not test_createchecks'", help = "Run the pytest test suite without order randomization excluding test_createchecks.py" }
 test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist -k 'not test_createchecks'", help = "Run the pytest test suite without order randomization excluding test_createchecks.py" }
-test-silent = { cmd = "pytest -x --show-capture=no -n auto", help = "Run the pytest test suite without showing output" }
+test-silent = { cmd = "pytest -x --show-capture=no -n auto -k 'not test_createchecks'", help =  "Run the pytest test suite without showing output excluding test_createchecks.py" }
 test-silent-not-randomly = { cmd = "pytest -x --show-capture=no -p no:randomly", help = "Run the pytest test suite without showing output and order randomization" }
 test-silent-not-xdist = { cmd = "pytest -x --show-capture=no -p no:xdist", help = "Run the pytest test suite without showing output and test distribution" }
 test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
