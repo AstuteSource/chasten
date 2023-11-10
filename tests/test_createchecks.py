@@ -15,3 +15,9 @@ def test_valid_api_key():
 
     result = is_valid_api_key(valid_api_key)
     assert result is True
+
+def test_invalid_api_key():
+    """Test is_valid_api_key function with an invalid api key."""
+    invalid_api_key = "fk-561sf56a1sf561as5f1asf165as1"
+    result = is_valid_api_key(invalid_api_key)
+    assert result is False
