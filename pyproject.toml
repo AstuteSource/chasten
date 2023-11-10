@@ -103,7 +103,7 @@ developer-test = { cmd = "{developer-test-command}", help = "Run developer-creat
 developer-test-silent = { cmd = "{developer-test-silent-command}", help = "Run developer-created without output", use_vars = true }
 hypothesis = { cmd = "{hypothesis-test-command}", help = "Run the hypothesis-based test cases", use_vars = true}
 hypothesis-silent = { cmd = "{hypothesis-test-silent-command}", help = "Run the hypothesis-based test cases", use_vars = true }
-test = { cmd = "pytest -x -s -vv -n auto", help = "Run the pytest test suite using order randomization and test distribution" }
+test = { cmd = "pytest -x -s -vv -n auto -k 'not test_createchecks'", help = "Run the pytest test suite using order randomization and test distribution excluding test_createchecks.py" }
 test-not-randomly = { cmd = "pytest -x -s -vv -p no:randomly", help = "Run the pytest test suite without order randomization" }
 test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist", help = "Run the pytest test suite without order randomization" }
 test-silent = { cmd = "pytest -x --show-capture=no -n auto", help = "Run the pytest test suite without showing output" }
