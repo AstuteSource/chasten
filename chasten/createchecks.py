@@ -109,7 +109,7 @@ def generate_yaml_config(file: Path, user_api_key, user_input: str) -> str:
         generated_yaml = response.choices[0].message["content"].strip()
         file.touch()
 
-        with open("generated_checks.yml", "w") as f:
+        with open(file, "w") as f:
             f.write(generated_yaml)
 
         return generated_yaml
