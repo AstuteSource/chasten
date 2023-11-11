@@ -1,9 +1,11 @@
 """Pytest test suite for the util module."""
 
+import shutil
+
 import pytest
 from hypothesis import given, strategies, provisional
 
-from chasten import util
+from chasten import constants, util
 
 
 def test_human_readable_boolean() -> None:
@@ -36,3 +38,15 @@ def test_is_url_correct(url: str) -> None:
     """Use Hypothesis to confirm that URLs are correctly recognized/unrecognized."""
     result = util.is_url(url=url)
     assert result == True
+
+
+OpSystem = util.get_OS()
+datasette_exec = constants.datasette.Datasette_Executable
+
+
+def test_executable_name() -> None:
+    """Test if executable name gets correct file name"""
+    # makes sure the datasette executable is where expected
+    assert shutil.which(util.executable_name(datasette_exec, OpSystem))
+    # makes sure the frogmouth executable is where expected
+    assert shutil.which(util.executable_name("frogmouth", OpSystem))
