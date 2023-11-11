@@ -261,7 +261,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
-    config: Path = typer.Option(
+    config: str = typer.Option(
         None,
         "--config",
         "-c",
