@@ -328,7 +328,9 @@ def test_cli_analyze_local_config_with_url_checks_file(cwd):
 
 def test_cli_analyze_local_config_with_url_and_local_checks_files(cwd):
     """Confirm that using the command-line interface correctly handles a local config that references a combination of URL endpoints and local files for each checks file."""
-    configuration_file = cwd / Path(".chasten") / Path("config_url_and_local_checks_files.yml")
+    configuration_file = (
+        cwd / Path(".chasten") / Path("config_url_and_local_checks_files.yml")
+    )
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
