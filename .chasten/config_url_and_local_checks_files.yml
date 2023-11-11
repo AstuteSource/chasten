@@ -3,7 +3,7 @@
 chasten:
   # point to a combination of checks files and local files
   checks-file:
-    - https://raw.githubusercontent.com/AstuteSource/chasten/master/.chasten/checks.yml
+    - https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/dummy_checks.yml
     - checks.yml
-    - https://raw.githubusercontent.com/AstuteSource/chasten/master/.chasten/checks.yml
+    - https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/dummy_checks.ym
     - checks.yml
