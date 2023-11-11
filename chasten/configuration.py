@@ -141,7 +141,9 @@ def validate_configuration_files(
                 # re-parse input config so it is of type Path
                 config_as_path = Path(config)
                 # get directory containing config file
-                chasten_user_config_dir_str = str(Path(*config_as_path.parts[: len(config_as_path.parts) - 1]))
+                chasten_user_config_dir_str = str(
+                    Path(*config_as_path.parts[: len(config_as_path.parts) - 1])
+                )
                 # isolate config file
                 chasten_user_config_file_str = str(config_as_path.parts[-1])
             else:
@@ -194,7 +196,9 @@ def validate_configuration_files(
         # argument will be supplied as unpacked dict
         chasten_user_config_file_str_argument = {}
         if chasten_user_config_file_str != "":
-            chasten_user_config_file_str_argument["configuration_file"] = chasten_user_config_file_str
+            chasten_user_config_file_str_argument[
+                "configuration_file"
+            ] = chasten_user_config_file_str
         # extract the configuration details
         (
             configuration_valid,
