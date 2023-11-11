@@ -247,17 +247,8 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
 
 def test_cli_analyze_url_config(cwd):
     """Confirm that using the command-line interface correctly handles a valid URL configuration."""
-    git_HEAD = cwd / Path(".git") / Path("HEAD")
-    git_config = cwd / Path(".git") / Path("config")
-    # get current git branch to use by reading local git data
-    branch = re.match("(?:ref: refs/heads/)(\S+)", git_HEAD.read_text()).group(1)
-    # get the git repo ("owner/repo") by reading local git data
-    owner_slash_repo = re.search(
-        '(?:\[remote "origin"\]\n\turl = (git@github.com:|https://github.com/))(\S+?)(?:\.git)',
-        git_config.read_text(),
-    ).group(2)
-    # use current git branch to fetch config files from raw text repo files
-    config_url = f"https://raw.githubusercontent.com/{owner_slash_repo}/{branch}/.chasten/config_url_checks_file.yml"
+    # use config files found in chasten-configuration remotely
+    config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten-configuration/config_url_checks_file.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -277,17 +268,8 @@ def test_cli_analyze_url_config(cwd):
 
 def test_cli_analyze_url_config_with_local_checks_file(cwd):
     """Confirm that using the command-line interface aborts execution when given a URL config that uses a local file path to specify checks files."""
-    git_HEAD = cwd / Path(".git") / Path("HEAD")
-    git_config = cwd / Path(".git") / Path("config")
-    # get current git branch to use by reading local git data
-    branch = re.match("(?:ref: refs/heads/)(\S+)", git_HEAD.read_text()).group(1)
-    # get the git repo ("owner/repo") by reading local git data
-    owner_slash_repo = re.search(
-        '(?:\[remote "origin"\]\n\turl = (git@github.com:|https://github.com/))(\S+?)(?:\.git)',
-        git_config.read_text(),
-    ).group(2)
-    # use current git branch to fetch config files from raw text repo files
-    config_url = f"https://raw.githubusercontent.com/{owner_slash_repo}/{branch}/.chasten/config.yml"
+    # use config files found in chasten-configuration remotely
+    config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten-configuration/config.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -350,17 +332,8 @@ def test_cli_analyze_local_config_with_url_and_local_checks_files(cwd):
 
 def test_cli_analyze_url_config_with_url_and_local_checks_files(cwd):
     """Confirm that using the command-line interface aborts execution when given a URL config that references a combination of URL endpoints and local files for each checks file."""
-    git_HEAD = cwd / Path(".git") / Path("HEAD")
-    git_config = cwd / Path(".git") / Path("config")
-    # get current git branch to use by reading local git data
-    branch = re.match("(?:ref: refs/heads/)(\S+)", git_HEAD.read_text()).group(1)
-    # get the git repo ("owner/repo") by reading local git data
-    owner_slash_repo = re.search(
-        '(?:\[remote "origin"\]\n\turl = (git@github.com:|https://github.com/))(\S+?)(?:\.git)',
-        git_config.read_text(),
-    ).group(2)
-    # use current git branch to fetch config files from raw text repo files
-    config_url = f"https://raw.githubusercontent.com/{owner_slash_repo}/{branch}/.chasten/config_url_and_local_checks_files.yml"
+    # use config files found in chasten-configuration remotely
+    config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten-configuration/config_url_and_local_checks_files.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
