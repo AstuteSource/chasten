@@ -57,7 +57,7 @@
     - /_scratch/chasten/chasten/output.py - 7 matches
     - /_scratch/chasten/chasten/checks.py - 13 matches
     - /_scratch/chasten/chasten/validate.py - 3 matches
-    - /_scratch/chasten/chasten/configuration.py - 15 matches
+    - /_scratch/chasten/chasten/configuration.py - 18 matches
     - /_scratch/chasten/chasten/filesystem.py - 11 matches
 
 # PASSED: **ID:** 'CL002', **Name:** 'dummy-test-double-nested-if', **Pattern:** './/FunctionDef/body//If\[ancestor::If and not(parent::orelse)]', min=None, max=None
@@ -67,5 +67,5 @@
     - /_scratch/chasten/chasten/output.py - 1 matches
     - /_scratch/chasten/chasten/checks.py - 3 matches
     - /_scratch/chasten/chasten/validate.py - 1 matches
-    - /_scratch/chasten/chasten/configuration.py - 3 matches
+    - /_scratch/chasten/chasten/configuration.py - 5 matches
     - /_scratch/chasten/chasten/filesystem.py - 3 matches

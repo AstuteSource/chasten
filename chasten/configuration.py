@@ -118,6 +118,7 @@ def validate_configuration_files(
     """Validate the configuration."""
     chasten_user_config_url_str = ""
     chasten_user_config_dir_str = ""
+    chasten_user_config_file_str = ""
     # there is a specified configuration directory path or url;
     # this overrides the use of the configuration files that
     # may exist inside of the platform-specific directory
@@ -131,8 +132,22 @@ def validate_configuration_files(
             chasten_user_config_url_str = str(parse_url(config))
         # input configuration is valid file path
         elif Path(config).exists():
-            # re-parse input config so it is of type Path
-            chasten_user_config_dir_str = str(Path(config))
+            # input configuration is a directory
+            if Path(config).is_dir():
+                # re-parse input config so it is of type Path
+                chasten_user_config_dir_str = str(Path(config))
+            # input configuration is a file
+            elif Path(config).is_file():
+                # re-parse input config so it is of type Path
+                config_as_path = Path(config)
+                # get directory containing config file
+                chasten_user_config_dir_str = str(Path(*config_as_path.parts[: len(config_as_path.parts) - 1]))
+                # isolate config file
+                chasten_user_config_file_str = str(config_as_path.parts[-1])
+            else:
+                output.logger.error(
+                    "\nGiven configuration was a Path, but was the wrong file type.\n"
+                )
         # the configuration file does not exist and thus,
         # since config was explicit, it is not possible
         # to validate the configuration file
@@ -175,6 +190,11 @@ def validate_configuration_files(
             + chasten_user_config_dir_str
             + constants.markers.Newline
         )
+        # optional argument if chasten_user_config_file_str is not empty
+        # argument will be supplied as unpacked dict
+        chasten_user_config_file_str_argument = {}
+        if chasten_user_config_file_str != "":
+            chasten_user_config_file_str_argument["configuration_file"] = chasten_user_config_file_str
         # extract the configuration details
         (
             configuration_valid,
@@ -182,7 +202,7 @@ def validate_configuration_files(
             configuration_file_yaml_str,
             yaml_data_dict,
         ) = extract_configuration_details_from_config_dir(
-            Path(chasten_user_config_dir_str)
+            Path(chasten_user_config_dir_str), **chasten_user_config_file_str_argument
         )
         # it was not possible to extract the configuration details and
         # thus this function should return immediately with False
@@ -260,7 +280,7 @@ def validate_configuration_files(
             output.logger.error(
                 f"\nChecks file directive was not a valid Path or URL (given: '{checks_file_name}')\n"
             )
-            # FIXME: print error or something
+            return (False, {})
         # the checks file could not be extracted in a valid
         # fashion and thus there is no need to continue the
         # validation of this file or any of the other check file
