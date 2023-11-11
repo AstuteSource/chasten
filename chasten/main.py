@@ -121,7 +121,7 @@ def configure(  # noqa: PLR0913
         None,
         "--config",
         "-c",
-        help="A directory with configuration file(s) or URL to configuration file.",
+        help="A directory with configuration file(s), path to configuration file, or URL to configuration file.",
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
