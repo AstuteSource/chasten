@@ -5,5 +5,5 @@ chasten:
   checks-file:
     - https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/dummy_checks.yml
     - checks.yml
-    - https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/dummy_checks.ym
+    - https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/dummy_checks.yml
     - checks.yml
