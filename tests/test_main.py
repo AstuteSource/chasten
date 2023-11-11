@@ -1,6 +1,7 @@
 """Pytest test suite for the main module."""
 
 import os
+import re
 from pathlib import Path
 from unittest.mock import patch
 
@@ -244,10 +245,13 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
     assert "Cannot perform analysis due to configuration" in result.output
 
 
-def test_cli_analyze_url_config(FIXME):
+def test_cli_analyze_url_config(pwd):
     """Confirm that using the command-line interface correctly handles a valid URL configuration."""
-    # FIXME
-    config_url = "FIXME"
+    # get current git branch to use
+    git_directory = pwd / Path(".git") / Path("HEAD")
+    branch = re.findall("(?:ref: refs/heads/).+", git_directory.read_text())[0]
+    # use current git branch to fetch config files from raw text repo files
+    config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten/{branch}/.chasten/config_url_checks_file.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -265,10 +269,13 @@ def test_cli_analyze_url_config(FIXME):
     assert result.exit_code == 0
 
 
-def test_cli_analyze_url_config_invalid_checks_files(FIXME):
-    """Confirm that using the command-line interface aborts execution when given a URL config that uses local file paths to specify checks files."""
-    # FIXME
-    config_url = "FIXME"
+def test_cli_analyze_url_config_with_local_checks_file():
+    """Confirm that using the command-line interface aborts execution when given a URL config that uses a local file path to specify checks files."""
+    # get current git branch to use
+    git_directory = pwd / Path(".git") / Path("HEAD")
+    branch = re.findall("(?:ref: refs/heads/).+", git_directory.read_text())[0]
+    # use current git branch to fetch config files from raw text repo files
+    config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten/{branch}/.chasten/config.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -287,10 +294,9 @@ def test_cli_analyze_url_config_invalid_checks_files(FIXME):
     assert "Cannot perform analysis due to configuration" in result.output
 
 
-def test_cli_analyze_correct_config_but_url_based_checks_files(FIXME):
+def test_cli_analyze_local_config_with_url_checks_file(cwd):
     """Confirm that using the command-line interface correctly handles a local config that references URL endpoints for each checks file."""
-    # FIXME
-    config_url = "FIXME"
+    configuration_file = cwd / Path(".chasten") / Path("config_url_checks_file.yml")
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -308,10 +314,9 @@ def test_cli_analyze_correct_config_but_url_based_checks_files(FIXME):
     assert result.exit_code == 0
 
 
-def test_cli_analyze_correct_config_but_url_and_filesystem_checks_files(FIXME):
+def test_cli_analyze_local_config_with_url_and_filesystem_checks_files(cwd):
     """Confirm that using the command-line interface correctly handles a local config that references a combination of URL endpoints and local files for each checks file."""
-    # FIXME
-    config_url = "FIXME"
+    configuration_file = cwd / Path(".chasten") / Path("config_url_and_local_checks_files.yml")
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -327,6 +332,30 @@ def test_cli_analyze_correct_config_but_url_and_filesystem_checks_files(FIXME):
         ],
     )
     assert result.exit_code == 0
+
+
+def test_cli_analyze_url_config_with_url_and_filesystem_checks_files():
+    """Confirm that using the command-line interface aborts execution when given a URL config that references a combination of URL endpoints and local files for each checks file."""
+    # get current git branch to use
+    git_directory = pwd / Path(".git") / Path("HEAD")
+    branch = re.findall("(?:ref: refs/heads/).+", git_directory.read_text())[0]
+    # use current git branch to fetch config files from raw text repo files
+    config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten/{branch}/.chasten/config_url_and_local_checks_files.yml"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            test_one,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
 
 
 @patch("chasten.configuration.user_config_dir")

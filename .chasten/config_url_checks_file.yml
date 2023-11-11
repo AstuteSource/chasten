@@ -1,0 +1,8 @@
+# chasten configuration
+# used for testing purposes
+# meant to be called as a url endpoint
+# Example: https://raw.githubusercontent.com/AstuteSource/chasten/master/.chasten/url_config.yml
+chasten:
+  # point to a checks file
+  checks-file:
+    - https://raw.githubusercontent.com/AstuteSource/chasten/master/.chasten/checks.yml
