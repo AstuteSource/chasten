@@ -11,7 +11,7 @@
 
     - /_scratch/chasten/tests/test_filesystem.py - 16 matches
     - /_scratch/chasten/tests/test_util.py - 5 matches
-    - /_scratch/chasten/tests/test_main.py - 18 matches
+    - /_scratch/chasten/tests/test_main.py - 19 matches
     - /_scratch/chasten/tests/test_configuration.py - 3 matches
     - /_scratch/chasten/tests/test_checks.py - 8 matches
     - /_scratch/chasten/tests/test_validate.py - 4 matches

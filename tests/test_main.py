@@ -245,10 +245,10 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
     assert "Cannot perform analysis due to configuration" in result.output
 
 
-def test_cli_analyze_url_config(pwd):
+def test_cli_analyze_url_config(cwd):
     """Confirm that using the command-line interface correctly handles a valid URL configuration."""
     # get current git branch to use
-    git_directory = pwd / Path(".git") / Path("HEAD")
+    git_directory = cwd / Path(".git") / Path("HEAD")
     branch = re.findall("(?:ref: refs/heads/).+", git_directory.read_text())[0]
     # use current git branch to fetch config files from raw text repo files
     config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten/{branch}/.chasten/config_url_checks_file.yml"
@@ -272,7 +272,7 @@ def test_cli_analyze_url_config(pwd):
 def test_cli_analyze_url_config_with_local_checks_file():
     """Confirm that using the command-line interface aborts execution when given a URL config that uses a local file path to specify checks files."""
     # get current git branch to use
-    git_directory = pwd / Path(".git") / Path("HEAD")
+    git_directory = cwd / Path(".git") / Path("HEAD")
     branch = re.findall("(?:ref: refs/heads/).+", git_directory.read_text())[0]
     # use current git branch to fetch config files from raw text repo files
     config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten/{branch}/.chasten/config.yml"
@@ -337,7 +337,7 @@ def test_cli_analyze_local_config_with_url_and_filesystem_checks_files(cwd):
 def test_cli_analyze_url_config_with_url_and_filesystem_checks_files():
     """Confirm that using the command-line interface aborts execution when given a URL config that references a combination of URL endpoints and local files for each checks file."""
     # get current git branch to use
-    git_directory = pwd / Path(".git") / Path("HEAD")
+    git_directory = cwd / Path(".git") / Path("HEAD")
     branch = re.findall("(?:ref: refs/heads/).+", git_directory.read_text())[0]
     # use current git branch to fetch config files from raw text repo files
     config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten/{branch}/.chasten/config_url_and_local_checks_files.yml"
