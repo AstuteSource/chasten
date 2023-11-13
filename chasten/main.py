@@ -578,7 +578,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         analysis_file_dir.touch()
     # create the list of directories
     valid_directories = [input_path]
-    #log list of directories
+    # log list of directories
     output.logger.debug("Valid Directories: {valid_directories}")
     # output the list of directories subject to checking
     output.console.print()
