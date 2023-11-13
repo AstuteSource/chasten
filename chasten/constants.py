@@ -9,6 +9,7 @@ from pathlib import Path
 class Chasten:
     """Define the Chasten dataclass for constant(s)."""
 
+    Analyze_Storage: Path
     Application_Name: str
     Application_Author: str
     App_Storage: Path
@@ -29,6 +30,7 @@ class Chasten:
 
 
 chasten = Chasten(
+    Analyze_Storage=Path("analysis.md"),
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
     App_Storage=Path("check.txt"),
