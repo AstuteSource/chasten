@@ -4,15 +4,15 @@ import logging
 import logging.config
 import logging.handlers
 import sys
-from typing import Any, Dict, List, Tuple, Union
 from pathlib import Path
-from urllib3.util import parse_url, Url
+from typing import Any, Dict, List, Tuple, Union
 
 import platformdirs
+import requests
+import yaml
 from rich.logging import RichHandler
 from rich.traceback import install
-import yaml
-import requests
+from urllib3.util import Url, parse_url
 
 from chasten import (
     constants,

@@ -1,11 +1,9 @@
 """Validate various aspects of configurations and command-line arguments."""
 
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 import jsonschema
 from jsonschema.exceptions import ValidationError
-from pathlib import Path
-from urllib3.util import Url
 
 from chasten import constants, output, util
 

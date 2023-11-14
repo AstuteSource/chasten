@@ -171,7 +171,7 @@ def configure(  # noqa: PLR0913
             # create the configuration directory, which will either be the one
             # specified by the config parameter (if it exists) or it will be
             # the one in the platform-specific directory given by platformdirs
-            if config == None:
+            if config is None:
                 configuration_directory = None
             else:
                 configuration_directory = Path(config)

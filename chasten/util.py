@@ -4,9 +4,9 @@ import importlib.metadata
 import platform
 import sys
 
-from chasten import constants
-from typing import List
 from urllib3.util import parse_url
+
+from chasten import constants
 
 checkmark_unicode = "\u2713"
 xmark_unicode = "\u2717"
