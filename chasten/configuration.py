@@ -115,7 +115,7 @@ def validate_checks_file(
     chasten_user_config_url_str: str,
     chasten_user_config_dir_str: str,
     chasten_user_config_file_str: str
-) -> Tuple[bool, bool]:
+) -> Tuple[bool, bool, Dict[str, Dict[str, Any]]]:
     """Validate a checks file."""
     checks_file_validated = False
     checks_file_invalidates_entire_config = False
@@ -140,7 +140,7 @@ def validate_checks_file(
         )
         checks_file_validated = False
         checks_file_invalidates_entire_config = True
-        return (checks_file_validated, checks_file_invalidates_entire_config)
+        return (checks_file_validated, checks_file_invalidates_entire_config, {})
     # checks file exists in local filesystem
     elif (Path(chasten_user_config_dir_str) / Path(checks_file_name)).exists():
         # extract the configuration details
@@ -161,7 +161,7 @@ def validate_checks_file(
         )
         checks_file_validated = False
         checks_file_invalidates_entire_config = True
-        return (checks_file_validated, checks_file_invalidates_entire_config)
+        return (checks_file_validated, checks_file_invalidates_entire_config, {})
     # the checks file could not be extracted in a valid
     # fashion and thus there is no need to continue the
     # validation of this file or any of the other check file
@@ -178,7 +178,7 @@ def validate_checks_file(
             validate.JSON_SCHEMA_CHECKS,
             verbose,
         )
-    return (checks_file_validated, checks_file_invalidates_entire_config)
+    return (checks_file_validated, checks_file_invalidates_entire_config, yaml_data_dict)
 
 
 def validate_configuration_files(
@@ -315,6 +315,7 @@ def validate_configuration_files(
         (
             checks_file_validated,
             checks_file_invalidates_entire_config,
+            checks_file_yaml_data_dict,
         ) = validate_checks_file(
                 verbose,
                 checks_file_name,
@@ -331,7 +332,7 @@ def validate_configuration_files(
         checks_files_validated_list.append(checks_file_validated)
         # add the listing of checks from the current yaml_data_dict to
         # the overall listing of checks in the main dictionary
-        overall_checks_dict[constants.checks.Checks_Label].extend(yaml_data_dict[constants.checks.Checks_Label])  # type: ignore
+        overall_checks_dict[constants.checks.Checks_Label].extend(checks_file_yaml_data_dict[constants.checks.Checks_Label])  # type: ignore
     # the check files are only validated if all of them are valid
     check_files_validated = all(checks_files_validated_list)
     # the files validated correctly; return an indicator to
