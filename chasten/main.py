@@ -9,8 +9,6 @@ from typing import Any, Dict, List, Tuple, Union
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from trogon import Trogon  # type: ignore
-from typer.main import get_group
 
 from chasten import (
     checks,
@@ -528,6 +526,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     )
     # extract the current version of the program
     chasten_version = util.get_chasten_version()
+    output.logger.debug(f"Current version of chasten: {chasten_version}")
     # create the include and exclude criteria
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
@@ -637,6 +636,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
+        output.logger.debug(f"check id: {check_id}")
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
