@@ -1,7 +1,8 @@
-import os
-import pytest
-from pathlib import Path
 from chasten.createchecks import is_valid_api_key, generate_yaml_config
+from pathlib import Path
+import pytest
+import os
+
 
 valid_api_key = os.getenv("OPEN_AI_KEY")
 test_genscript = "Write: 'Hello, World'"
@@ -10,7 +11,7 @@ file_path = "test_checks.yml"
 
 def test_valid_api_key():
     """Test is_valid_api_key function with a valid api key."""
-    global valid_api_key
+    global valid_api_key  # pylint: disable=global-statement
     if not valid_api_key:
         pytest.skip("No valid API key found in the environment variables")
 
@@ -26,7 +27,7 @@ def test_invalid_api_key():
 
 
 def test_generate_yaml_config():
-    global valid_api_key, test_genscript, file_path
+    global valid_api_key, test_genscript, file_path  # pylint: disable=global-statement
 
     if not valid_api_key:
         pytest.skip("No valid API key found in the environment variables")
