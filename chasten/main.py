@@ -442,7 +442,8 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         None,
         "--save-xml",
         "-sx",
-        help="The directory/file for the XML file(s) to be saved in.",
+        help="The directory/file for the XML file(s) to be saved in."
+    ),
     store_result: Path = typer.Option(
         None,
         "--markdown-storage",
