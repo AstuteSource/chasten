@@ -114,7 +114,7 @@ def validate_checks_file(
     checks_file_name: str,
     chasten_user_config_url_str: str,
     chasten_user_config_dir_str: str,
-    chasten_user_config_file_str: str
+    chasten_user_config_file_str: str,
 ) -> Tuple[bool, bool, Dict[str, Dict[str, Any]]]:
     """Validate a checks file."""
     checks_file_validated = False
@@ -126,9 +126,7 @@ def validate_checks_file(
             checks_file_extracted_valid,
             configuration_file_yaml_str,
             yaml_data_dict,
-        ) = extract_configuration_details_from_config_url(
-            parse_url(checks_file_name)
-        )
+        ) = extract_configuration_details_from_config_url(parse_url(checks_file_name))
         # name of checks file is a url and thus can be used for logging
         checks_file_source = checks_file_name
     # assume check file name is a file path
@@ -178,7 +176,11 @@ def validate_checks_file(
             validate.JSON_SCHEMA_CHECKS,
             verbose,
         )
-    return (checks_file_validated, checks_file_invalidates_entire_config, yaml_data_dict)
+    return (
+        checks_file_validated,
+        checks_file_invalidates_entire_config,
+        yaml_data_dict,
+    )
 
 
 def validate_configuration_files(
@@ -317,15 +319,15 @@ def validate_configuration_files(
             checks_file_invalidates_entire_config,
             checks_file_yaml_data_dict,
         ) = validate_checks_file(
-                verbose,
-                checks_file_name,
-                chasten_user_config_url_str,
-                chasten_user_config_dir_str,
-                chasten_user_config_file_str
+            verbose,
+            checks_file_name,
+            chasten_user_config_url_str,
+            chasten_user_config_dir_str,
+            chasten_user_config_file_str,
         )
         # checks file invalidates entire configuration
         # indicate invalid configuration
-        if (checks_file_invalidates_entire_config):
+        if checks_file_invalidates_entire_config:
             return (False, {})
         # keep track of the validation of all of validation
         # records for each of the check files
