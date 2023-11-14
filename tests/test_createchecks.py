@@ -1,4 +1,7 @@
-from chasten.createchecks import is_valid_api_key, generate_yaml_config  # pylint: skip-file
+from chasten.createchecks import (
+    is_valid_api_key,
+    generate_yaml_config,
+)  # pylint: skip-file
 from pathlib import Path
 import pytest
 import os
