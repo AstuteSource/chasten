@@ -1049,7 +1049,6 @@ def version():
     """🖥️  Display the version of Chasten."""
     # Get Chasten version from util file
     version_string = util.get_chasten_version()
-    output.logger.debug(f"Chasten version: {version_string}")
     # output chasten version
     typer.echo(f"chasten {version_string}")
 
