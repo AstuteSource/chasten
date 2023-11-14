@@ -705,13 +705,15 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                         file_path = save_XML / Path(str(sub_file).split(".")[0] + ".xml")
                         with open(file_path, "w") as current_file:
                             current_file.write(str(xml_root))
-        else:
+        elif os.path.isfile(input_path):
             contents = Path(input_path).read_bytes()
             _, ast = pyastgrep.files.parse_python_file(contents, input_path, auto_dedent=False)
             xml_root = pyastgrep.asts.ast_to_xml(ast, {})
             file_path = save_XML / Path(str(input_path).split(".")[0] + ".xml")
             with open(file_path, "w") as current_file:
                 current_file.write(str(xml_root))
+        else:
+            output.console.print("Sorry, failed to parse file path.")
     # Check if 'view_XML' is not None and if the file specified by 'view_XML' exists
     if view_XML is not None and os.path.exists(view_XML):
         output.console.print(":memo: Viewing XML...")
@@ -734,7 +736,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                             "utf-8"
                         )
                     )
-                else:
+                elif os.path.isdir(each_file):
                     for sub_file in os.listdir(each_file):
                         contents = Path(sub_file).read_bytes()
                         _, ast = pyastgrep.files.parse_python_file(contents, sub_file, auto_dedent=False)
@@ -747,7 +749,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                                 "utf-8"
                             )
                         )
-        else:
+        elif os.path.isfile(input_path):
             contents = Path(input_path).read_bytes()
             _, ast = pyastgrep.files.parse_python_file(contents, input_path, auto_dedent=False)
             xml_root = pyastgrep.asts.ast_to_xml(ast, {})
@@ -759,6 +761,8 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
             output.console.print(
                 pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
             )
+        else:
+            output.console.print("Sorry, failed to parse file path.")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
