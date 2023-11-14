@@ -578,8 +578,6 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         analysis_file_dir.touch()
     # create the list of directories
     valid_directories = [input_path]
-    # log list of directories
-    output.logger.debug("Valid Directories: {valid_directories}")
     # output the list of directories subject to checking
     output.console.print()
     output.console.print(f":sparkles: Analyzing Python source code in: {input_path}")
@@ -589,6 +587,11 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     output.console.print()
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
+    # check XPATH version
+    if xpath == "1.0":
+        output.logger.debug("Using XPath version 1.0")
+    else:
+        output.logger.debug("Using XPath version 2.0")
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
@@ -612,12 +615,10 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         #         paths=valid_directories, expression=current_xpath_pattern, xpath2=True
         # )
         if xpath == "1.0":
-            output.logger.debug("Using XPath version 1.0")
             match_generator = pyastgrepsearch.search_python_files(
                 paths=valid_directories, expression=current_xpath_pattern, xpath2=False
             )
         else:
-            output.logger.debug("Using XPath version 2.0")
             match_generator = pyastgrepsearch.search_python_files(
                 paths=valid_directories, expression=current_xpath_pattern, xpath2=True
             )
