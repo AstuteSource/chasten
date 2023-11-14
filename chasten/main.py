@@ -490,7 +490,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     # extract the current version of the program
     chasten_version = util.get_chasten_version()
     # display current chasten version
-    output.logger.info(f"Current Chasten version {chasten_version}")
+    output.logger.debug(f"Current Chasten version {chasten_version}")
     # create the include and exclude criteria
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
@@ -589,9 +589,9 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     check_status_list: List[bool] = []
     # check XPATH version
     if xpath == "1.0":
-        output.logger.info("Using XPath version 1.0")
+        output.logger.debug("Using XPath version 1.0")
     else:
-        output.logger.info("Using XPath version 2.0")
+        output.logger.debug("Using XPath version 2.0")
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
