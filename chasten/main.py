@@ -774,8 +774,8 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         output.console.print(":memo: Saving XML...")
         if os.path.isdir(input_path):
             for each_file in os.listdir(input_path):
-                each_file = input_path / Path(each_file)
-                if not os.path.isdir(each_file) and os.path.isfile(each_file):
+                each_file = Path(input_path) / Path(each_file)
+                if not os.path.isdir(each_file) and os.path.isfile(each_file) and str(each_file).endswith(".py"):
                     # Read the bytes of the input path and store them in the 'contents' variable
                     contents = Path(each_file).read_bytes()
                     # Use pyastgrep to parse the contents of the Python file at 'input_path'
@@ -790,18 +790,19 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                         current_file.write(str(xml_root))
                 elif os.path.isdir(each_file):
                     for sub_file in os.listdir(each_file):
-                        sub_file = Path(each_file) / Path(sub_file)
-                        contents = Path(sub_file).read_bytes()
-                        _, ast = pyastgrep.files.parse_python_file(
-                            contents, sub_file, auto_dedent=False
-                        )
-                        xml_root = pyastgrep.asts.ast_to_xml(ast, {})
-                        file_path = save_XML / Path(
-                            str(sub_file).split(".")[0] + ".xml"
-                        )
-                        with open(file_path, "w") as current_file:
-                            current_file.write(str(xml_root))
-        elif os.path.isfile(input_path):
+                        if str(sub_file).endswith(".py"):
+                            sub_file = Path(each_file) / Path(sub_file)
+                            contents = Path(sub_file).read_bytes()
+                            _, ast = pyastgrep.files.parse_python_file(
+                                contents, sub_file, auto_dedent=False
+                            )
+                            xml_root = pyastgrep.asts.ast_to_xml(ast, {})
+                            file_path = save_XML / Path(
+                                str(sub_file).split(".")[0] + ".xml"
+                            )
+                            with open(file_path, "w") as current_file:
+                                current_file.write(str(xml_root))
+        elif os.path.isfile(input_path) and str(input_path).endswith(".py"):
             contents = Path(input_path).read_bytes()
             _, ast = pyastgrep.files.parse_python_file(
                 contents, input_path, auto_dedent=False
@@ -810,8 +811,6 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
             file_path = save_XML / Path(str(input_path).split(".")[0] + ".xml")
             with open(file_path, "w") as current_file:
                 current_file.write(str(xml_root))
-        else:
-            output.console.print(":sweat: Sorry, failed to parse file path.")
     elif save_XML is not None:
         output.console.print(":sweat: Sorry, failed to parse file path.")
     # Check if 'view_XML' is not None and if the file specified by 'view_XML' exists
@@ -819,8 +818,8 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         output.console.print(":memo: Viewing XML...")
         if os.path.isdir(input_path):
             for each_file in os.listdir(input_path):
-                each_file = input_path / Path(each_file)
-                if not os.path.isdir(each_file) and os.path.isfile(each_file):
+                each_file = Path(input_path) / Path(each_file)
+                if not os.path.isdir(each_file) and os.path.isfile(each_file) and str(each_file).endswith(".py"):
                     # Read the bytes of the input path and store them in the 'contents' variable
                     contents = Path(each_file).read_bytes()
                     # Use pyastgrep to parse the contents of the Python file at 'input_path'
@@ -844,26 +843,28 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                     )
                 elif os.path.isdir(each_file):
                     for sub_file in os.listdir(each_file):
-                        contents = Path(sub_file).read_bytes()
-                        _, ast = pyastgrep.files.parse_python_file(
-                            contents, sub_file, auto_dedent=False
-                        )
-                        xml_root = pyastgrep.asts.ast_to_xml(ast, {})
-                        file_path = view_XML / Path(
-                            str(sub_file).split(".")[0] + ".xml"
-                        )
-                        with open(file_path, "w") as current_file:
-                            current_file.write(
-                                pyastgrep.xml.tostring(
-                                    xml_root, pretty_print=True
-                                ).decode("utf-8")
+                        sub_file = Path(each_file) / Path(sub_file)
+                        if str(sub_file).endswith(".py"):
+                            contents = Path(sub_file).read_bytes()
+                            _, ast = pyastgrep.files.parse_python_file(
+                                contents, sub_file, auto_dedent=False
                             )
-                        output.console.print(
-                            pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
-                                "utf-8"
+                            xml_root = pyastgrep.asts.ast_to_xml(ast, {})
+                            file_path = view_XML / Path(
+                                str(sub_file).split(".")[0] + ".xml"
                             )
-                        )
-        elif os.path.isfile(input_path):
+                            with open(file_path, "w") as current_file:
+                                current_file.write(
+                                    pyastgrep.xml.tostring(
+                                        xml_root, pretty_print=True
+                                    ).decode("utf-8")
+                                )
+                            output.console.print(
+                                pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
+                                    "utf-8"
+                                )
+                            )
+        elif os.path.isfile(input_path) and str(input_path).endswith(".py"):
             contents = Path(input_path).read_bytes()
             _, ast = pyastgrep.files.parse_python_file(
                 contents, input_path, auto_dedent=False
@@ -877,8 +878,6 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
             output.console.print(
                 pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
             )
-        else:
-            output.console.print(":sweat: Sorry, failed to parse file path.")
     elif view_XML is not None:
         output.console.print(":sweat: Sorry, failed to parse file path.")
     # confirm whether or not all of the checks passed
