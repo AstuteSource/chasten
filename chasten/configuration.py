@@ -116,6 +116,7 @@ def validate_checks_file(
     chasten_user_config_dir_str: str,
     chasten_user_config_file_str: str
 ) -> Tuple[bool, bool]:
+    """Validate a checks file."""
     checks_file_validated = False
     checks_file_invalidates_entire_config = False
     # specified check file is URL
@@ -190,100 +191,97 @@ def validate_configuration_files(
     chasten_user_config_url_str = ""
     chasten_user_config_dir_str = ""
     chasten_user_config_file_str = ""
-    # there is a specified configuration directory path or url;
-    # this overrides the use of the configuration files that
-    # may exist inside of the platform-specific directory
-    if config:
-        # the configuration file or url exists and thus it should
-        # be used instead of the platform-specific directory
 
-        # input configuration is valid URL
-        if util.is_url(config):
-            # re-parse input config so it is of type URL
-            chasten_user_config_url_str = str(parse_url(config))
-            output.console.print(
-                ":sparkles: Configuration URL:"
-                + constants.markers.Space
-                + chasten_user_config_url_str
-                + constants.markers.Newline
-            )
-            # extract the configuration details
-            (
-                configuration_valid,
-                configuration_file_yaml_str,
-                yaml_data_dict,
-            ) = extract_configuration_details_from_config_url(
-                parse_url(chasten_user_config_url_str)
-            )
-            configuration_file_source = chasten_user_config_url_str
-        # input configuration is valid file path
-        elif Path(config).exists():
-            # input configuration is a directory
-            if Path(config).is_dir():
-                # re-parse input config so it is of type Path
-                chasten_user_config_dir_str = str(Path(config))
-            # input configuration is a file
-            elif Path(config).is_file():
-                # re-parse input config so it is of type Path
-                config_as_path = Path(config)
-                # get directory containing config file
-                chasten_user_config_dir_str = str(
-                    Path(*config_as_path.parts[: len(config_as_path.parts) - 1])
-                )
-                # isolate config file
-                chasten_user_config_file_str = str(config_as_path.parts[-1])
-            else:
-                output.logger.error(
-                    "\nGiven configuration was a Path, but was the wrong file type.\n"
-                )
-                return (False, {})
-            output.console.print(
-                ":sparkles: Configuration directory:"
-                + constants.markers.Space
-                + chasten_user_config_dir_str
-                + constants.markers.Newline
-            )
-            # optional argument if chasten_user_config_file_str is not empty
-            # argument will be supplied as unpacked dict
-            chasten_user_config_file_str_argument = {}
-            if chasten_user_config_file_str != "":
-                chasten_user_config_file_str_argument[
-                    "configuration_file"
-                ] = chasten_user_config_file_str
-            # extract the configuration details
-            (
-                configuration_valid,
-                configuration_file_path_str,
-                configuration_file_yaml_str,
-                yaml_data_dict,
-            ) = extract_configuration_details_from_config_dir(
-                Path(chasten_user_config_dir_str), **chasten_user_config_file_str_argument
-            )
-            # it was not possible to extract the configuration details and
-            # thus this function should return immediately with False
-            # to indicate the failure and an empty configuration dictionary
-            if not configuration_valid:
-                return (False, {})
-            # create a visualization of the user's configuration directory;
-            # display details about the configuration directory in console
-            display_configuration_directory(chasten_user_config_dir_str, verbose)
-            configuration_file_source = chasten_user_config_dir_str
-            # the configuration file does not exist and thus,
-            # since config was explicit, it is not possible
-            # to validate the configuration file
-        else:
-            output.logger.error("\nGiven configuration was not a valid Path or URL.\n")
-            return (False, {})
-    # there is no configuration file specified and thus
-    # this function should access the platform-specific
-    # configuration directory detected by platformdirs
-    else:
+    if config == "":
+        # there is no configuration file specified and thus
+        # this function should access the platform-specific
+        # configuration directory detected by platformdirs
         # detect and store the platform-specific user
         # configuration directory by default
         chasten_user_config_dir_str = user_config_dir(
             application_name=constants.chasten.Application_Name,
             application_author=constants.chasten.Application_Author,
         )
+    # there is a specified configuration directory path or url;
+    # this overrides the use of the configuration files that
+    # may exist inside of the platform-specific directory.
+    # input configuration is valid URL
+    elif util.is_url(config):
+        # re-parse input config so it is of type URL
+        chasten_user_config_url_str = str(parse_url(config))
+        output.console.print(
+            ":sparkles: Configuration URL:"
+            + constants.markers.Space
+            + chasten_user_config_url_str
+            + constants.markers.Newline
+        )
+        # extract the configuration details
+        (
+            configuration_valid,
+            configuration_file_yaml_str,
+            yaml_data_dict,
+        ) = extract_configuration_details_from_config_url(
+            parse_url(chasten_user_config_url_str)
+        )
+        configuration_file_source = chasten_user_config_url_str
+    # input configuration exists and is valid file path
+    elif Path(config).exists():
+        # input configuration is a directory
+        if Path(config).is_dir():
+            # re-parse input config so it is of type Path
+            chasten_user_config_dir_str = str(Path(config))
+        # input configuration is a file
+        elif Path(config).is_file():
+            # re-parse input config so it is of type Path
+            config_as_path = Path(config)
+            # get directory containing config file
+            chasten_user_config_dir_str = str(
+                Path(*config_as_path.parts[: len(config_as_path.parts) - 1])
+            )
+            # isolate config file
+            chasten_user_config_file_str = str(config_as_path.parts[-1])
+        else:
+            output.logger.error(
+                "\nGiven configuration was a Path, but was the wrong file type.\n"
+            )
+            return (False, {})
+        output.console.print(
+            ":sparkles: Configuration directory:"
+            + constants.markers.Space
+            + chasten_user_config_dir_str
+            + constants.markers.Newline
+        )
+        # optional argument if chasten_user_config_file_str is not empty
+        # argument will be supplied as unpacked dict
+        chasten_user_config_file_str_argument = {}
+        if chasten_user_config_file_str != "":
+            chasten_user_config_file_str_argument[
+                "configuration_file"
+            ] = chasten_user_config_file_str
+        # extract the configuration details
+        (
+            configuration_valid,
+            configuration_file_path_str,
+            configuration_file_yaml_str,
+            yaml_data_dict,
+        ) = extract_configuration_details_from_config_dir(
+            Path(chasten_user_config_dir_str), **chasten_user_config_file_str_argument
+        )
+        # it was not possible to extract the configuration details and
+        # thus this function should return immediately with False
+        # to indicate the failure and an empty configuration dictionary
+        if not configuration_valid:
+            return (False, {})
+        # create a visualization of the user's configuration directory;
+        # display details about the configuration directory in console
+        display_configuration_directory(chasten_user_config_dir_str, verbose)
+        configuration_file_source = chasten_user_config_dir_str
+        # the configuration file does not exist and thus,
+        # since config was explicit, it is not possible
+        # to validate the configuration file
+    else:
+        output.logger.error("\nGiven configuration was not a valid Path or URL.\n")
+        return (False, {})
 
     # Summary of the remaining steps:
     # --> Step 1: Validate the main configuration file
