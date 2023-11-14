@@ -35,12 +35,13 @@
           THEN substr(context, 1, instr(context, '[') - 1)
           ELSE
           context
+          JSON.stringify(obj, projectname)
           END AS stripped_text
           FROM
           context;"
         },
       }
     }
-
+    
   }
 }
