@@ -68,7 +68,7 @@ def join_and_preserve(data, start, end):
     return constants.markers.Newline.join(data[start:end])
 
 
-def total_amount_passed(analyze_result, count_total) -> tuple[int, int, float]:
+def total_amount_passed(analyze_result, count_total: int) -> tuple[int, int, float]:
     """Calculate amount of checks passed in analyze"""
     try:
         # iterate through check sources to find checks passed

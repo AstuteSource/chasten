@@ -761,7 +761,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     elapsed_time = end_time - start_time
 
     if not all_checks_passed:
-        output.console.print("\n:sweat: At least one check did not pass.")
+        output.console.print(":sweat: At least one check did not pass.")
         if store_result:
             # writes results of analyze into a markdown file
             analysis_file_dir.write_text(analysis_result, encoding="utf-8")

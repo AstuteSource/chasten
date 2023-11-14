@@ -32,6 +32,12 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
         assert str_answer == "No"
 
 
+@given(analyze_result=strategies.builds(),count_total=strategies.integers())
+@pytest.mark.fuzz
+def test_total_amount_passed(analyze_result,count_total: int)
+    util.total_amount_passed(analyze_result,count_total)
+
+
 OpSystem = util.get_OS()
 datasette_exec = constants.datasette.Datasette_Executable
 
