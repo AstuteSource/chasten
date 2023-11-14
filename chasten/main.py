@@ -4,7 +4,11 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import pyastgrep  # type: ignore
 import typer
@@ -13,21 +17,19 @@ from pyastgrep import search as pyastgrepsearch  # type: ignore
 from trogon import Trogon  # type: ignore
 from typer.main import get_group
 
-from chasten import (
-    checks,
-    configuration,
-    constants,
-    database,
-    debug,
-    enumerations,
-    filesystem,
-    output,
-    process,
-    results,
-    server,
-    util,
-    validate,
-)
+from chasten import checks
+from chasten import configuration
+from chasten import constants
+from chasten import database
+from chasten import debug
+from chasten import enumerations
+from chasten import filesystem
+from chasten import output
+from chasten import process
+from chasten import results
+from chasten import server
+from chasten import util
+from chasten import validate
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
@@ -442,7 +444,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         None,
         "--save-xml",
         "-sx",
-        help="The directory/file for the XML file(s) to be saved in."
+        help="The directory/file for the XML file(s) to be saved in.",
     ),
     store_result: Path = typer.Option(
         None,
@@ -777,7 +779,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                     # Read the bytes of the input path and store them in the 'contents' variable
                     contents = Path(each_file).read_bytes()
                     # Use pyastgrep to parse the contents of the Python file at 'input_path'
-                    _, ast = pyastgrep.files.parse_python_file(contents, each_file, auto_dedent=False)
+                    _, ast = pyastgrep.files.parse_python_file(
+                        contents, each_file, auto_dedent=False
+                    )
                     # Convert the Abstract Syntax Tree (AST) into an XML representation
                     xml_root = pyastgrep.asts.ast_to_xml(ast, {})
                     # Convert the XML to a string and write it to a file
@@ -788,14 +792,20 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                     for sub_file in os.listdir(each_file):
                         sub_file = Path(each_file) / Path(sub_file)
                         contents = Path(sub_file).read_bytes()
-                        _, ast = pyastgrep.files.parse_python_file(contents, sub_file, auto_dedent=False)
+                        _, ast = pyastgrep.files.parse_python_file(
+                            contents, sub_file, auto_dedent=False
+                        )
                         xml_root = pyastgrep.asts.ast_to_xml(ast, {})
-                        file_path = save_XML / Path(str(sub_file).split(".")[0] + ".xml")
+                        file_path = save_XML / Path(
+                            str(sub_file).split(".")[0] + ".xml"
+                        )
                         with open(file_path, "w") as current_file:
                             current_file.write(str(xml_root))
         elif os.path.isfile(input_path):
             contents = Path(input_path).read_bytes()
-            _, ast = pyastgrep.files.parse_python_file(contents, input_path, auto_dedent=False)
+            _, ast = pyastgrep.files.parse_python_file(
+                contents, input_path, auto_dedent=False
+            )
             xml_root = pyastgrep.asts.ast_to_xml(ast, {})
             file_path = save_XML / Path(str(input_path).split(".")[0] + ".xml")
             with open(file_path, "w") as current_file:
@@ -812,13 +822,19 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                     # Read the bytes of the input path and store them in the 'contents' variable
                     contents = Path(each_file).read_bytes()
                     # Use pyastgrep to parse the contents of the Python file at 'input_path'
-                    _, ast = pyastgrep.files.parse_python_file(contents, each_file, auto_dedent=False)
+                    _, ast = pyastgrep.files.parse_python_file(
+                        contents, each_file, auto_dedent=False
+                    )
                     # Convert the Abstract Syntax Tree (AST) into an XML representation
                     xml_root = pyastgrep.asts.ast_to_xml(ast, {})
                     # Convert the XML to a string and write it to a file
                     file_path = view_XML / Path(str(each_file).split(".")[0] + ".xml")
                     with open(file_path, "w") as current_file:
-                        current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                        current_file.write(
+                            pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
+                                "utf-8"
+                            )
+                        )
                     output.console.print(
                         pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
                             "utf-8"
@@ -827,11 +843,19 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                 elif os.path.isdir(each_file):
                     for sub_file in os.listdir(each_file):
                         contents = Path(sub_file).read_bytes()
-                        _, ast = pyastgrep.files.parse_python_file(contents, sub_file, auto_dedent=False)
+                        _, ast = pyastgrep.files.parse_python_file(
+                            contents, sub_file, auto_dedent=False
+                        )
                         xml_root = pyastgrep.asts.ast_to_xml(ast, {})
-                        file_path = view_XML / Path(str(sub_file).split(".")[0] + ".xml")
+                        file_path = view_XML / Path(
+                            str(sub_file).split(".")[0] + ".xml"
+                        )
                         with open(file_path, "w") as current_file:
-                            current_file.write(pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8"))
+                            current_file.write(
+                                pyastgrep.xml.tostring(
+                                    xml_root, pretty_print=True
+                                ).decode("utf-8")
+                            )
                         output.console.print(
                             pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
                                 "utf-8"
@@ -839,7 +863,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                         )
         elif os.path.isfile(input_path):
             contents = Path(input_path).read_bytes()
-            _, ast = pyastgrep.files.parse_python_file(contents, input_path, auto_dedent=False)
+            _, ast = pyastgrep.files.parse_python_file(
+                contents, input_path, auto_dedent=False
+            )
             xml_root = pyastgrep.asts.ast_to_xml(ast, {})
             file_path = view_XML / Path(str(input_path).split(".")[0] + ".xml")
             with open(file_path, "w") as current_file:
