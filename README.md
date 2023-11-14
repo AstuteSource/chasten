@@ -238,6 +238,21 @@ CSV files that correspond to each of the tables inside of the database.
 You can learn more about the `integrate` sub-command by typing `chasten
 integrate --help`.
 
+## 💠 Verbose Output
+
+When utilizing the `chasten` command, appending this `--verbose` flag can significantly enhance your troubleshooting experience and provide a detailed understanding of the tool's functionality. Here is an example with `chasten analyze lazytracker`:
+
+```shell
+chasten analyze lazytracker \
+        --config <path to the chasten-configuration/ directory> \
+        --search-path <path to the lazytracker/ directory> \
+        --save-directory <path to the subject-data/lazytracker/ directory> \
+        --save
+        --verbose
+ ```
+
+Upon executing this command, you can expect the output to contain informative messages such as `✨ Matching source code:` indicating that the tool is actively comparing the source code against the specified patterns. Additionally, you will receive detailed match results, providing insights into the identified checks.
+
 ## 🌄 Results
 
 If you want to create an interactive analysis dashboard that uses 📦

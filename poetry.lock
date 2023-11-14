@@ -2896,21 +2896,6 @@ files = [
 ]
 
 [[package]]
-name = "trogon"
-version = "0.5.0"
-description = "Automatically generate a Textual TUI for your Click CLI"
-optional = false
-python-versions = ">=3.7,<4.0"
-files = [
-    {file = "trogon-0.5.0-py3-none-any.whl", hash = "sha256:987d2195c1dd2f93c50e555063a9de57edbc5906ce20ee39081343ff194952c1"},
-    {file = "trogon-0.5.0.tar.gz", hash = "sha256:61a57f0f1a38227d90601cd020f46960be8e36947b5e56c6932c2e01ecc5042a"},
-]
-
-[package.dependencies]
-click = ">=8.0.0"
-textual = ">=0.26.0"
-
-[[package]]
 name = "typer"
 version = "0.9.0"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
@@ -3105,4 +3090,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ce0e4a4dad868f55f439e99ceb5f0cfb2dd084a928a401deaea4d5fdf3138bca"
+content-hash = "c95c2e6db4113c81c109c18300760622feb47705f1cf1e3d441c5c38913225c4"

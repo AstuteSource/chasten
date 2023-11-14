@@ -8,8 +8,6 @@ from typing import Dict, List, Tuple, Union
 
 import typer
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from trogon import Trogon  # type: ignore
-from typer.main import get_group
 
 from chasten import (
     checks,
@@ -98,18 +96,6 @@ def display_serve_or_publish_details(
 # ---
 # Start region: Command-line interface functions {{{
 # ---
-
-
-@cli.command()
-def interact(ctx: typer.Context) -> None:
-    """🚀 Interactively configure and run."""
-    # construct a Trogon object; this will create a
-    # terminal-user interface that will allow the
-    # person using chasten to pick a mode and then
-    # fill-in command-line arguments and then
-    # run the tool; note that this line of code
-    # cannot be easily tested in an automated fashion
-    Trogon(get_group(cli), click_context=ctx).run()
 
 
 @cli.command()
@@ -296,6 +282,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     )
     # extract the current version of the program
     chasten_version = util.get_chasten_version()
+    output.logger.debug(f"Current version of chasten: {chasten_version}")
     # create the include and exclude criteria
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
@@ -407,6 +394,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
+        output.logger.debug(f"check id: {check_id}")
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
