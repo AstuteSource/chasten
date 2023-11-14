@@ -109,6 +109,77 @@ def display_configuration_directory(
     output.opt_print_log(verbose, empty="")
 
 
+def validate_checks_file(
+    verbose: bool,
+    checks_file_name: str,
+    chasten_user_config_url_str: str,
+    chasten_user_config_dir_str: str,
+    chasten_user_config_file_str: str
+) -> Tuple[bool, bool]:
+    checks_file_validated = False
+    checks_file_invalidates_entire_config = False
+    # specified check file is URL
+    if util.is_url(checks_file_name):
+        # extract the configuration details
+        (
+            checks_file_extracted_valid,
+            configuration_file_yaml_str,
+            yaml_data_dict,
+        ) = extract_configuration_details_from_config_url(
+            parse_url(checks_file_name)
+        )
+        # name of checks file is a url and thus can be used for logging
+        checks_file_source = checks_file_name
+    # assume check file name is a file path
+    # will not support checks files being local paths
+    # if config file is a URL
+    elif chasten_user_config_url_str != "":
+        output.logger.error(
+            f"\nChecks file directive was a Path when config was a URL (given: '{checks_file_name}')\n"
+        )
+        checks_file_validated = False
+        checks_file_invalidates_entire_config = True
+        return (checks_file_validated, checks_file_invalidates_entire_config)
+    # checks file exists in local filesystem
+    elif (Path(chasten_user_config_dir_str) / Path(checks_file_name)).exists():
+        # extract the configuration details
+        (
+            checks_file_extracted_valid,
+            configuration_file_path_str,
+            configuration_file_yaml_str,
+            yaml_data_dict,
+        ) = extract_configuration_details_from_config_dir(
+            Path(chasten_user_config_dir_str), checks_file_name
+        )
+        # configuration path returned from extraction function can be used for logging
+        checks_file_source = configuration_file_path_str
+    # checks file was not valid
+    else:
+        output.logger.error(
+            f"\nChecks file directive was not a valid Path or URL (given: '{checks_file_name}')\n"
+        )
+        checks_file_validated = False
+        checks_file_invalidates_entire_config = True
+        return (checks_file_validated, checks_file_invalidates_entire_config)
+    # the checks file could not be extracted in a valid
+    # fashion and thus there is no need to continue the
+    # validation of this file or any of the other check file
+    if not checks_file_extracted_valid:
+        checks_file_validated = False
+    # the checks file could be extract and thus the
+    # function should proceed to validate a checks configuration file
+    else:
+        # validate checks file
+        checks_file_validated = validate.validate_file(
+            checks_file_source,
+            configuration_file_yaml_str,
+            yaml_data_dict,
+            validate.JSON_SCHEMA_CHECKS,
+            verbose,
+        )
+    return (checks_file_validated, checks_file_invalidates_entire_config)
+
+
 def validate_configuration_files(
     config: str,
     verbose: bool = False,
@@ -130,6 +201,21 @@ def validate_configuration_files(
         if util.is_url(config):
             # re-parse input config so it is of type URL
             chasten_user_config_url_str = str(parse_url(config))
+            output.console.print(
+                ":sparkles: Configuration URL:"
+                + constants.markers.Space
+                + chasten_user_config_url_str
+                + constants.markers.Newline
+            )
+            # extract the configuration details
+            (
+                configuration_valid,
+                configuration_file_yaml_str,
+                yaml_data_dict,
+            ) = extract_configuration_details_from_config_url(
+                parse_url(chasten_user_config_url_str)
+            )
+            configuration_file_source = chasten_user_config_url_str
         # input configuration is valid file path
         elif Path(config).exists():
             # input configuration is a directory
@@ -150,9 +236,41 @@ def validate_configuration_files(
                 output.logger.error(
                     "\nGiven configuration was a Path, but was the wrong file type.\n"
                 )
-        # the configuration file does not exist and thus,
-        # since config was explicit, it is not possible
-        # to validate the configuration file
+                return (False, {})
+            output.console.print(
+                ":sparkles: Configuration directory:"
+                + constants.markers.Space
+                + chasten_user_config_dir_str
+                + constants.markers.Newline
+            )
+            # optional argument if chasten_user_config_file_str is not empty
+            # argument will be supplied as unpacked dict
+            chasten_user_config_file_str_argument = {}
+            if chasten_user_config_file_str != "":
+                chasten_user_config_file_str_argument[
+                    "configuration_file"
+                ] = chasten_user_config_file_str
+            # extract the configuration details
+            (
+                configuration_valid,
+                configuration_file_path_str,
+                configuration_file_yaml_str,
+                yaml_data_dict,
+            ) = extract_configuration_details_from_config_dir(
+                Path(chasten_user_config_dir_str), **chasten_user_config_file_str_argument
+            )
+            # it was not possible to extract the configuration details and
+            # thus this function should return immediately with False
+            # to indicate the failure and an empty configuration dictionary
+            if not configuration_valid:
+                return (False, {})
+            # create a visualization of the user's configuration directory;
+            # display details about the configuration directory in console
+            display_configuration_directory(chasten_user_config_dir_str, verbose)
+            configuration_file_source = chasten_user_config_dir_str
+            # the configuration file does not exist and thus,
+            # since config was explicit, it is not possible
+            # to validate the configuration file
         else:
             output.logger.error("\nGiven configuration was not a valid Path or URL.\n")
             return (False, {})
@@ -166,57 +284,6 @@ def validate_configuration_files(
             application_name=constants.chasten.Application_Name,
             application_author=constants.chasten.Application_Author,
         )
-
-    # input config is a URL
-    if chasten_user_config_url_str:
-        output.console.print(
-            ":sparkles: Configuration URL:"
-            + constants.markers.Space
-            + chasten_user_config_url_str
-            + constants.markers.Newline
-        )
-        # extract the configuration details
-        (
-            configuration_valid,
-            configuration_file_yaml_str,
-            yaml_data_dict,
-        ) = extract_configuration_details_from_config_url(
-            parse_url(chasten_user_config_url_str)
-        )
-        configuration_file_source = chasten_user_config_url_str
-    # input config is a Path
-    elif chasten_user_config_dir_str:
-        output.console.print(
-            ":sparkles: Configuration directory:"
-            + constants.markers.Space
-            + chasten_user_config_dir_str
-            + constants.markers.Newline
-        )
-        # optional argument if chasten_user_config_file_str is not empty
-        # argument will be supplied as unpacked dict
-        chasten_user_config_file_str_argument = {}
-        if chasten_user_config_file_str != "":
-            chasten_user_config_file_str_argument[
-                "configuration_file"
-            ] = chasten_user_config_file_str
-        # extract the configuration details
-        (
-            configuration_valid,
-            configuration_file_path_str,
-            configuration_file_yaml_str,
-            yaml_data_dict,
-        ) = extract_configuration_details_from_config_dir(
-            Path(chasten_user_config_dir_str), **chasten_user_config_file_str_argument
-        )
-        # it was not possible to extract the configuration details and
-        # thus this function should return immediately with False
-        # to indicate the failure and an empty configuration dictionary
-        if not configuration_valid:
-            return (False, {})
-        # create a visualization of the user's configuration directory;
-        # display details about the configuration directory in console
-        display_configuration_directory(chasten_user_config_dir_str, verbose)
-        configuration_file_source = chasten_user_config_dir_str
 
     # Summary of the remaining steps:
     # --> Step 1: Validate the main configuration file
@@ -247,63 +314,23 @@ def validate_configuration_files(
     # initialize the dictionary to contain the empty list
     overall_checks_dict[constants.checks.Checks_Label] = overall_checks_list
     for checks_file_name in checks_file_name_list:
-        # specified check file is URL
-        if util.is_url(checks_file_name):
-            # extract the configuration details
-            (
-                checks_file_extracted_valid,
-                configuration_file_yaml_str,
-                yaml_data_dict,
-            ) = extract_configuration_details_from_config_url(
-                parse_url(checks_file_name)
-            )
-            # name of checks file is a url and thus can be used for logging
-            checks_file_source = checks_file_name
-        # assume check file name is a file path
-        elif (Path(chasten_user_config_dir_str) / Path(checks_file_name)).exists():
-            # will not support checks files being local paths
-            # if config file is a URL
-            if isinstance(config, Url):
-                output.logger.error(
-                    f"\nChecks file directive was a Path when config was a URL (given: '{checks_file_name}')\n"
-                )
-                return (False, {})
-            # extract the configuration details
-            (
-                checks_file_extracted_valid,
-                configuration_file_path_str,
-                configuration_file_yaml_str,
-                yaml_data_dict,
-            ) = extract_configuration_details_from_config_dir(
-                Path(chasten_user_config_dir_str), checks_file_name
-            )
-            # configuration path returned from extraction function can be used for logging
-            checks_file_source = configuration_file_path_str
-        else:
-            # checks file was not valid
-            output.logger.error(
-                f"\nChecks file directive was not a valid Path or URL (given: '{checks_file_name}')\n"
-            )
-            return (False, {})
-        # the checks file could not be extracted in a valid
-        # fashion and thus there is no need to continue the
-        # validation of this file or any of the other check file
-        if not checks_file_extracted_valid:
-            check_file_validated = False
-        # the checks file could be extract and thus the
-        # function should proceed to validate a checks configuration file
-        else:
-            # validate checks file
-            check_file_validated = validate.validate_file(
-                checks_file_source,
-                configuration_file_yaml_str,
-                yaml_data_dict,
-                validate.JSON_SCHEMA_CHECKS,
+        (
+            checks_file_validated,
+            checks_file_invalidates_entire_config,
+        ) = validate_checks_file(
                 verbose,
-            )
+                checks_file_name,
+                chasten_user_config_url_str,
+                chasten_user_config_dir_str,
+                chasten_user_config_file_str
+        )
+        # checks file invalidates entire configuration
+        # indicate invalid configuration
+        if (checks_file_invalidates_entire_config):
+            return (False, {})
         # keep track of the validation of all of validation
         # records for each of the check files
-        checks_files_validated_list.append(check_file_validated)
+        checks_files_validated_list.append(checks_file_validated)
         # add the listing of checks from the current yaml_data_dict to
         # the overall listing of checks in the main dictionary
         overall_checks_dict[constants.checks.Checks_Label].extend(yaml_data_dict[constants.checks.Checks_Label])  # type: ignore
