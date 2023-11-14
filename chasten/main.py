@@ -811,7 +811,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
             with open(file_path, "w") as current_file:
                 current_file.write(str(xml_root))
         else:
-            output.console.print("Sorry, failed to parse file path.")
+            output.console.print(":sweat: Sorry, failed to parse file path.")
+    elif save_XML is not None:
+        output.console.print(":sweat: Sorry, failed to parse file path.")
     # Check if 'view_XML' is not None and if the file specified by 'view_XML' exists
     if view_XML is not None and os.path.exists(view_XML):
         output.console.print(":memo: Viewing XML...")
@@ -876,7 +878,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                 pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
             )
         else:
-            output.console.print("Sorry, failed to parse file path.")
+            output.console.print(":sweat: Sorry, failed to parse file path.")
+    elif view_XML is not None:
+        output.console.print(":sweat: Sorry, failed to parse file path.")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
