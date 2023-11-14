@@ -3,7 +3,7 @@
 import shutil
 
 import pytest
-from hypothesis import given, strategies, provisional
+from hypothesis import given, provisional, strategies
 
 from chasten import constants, util
 
@@ -37,7 +37,7 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
 def test_is_url_correct(url: str) -> None:
     """Use Hypothesis to confirm that URLs are correctly recognized/unrecognized."""
     result = util.is_url(url=url)
-    assert result == True
+    assert result is True
 
 
 OpSystem = util.get_OS()

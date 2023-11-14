@@ -12,7 +12,6 @@ from chasten.checks import (
 )
 from chasten.validate import JSON_SCHEMA_CHECKS
 
-
 JSON_SCHEMA_COUNT = {
     "type": "object",
     "properties": {
