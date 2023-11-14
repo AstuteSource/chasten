@@ -9,8 +9,6 @@ from typing import Any, Dict, List, Tuple, Union
 import typer
 import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from trogon import Trogon  # type: ignore
-from typer.main import get_group
 
 from chasten import (
     checks,
@@ -284,18 +282,6 @@ def display_serve_or_publish_details(
 # ---
 # Start region: Command-line interface functions {{{
 # ---
-
-
-@cli.command()
-def interact(ctx: typer.Context) -> None:
-    """🚀 Interactively configure and run."""
-    # construct a Trogon object; this will create a
-    # terminal-user interface that will allow the
-    # person using chasten to pick a mode and then
-    # fill-in command-line arguments and then
-    # run the tool; note that this line of code
-    # cannot be easily tested in an automated fashion
-    Trogon(get_group(cli), click_context=ctx).run()
 
 
 @cli.command()
