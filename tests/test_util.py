@@ -38,9 +38,9 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
 def test_total_amount_passed(check_status_list: list[bool]):
     stats = util.total_amount_passed(check_status_list)
 
-    assert 0 <= stats[2] <= 100
+    assert constants.markers.Zero <= stats[2] <= constants.markers.Percent_Multiplier
     assert stats[0] <= stats[1]
- 
+
 
 OpSystem = util.get_OS()
 datasette_exec = constants.datasette.Datasette_Executable
