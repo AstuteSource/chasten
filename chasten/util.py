@@ -72,10 +72,10 @@ def total_amount_passed(analyze_result, count_total: int) -> tuple[int, int, flo
     """Calculate amount of checks passed in analyze"""
     try:
         # iterate through check sources to find checks passed
-        list_passed = [{x.check.id:x.check.passed} for x in analyze_result.sources]
+        list_passed = set([x.check.id for x in analyze_result.sources if x.check.passed == True])
         output.console.print(list_passed)
         # set variables to count true checks and total counts
-        count_true = list_passed.count(True)
+        count_true = len(list_passed)        
         # return tuple of checks passed, total checks, percentage of checks passed
         return (count_true, count_total, (count_true / count_total) * 100)
     # return exception when dividing by zero
