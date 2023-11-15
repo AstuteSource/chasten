@@ -19,7 +19,7 @@
     - /home/caleb/Allegheny/CMP203/chasten/chasten/checks.py - 9 matches
     - /home/caleb/Allegheny/CMP203/chasten/chasten/configuration.py - 5 matches
     - /home/caleb/Allegheny/CMP203/chasten/chasten/output.py - 12 matches
-    - /home/caleb/Allegheny/CMP203/chasten/tests/test_util.py - 4 matches
+    - /home/caleb/Allegheny/CMP203/chasten/tests/test_util.py - 5 matches
     - /home/caleb/Allegheny/CMP203/chasten/tests/test_debug.py - 8 matches
     - /home/caleb/Allegheny/CMP203/chasten/tests/test_configuration.py - 3 matches
     - /home/caleb/Allegheny/CMP203/chasten/tests/test_main.py - 14 matches

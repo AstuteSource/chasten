@@ -35,8 +35,8 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
 
 @given(check_status_list=st.lists(st.integers()))
 @pytest.mark.fuzz
-def test_total_amount_passed(analyze_result,count_total: int)
-    util.total_amount_passed(analyze_result,count_total)
+def test_total_amount_passed(check_status: list[bool]):
+    util.total_amount_passed(check_status)
 
 
 OpSystem = util.get_OS()
