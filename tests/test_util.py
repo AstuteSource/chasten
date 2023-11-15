@@ -36,8 +36,11 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
 @given(check_status_list=st.lists(st.booleans()))
 @pytest.mark.fuzz
 def test_total_amount_passed(check_status_list: list[bool]):
-    util.total_amount_passed(check_status_list)
+    stats = util.total_amount_passed(check_status_list)
 
+    assert 0 <= stats[2] <= 100
+    assert stats[0] <= stats[1]
+ 
 
 OpSystem = util.get_OS()
 datasette_exec = constants.datasette.Datasette_Executable
