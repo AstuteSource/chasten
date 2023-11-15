@@ -37,6 +37,7 @@ CHECK_STORAGE = constants.chasten.App_Storage
 API_KEY_STORAGE = constants.chasten.API_Key_Storage
 ANALYSIS_FILE = constants.chasten.Analyze_Storage
 
+
 # ---
 # Region: Helper functions {{{
 # ---
@@ -285,18 +286,6 @@ def display_serve_or_publish_details(
 # ---
 # Start region: Command-line interface functions {{{
 # ---
-
-
-@cli.command()
-def interact(ctx: typer.Context) -> None:
-    """🚀 Interactively configure and run."""
-    # construct a Trogon object; this will create a
-    # terminal-user interface that will allow the
-    # person using chasten to pick a mode and then
-    # fill-in command-line arguments and then
-    # run the tool; note that this line of code
-    # cannot be easily tested in an automated fashion
-    Trogon(get_group(cli), click_context=ctx).run()
 
 
 @cli.command()
