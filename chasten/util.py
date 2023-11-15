@@ -4,7 +4,7 @@ import importlib.metadata
 import platform
 import sys
 
-from chasten import constants,output
+from chasten import constants
 
 checkmark_unicode = "\u2713"
 xmark_unicode = "\u2717"
@@ -73,7 +73,6 @@ def total_amount_passed(analyze_result, count_total: int) -> tuple[int, int, flo
     try:
         # iterate through check sources to find checks passed
         list_passed = set([x.check.id for x in analyze_result.sources if x.check.passed == True])
-        output.console.print(list_passed)
         # set variables to count true checks and total counts
         count_true = len(list_passed)        
         # return tuple of checks passed, total checks, percentage of checks passed
