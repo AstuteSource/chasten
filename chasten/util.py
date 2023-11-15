@@ -70,11 +70,14 @@ def join_and_preserve(data, start, end):
 
 def total_amount_passed(check_status_list: list[bool]) -> tuple[int, int, float]:
     """Calculate amount of checks passed in analyze"""
+    # attempt calculations for percentage of checks passed
     try:
-        count_total = len(check_status_list)        
+        # calculate total amount of checks in list
+        count_total = len(check_status_list)      
+        # count total amount of checks counted as true  
         count_passed = check_status_list.count(True)
         # return tuple of checks passed, total checks, percentage of checks passed
         return (count_passed, count_total, (count_passed / count_total) * 100)
-    # return exception when dividing by zero
+    # return exception of zeros when dividing by zero
     except ZeroDivisionError:
         return (0, 0, 0.0)
