@@ -102,6 +102,7 @@ def is_url(url: str) -> bool:
     # determine if parsed and reconstructed url matches original
     return str(parse_url(url)).lower() == url_reassembled.lower()
 
+
 def total_amount_passed(check_status_list: list[bool]) -> tuple[int, int, float]:
     """Calculate amount of checks passed in analyze"""
     # attempt calculations for percentage of checks passed
