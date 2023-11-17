@@ -32,7 +32,7 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
     else:
         assert str_answer == "No"
 
-        
+
 @given(url=provisional.urls())
 @pytest.mark.fuzz
 def test_is_url_correct(url: str) -> None:
@@ -40,7 +40,7 @@ def test_is_url_correct(url: str) -> None:
     result = util.is_url(url=url)
     assert result is True
 
-    
+
 @given(check_status_list=st.lists(st.booleans()))
 @pytest.mark.fuzz
 def test_total_amount_passed(check_status_list: list[bool]):
@@ -48,7 +48,6 @@ def test_total_amount_passed(check_status_list: list[bool]):
 
     assert constants.markers.Zero <= stats[2] <= constants.markers.Percent_Multiplier
     assert stats[0] <= stats[1]
-
 
 
 OpSystem = util.get_OS()
