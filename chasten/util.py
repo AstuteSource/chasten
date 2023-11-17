@@ -75,7 +75,7 @@ def is_url(url: str) -> bool:
     # parse input url
     url_parsed = parse_url(url)
     # only allow http and https
-    if not url_parsed.scheme in ["http", "https"]:
+    if url_parsed.scheme not in ["http", "https"]:
         return False
     # only input characters for initiatig query and/or fragments if necessary
     port_character = ":" if url_parsed.port is not None else ""
