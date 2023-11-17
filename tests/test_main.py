@@ -247,8 +247,7 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
 def test_cli_analyze_url_config(cwd):
     """Confirm that using the command-line interface correctly handles a valid URL configuration."""
     # use config files found in chasten-configuration remotely
-    # config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config_url_checks_file.yml"
-    config_url = "https://raw.githubusercontent.com/simojo/chasten-configuration/master/config_url_checks_file.yml"
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config_url_checks_file.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -269,8 +268,7 @@ def test_cli_analyze_url_config(cwd):
 def test_cli_analyze_url_config_with_local_checks_file(cwd):
     """Confirm that using the command-line interface aborts execution when given a URL config that uses a local file path to specify checks files."""
     # use config files found in chasten-configuration remotely
-    # config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
-    config_url = "https://raw.githubusercontent.com/simojo/chasten-configuration/master/config.yml"
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
@@ -334,8 +332,7 @@ def test_cli_analyze_local_config_with_url_and_local_checks_files(cwd):
 def test_cli_analyze_url_config_with_url_and_local_checks_files(cwd):
     """Confirm that using the command-line interface aborts execution when given a URL config that references a combination of URL endpoints and local files for each checks file."""
     # use config files found in chasten-configuration remotely
-    # config_url = f"https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
-    config_url = "https://raw.githubusercontent.com/simojo/chasten-configuration/master/config.yml"
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
     project_name = "test"
     # call the analyze command
     result = runner.invoke(
