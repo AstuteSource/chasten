@@ -8,7 +8,7 @@ from chasten.createchecks import generate_yaml_config, is_valid_api_key
 
 def get_valid_api_key():
     """Retrive and return api key from env variable"""
-    return os.getenv("OPEN_AI_KEY")
+    return os.getenv("API_KEY")
 
 
 def test_valid_api_key():

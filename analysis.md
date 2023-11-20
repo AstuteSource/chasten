@@ -19,11 +19,11 @@
     - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 5 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/createchecks.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/database.py - 6 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 15 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 14 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 7 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/configApp.py - 8 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_process.py - 3 matches
-    - /home/chhetri01/203-software-engineering/chasten/tests/test_createchecks.py - 3 matches
+    - /home/chhetri01/203-software-engineering/chasten/tests/test_createchecks.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_checks.py - 8 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_configApp.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_configuration.py - 3 matches
@@ -45,9 +45,10 @@
     - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 5 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/createchecks.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/database.py - 6 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 15 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 14 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 7 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/configApp.py - 8 matches
+    - /home/chhetri01/203-software-engineering/chasten/tests/test_createchecks.py - 1 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_main.py - 1 matches
 
 # PASSED: **ID:** 'CL001', **Name:** 'dummy-test-single-nested-if', **Pattern:** './/FunctionDef/body//If', min=None, max=None

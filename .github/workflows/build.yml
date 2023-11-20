@@ -48,9 +48,6 @@ jobs:
             fetch-depth: 0
         # Run the mdl linting tool
         # Refers to .mdlrc file in repository
-        - name: Set Env Values
-          run: |
-            echo "${{ secrets.ENV_FILE }}" > .env
         - name: Run Markdown Linting
           if: matrix.os == 'ubuntu-latest'
           uses: actionshub/markdownlint@main
