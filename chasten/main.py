@@ -775,7 +775,11 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         if os.path.isdir(input_path):
             for each_file in os.listdir(input_path):
                 each_file = Path(input_path) / Path(each_file)
-                if not os.path.isdir(each_file) and os.path.isfile(each_file) and str(each_file).endswith(".py"):
+                if (
+                    not os.path.isdir(each_file)
+                    and os.path.isfile(each_file)
+                    and str(each_file).endswith(".py")
+                ):
                     # Read the bytes of the input path and store them in the 'contents' variable
                     contents = Path(each_file).read_bytes()
                     # Use pyastgrep to parse the contents of the Python file at 'input_path'
@@ -819,7 +823,11 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         if os.path.isdir(input_path):
             for each_file in os.listdir(input_path):
                 each_file = Path(input_path) / Path(each_file)
-                if not os.path.isdir(each_file) and os.path.isfile(each_file) and str(each_file).endswith(".py"):
+                if (
+                    not os.path.isdir(each_file)
+                    and os.path.isfile(each_file)
+                    and str(each_file).endswith(".py")
+                ):
                     # Read the bytes of the input path and store them in the 'contents' variable
                     contents = Path(each_file).read_bytes()
                     # Use pyastgrep to parse the contents of the Python file at 'input_path'
@@ -860,9 +868,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                                     ).decode("utf-8")
                                 )
                             output.console.print(
-                                pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
-                                    "utf-8"
-                                )
+                                pyastgrep.xml.tostring(
+                                    xml_root, pretty_print=True
+                                ).decode("utf-8")
                             )
         elif os.path.isfile(input_path) and str(input_path).endswith(".py"):
             contents = Path(input_path).read_bytes()
