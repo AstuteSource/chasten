@@ -3,7 +3,8 @@
 import logging
 
 import pytest
-from hypothesis import given, strategies
+from hypothesis import given
+from hypothesis import strategies
 
 from chasten import configuration
 
