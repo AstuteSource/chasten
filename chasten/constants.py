@@ -224,6 +224,7 @@ class Markers:
     Xml: str
     Zero: int
     Zero_Exit: int
+    Percent_Multiplier: int
 
 
 markers = Markers(
@@ -250,6 +251,7 @@ markers = Markers(
     Xml="xml",
     Zero=0,
     Zero_Exit=0,
+    Percent_Multiplier=100,
 )
 
 

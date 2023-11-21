@@ -4,6 +4,8 @@ import importlib.metadata
 import platform
 import sys
 
+from urllib3.util import parse_url
+
 from chasten import constants
 
 checkmark_unicode = "\u2713"
@@ -68,15 +70,53 @@ def join_and_preserve(data, start, end):
     return constants.markers.Newline.join(data[start:end])
 
 
-def total_amount_passed(analyze_result, count_total) -> tuple[int, int, float]:
+def is_url(url: str) -> bool:
+    """Determine if string is valid URL."""
+    # parse input url
+    url_parsed = parse_url(url)
+    # only allow http and https
+    if url_parsed.scheme not in ["http", "https"]:
+        return False
+    # only input characters for initiatig query and/or fragments if necessary
+    port_character = ":" if url_parsed.port is not None else ""
+    query_character = "?" if url_parsed.query is not None else ""
+    fragment_character = "#" if url_parsed.fragment is not None else ""
+    url_pieces = [
+        url_parsed.scheme,
+        "://",
+        url_parsed.host,
+        port_character,
+        url_parsed.port,
+        url_parsed.path,
+        query_character,
+        url_parsed.query,
+        fragment_character,
+        url_parsed.fragment,
+    ]
+    # convert every item to a string and piece the url back together
+    # to make sure it matches what was given
+    url_reassembled = ""
+    for url_piece in url_pieces:
+        if url_piece is not None:
+            url_reassembled += str(url_piece)
+    # determine if parsed and reconstructed url matches original
+    return str(parse_url(url)).lower() == url_reassembled.lower()
+
+
+def total_amount_passed(check_status_list: list[bool]) -> tuple[int, int, float]:
     """Calculate amount of checks passed in analyze"""
+    # attempt calculations for percentage of checks passed
     try:
-        # iterate through check sources to find checks passed
-        list_passed = [x.check.passed for x in analyze_result.sources]
-        # set variables to count true checks and total counts
-        count_true = list_passed.count(True)
+        # calculate total amount of checks in list
+        count_total = len(check_status_list)
+        # count total amount of checks counted as true
+        count_passed = check_status_list.count(True)
         # return tuple of checks passed, total checks, percentage of checks passed
-        return (count_true, count_total, (count_true / count_total) * 100)
-    # return exception when dividing by zero
+        return (
+            count_passed,
+            count_total,
+            (count_passed / count_total) * constants.markers.Percent_Multiplier,
+        )
+    # return exception of zeros when dividing by zero
     except ZeroDivisionError:
         return (0, 0, 0.0)

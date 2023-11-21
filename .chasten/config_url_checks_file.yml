@@ -1,0 +1,6 @@
+# chasten configuration
+# used for testing purposes
+chasten:
+  # point to a checks file
+  checks-file:
+    - https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/dummy_checks.yml

@@ -369,3 +369,6 @@ coverage.json
 
 # bash command history
 .bash_history
+
+# viewable markdown analysis
+analysis.md
