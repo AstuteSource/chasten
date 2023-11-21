@@ -15,12 +15,12 @@
     - /home/chhetri01/203-software-engineering/chasten/chasten/output.py - 12 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/checks.py - 9 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/process.py - 4 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/validate.py - 3 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 5 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/validate.py - 4 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 11 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/createchecks.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/database.py - 6 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 14 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 7 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 10 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 8 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/configApp.py - 8 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_process.py - 3 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_createchecks.py - 4 matches
@@ -28,9 +28,9 @@
     - /home/chhetri01/203-software-engineering/chasten/tests/test_configApp.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_configuration.py - 3 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_filesystem.py - 16 matches
-    - /home/chhetri01/203-software-engineering/chasten/tests/test_util.py - 4 matches
+    - /home/chhetri01/203-software-engineering/chasten/tests/test_util.py - 6 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_debug.py - 8 matches
-    - /home/chhetri01/203-software-engineering/chasten/tests/test_main.py - 14 matches
+    - /home/chhetri01/203-software-engineering/chasten/tests/test_main.py - 19 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_validate.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_constants.py - 5 matches
 
@@ -41,12 +41,12 @@
     - /home/chhetri01/203-software-engineering/chasten/chasten/output.py - 10 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/checks.py - 9 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/process.py - 4 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/validate.py - 3 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 5 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/validate.py - 4 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 11 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/createchecks.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/database.py - 6 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 14 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 7 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 10 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 8 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/configApp.py - 8 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_createchecks.py - 1 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_main.py - 1 matches
@@ -57,11 +57,12 @@
     - /home/chhetri01/203-software-engineering/chasten/chasten/output.py - 7 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/checks.py - 13 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/process.py - 5 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/validate.py - 2 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/validate.py - 3 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 17 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/createchecks.py - 1 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/database.py - 12 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 34 matches
-    - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 3 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 29 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/util.py - 5 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/configApp.py - 10 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_process.py - 1 matches
     - /home/chhetri01/203-software-engineering/chasten/tests/test_createchecks.py - 2 matches
@@ -76,6 +77,7 @@
     - /home/chhetri01/203-software-engineering/chasten/chasten/output.py - 1 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/checks.py - 3 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/validate.py - 1 matches
+    - /home/chhetri01/203-software-engineering/chasten/chasten/configuration.py - 3 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/database.py - 4 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/main.py - 9 matches
     - /home/chhetri01/203-software-engineering/chasten/chasten/configApp.py - 2 matches
