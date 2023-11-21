@@ -595,8 +595,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         output.console.print(":memo: Saving XML...")
         if os.path.isdir(input_path):
             for each_file in os.listdir(input_path):
-                Path(each_file)
-                each_file = Path(input_path) / each_file
+                each_file = Path(input_path) / Path(each_file) # type: ignore
                 if (
                     not os.path.isdir(each_file)
                     and os.path.isfile(each_file)
@@ -617,8 +616,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                 elif os.path.isdir(each_file):
                     for sub_file in os.listdir(each_file):
                         if str(sub_file).endswith(".py"):
-                            Path(sub_file)
-                            sub_file = Path(each_file) / sub_file
+                            sub_file = Path(each_file) / Path(sub_file) # type: ignore
                             contents = Path(sub_file).read_bytes()
                             _, ast = pyastgrep.files.parse_python_file(
                                 contents, sub_file, auto_dedent=False
@@ -645,8 +643,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
         output.console.print(":memo: Viewing XML...")
         if os.path.isdir(input_path):
             for each_file in os.listdir(input_path):
-                Path(each_file)
-                each_file = Path(input_path) / each_file
+                each_file = Path(input_path) / Path(each_file) # type: ignore
                 if (
                     not os.path.isdir(each_file)
                     and os.path.isfile(each_file)
@@ -675,8 +672,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                     )
                 elif os.path.isdir(each_file):
                     for sub_file in os.listdir(each_file):
-                        Path(sub_file)
-                        sub_file = Path(each_file) / sub_file
+                        sub_file = Path(each_file) / Path(sub_file) # type: ignore
                         if str(sub_file).endswith(".py"):
                             contents = Path(sub_file).read_bytes()
                             _, ast = pyastgrep.files.parse_python_file(
