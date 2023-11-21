@@ -4,6 +4,8 @@ import importlib.metadata
 import platform
 import sys
 
+from urllib3.util import parse_url
+
 from chasten import constants
 
 checkmark_unicode = "\u2713"
@@ -66,6 +68,39 @@ def get_chasten_version() -> str:
 def join_and_preserve(data, start, end):
     """Join and preserve lines inside of a list."""
     return constants.markers.Newline.join(data[start:end])
+
+
+def is_url(url: str) -> bool:
+    """Determine if string is valid URL."""
+    # parse input url
+    url_parsed = parse_url(url)
+    # only allow http and https
+    if url_parsed.scheme not in ["http", "https"]:
+        return False
+    # only input characters for initiatig query and/or fragments if necessary
+    port_character = ":" if url_parsed.port is not None else ""
+    query_character = "?" if url_parsed.query is not None else ""
+    fragment_character = "#" if url_parsed.fragment is not None else ""
+    url_pieces = [
+        url_parsed.scheme,
+        "://",
+        url_parsed.host,
+        port_character,
+        url_parsed.port,
+        url_parsed.path,
+        query_character,
+        url_parsed.query,
+        fragment_character,
+        url_parsed.fragment,
+    ]
+    # convert every item to a string and piece the url back together
+    # to make sure it matches what was given
+    url_reassembled = ""
+    for url_piece in url_pieces:
+        if url_piece is not None:
+            url_reassembled += str(url_piece)
+    # determine if parsed and reconstructed url matches original
+    return str(parse_url(url)).lower() == url_reassembled.lower()
 
 
 def total_amount_passed(check_status_list: list[bool]) -> tuple[int, int, float]:

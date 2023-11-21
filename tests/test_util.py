@@ -3,7 +3,7 @@
 import shutil
 
 import pytest
-from hypothesis import given
+from hypothesis import given, provisional
 from hypothesis import strategies as st
 
 from chasten import constants, util
@@ -31,6 +31,14 @@ def test_fuzz_human_readable_boolean_correct_string(answer: bool) -> None:
         assert str_answer == "Yes"
     else:
         assert str_answer == "No"
+
+
+@given(url=provisional.urls())
+@pytest.mark.fuzz
+def test_is_url_correct(url: str) -> None:
+    """Use Hypothesis to confirm that URLs are correctly recognized/unrecognized."""
+    result = util.is_url(url=url)
+    assert result is True
 
 
 @given(check_status_list=st.lists(st.booleans()))
