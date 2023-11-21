@@ -4,8 +4,7 @@ import logging
 import logging.handlers
 import socketserver
 
-from chasten import constants
-from chasten import output
+from chasten import constants, output
 
 LOG_FILE = constants.server.Log_File
 HOST = constants.server.Localhost

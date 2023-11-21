@@ -4,27 +4,26 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from typing import Dict, List, Tuple, Union
 
 import pyastgrep  # type: ignore
 import typer
 from pyastgrep import search as pyastgrepsearch  # type: ignore
 
-from chasten import checks
-from chasten import configuration
-from chasten import constants
-from chasten import database
-from chasten import debug
-from chasten import enumerations
-from chasten import filesystem
-from chasten import output
-from chasten import process
-from chasten import results
-from chasten import server
-from chasten import util
+from chasten import (
+    checks,
+    configuration,
+    constants,
+    database,
+    debug,
+    enumerations,
+    filesystem,
+    output,
+    process,
+    results,
+    server,
+    util,
+)
 
 # create a Typer object to support the command-line interface
 cli = typer.Typer(no_args_is_help=True)
