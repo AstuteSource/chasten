@@ -11,6 +11,7 @@ def get_valid_api_key():
     return os.getenv("API_KEY")
 
 
+@pytest.mark.api
 def test_valid_api_key():
     """Test is_valid_api_key function with a valid api key."""
     valid_api_key = get_valid_api_key()
@@ -21,6 +22,7 @@ def test_valid_api_key():
     assert result is True
 
 
+@pytest.mark.api
 def test_invalid_api_key():
     """Test is_valid_api_key function with an invalid api key."""
     invalid_api_key = "fk-561sf56a1sf561as5f1asf165as1"
@@ -28,6 +30,7 @@ def test_invalid_api_key():
     assert result is False
 
 
+@pytest.mark.api
 def test_generate_yaml_config():
     valid_api_key = get_valid_api_key()
     test_genscript = "Write: 'Hello, World'"
