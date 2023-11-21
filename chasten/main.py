@@ -137,6 +137,11 @@ def configure(  # noqa: PLR0913
         config=config,
         force=force,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     # display the configuration directory and its contents
     if task == enumerations.ConfigureTask.VALIDATE:
         # validate the configuration files:
@@ -271,7 +276,13 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     force: bool = typer.Option(False, help="Force creation of new markdown file"),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     start_time = time.time()
+    output.logger.debug("Analysis Started.")
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -282,6 +293,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     )
     # extract the current version of the program
     chasten_version = util.get_chasten_version()
+    # display current chasten version
     output.logger.debug(f"Current version of chasten: {chasten_version}")
     # create the include and exclude criteria
     include = results.CheckCriterion(
@@ -320,6 +332,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
         )
+        output.logger.debug("Cannot perform analysis due to configuration error(s)")
         sys.exit(constants.markers.Non_Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
@@ -380,6 +393,11 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     output.console.print()
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
+    # check XPATH version
+    if xpath == "1.0":
+        output.logger.debug("Using XPath version 1.0")
+    else:
+        output.logger.debug("Using XPath version 2.0")
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
@@ -578,6 +596,7 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     output.console.print(
         f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds"
     )
+    output.logger.debug("Analysis complete.")
     if store_result:
         # writes results of analyze into a markdown file
         result_path = os.path.abspath(analysis_file_dir)
@@ -634,9 +653,11 @@ def integrate(  # noqa: PLR0913
         json_path=json_path,
         force=force,
     )
+    output.logger.debug("Integrate function started.")
     # output the list of directories subject to checking
     output.console.print()
     output.console.print(":sparkles: Combining data file(s) in:")
+    output.logger.debug(":sparkles: Combining data file(s) in:")
     output.console.print()
     output.print_list_contents(json_path)
     # extract all of the JSON dictionaries from the specified files
@@ -652,6 +673,7 @@ def integrate(  # noqa: PLR0913
     # output the name of the saved file if saving successfully took place
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
+        output.logger.debug(f"Saved the file '{combined_json_file_name}'.")
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
     # create the SQLite3 database and then configure the database for use in datasette
     combined_flattened_directory = filesystem.write_flattened_csv_and_database(
@@ -659,6 +681,7 @@ def integrate(  # noqa: PLR0913
         output_directory,
         project,
     )
+    output.logger.debug("Flattened JSON and created SQLite database.")
     # output the name of the saved file if saving successfully took place
     if combined_flattened_directory:
         output.console.print(
@@ -669,6 +692,7 @@ def integrate(  # noqa: PLR0913
         )
         output.console.print()
         output.console.print(combined_directory_tree)
+        output.logger.debug("Integrate function completed successfully.")
 
 
 @cli.command()
@@ -724,6 +748,11 @@ def datasette_serve(  # noqa: PLR0913
         datasette_port=port,
         metadata=metadata,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     # display diagnostic information about the datasette instance
     label = ":sparkles: Starting a local datasette instance:"
     display_serve_or_publish_details(
@@ -793,6 +822,11 @@ def datasette_publish(  # noqa: PLR0913
         database=database_path,
         metadata=metadata,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     output.console.print()
     output.console.print(
         f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
