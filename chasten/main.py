@@ -806,6 +806,7 @@ def datasette_publish(  # noqa: PLR0913
         datasette_metadata=metadata,
         datasette_platform=datasette_platform.value,
         publish=True,
+        OpSystem=util.get_OS(),
     )
 
 
