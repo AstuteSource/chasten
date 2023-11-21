@@ -8,7 +8,9 @@ from typing import Tuple
 import jsonschema
 from jsonschema.exceptions import ValidationError
 
-from chasten import constants, output, util
+from chasten import constants
+from chasten import output
+from chasten import util
 
 # intuitive description:
 # a configuration file links to one or more checks files
