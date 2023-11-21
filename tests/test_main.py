@@ -244,6 +244,112 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
     assert "Cannot perform analysis due to configuration" in result.output
 
 
+def test_cli_analyze_url_config(cwd):
+    """Confirm that using the command-line interface correctly handles a valid URL configuration."""
+    # use config files found in chasten-configuration remotely
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config_url_checks_file.yml"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_url_config_with_local_checks_file(cwd):
+    """Confirm that using the command-line interface aborts execution when given a URL config that uses a local file path to specify checks files."""
+    # use config files found in chasten-configuration remotely
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
+    assert "Cannot perform analysis due to configuration" in result.output
+
+
+def test_cli_analyze_local_config_with_url_checks_file(cwd):
+    """Confirm that using the command-line interface correctly handles a local config that references URL endpoints for each checks file."""
+    configuration_file = cwd / Path(".chasten") / Path("config_url_checks_file.yml")
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            configuration_file,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_local_config_with_url_and_local_checks_files(cwd):
+    """Confirm that using the command-line interface correctly handles a local config that references a combination of URL endpoints and local files for each checks file."""
+    configuration_file = (
+        cwd / Path(".chasten") / Path("config_url_and_local_checks_files.yml")
+    )
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            configuration_file,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_url_config_with_url_and_local_checks_files(cwd):
+    """Confirm that using the command-line interface aborts execution when given a URL config that references a combination of URL endpoints and local files for each checks file."""
+    # use config files found in chasten-configuration remotely
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
+
+
 @patch("chasten.configuration.user_config_dir")
 def test_cli_configure_create_config_when_does_not_exist(
     mock_user_config_dir, tmp_path

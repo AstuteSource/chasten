@@ -211,7 +211,7 @@ def start_datasette_server(  # noqa: PLR0912, PLR0913
         (
             found_publish_platform_executable,
             publish_platform_executable,
-        ) = filesystem.can_find_executable(datasette_platform)
+        ) = filesystem.can_find_executable(util.executable_name(datasette_platform))
         # was not able to find the fly or vercel executable (the person using this
         # program has to install separately, following the instructions for the
         # datasette-publish-fly plugin) and thus need to exit and not proceed
