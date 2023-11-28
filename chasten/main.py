@@ -614,9 +614,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                         # Check if view_xml is chosen
                         if view_XML is not None:
                             output.console.print(
-                                pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
-                                    "utf-8"
-                                )
+                                pyastgrep.xml.tostring(
+                                    xml_root, pretty_print=True
+                                ).decode("utf-8")
                             )
                     elif os.path.isdir(each_file):
                         for sub_file in os.listdir(each_file):
@@ -643,7 +643,9 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                 # Check if view_xml is chosen
                 if view_XML is not None:
                     output.console.print(
-                        pyastgrep.xml.tostring(xml_root, pretty_print=True).decode("utf-8")
+                        pyastgrep.xml.tostring(xml_root, pretty_print=True).decode(
+                            "utf-8"
+                        )
                     )
         except:
             print(f":sweat: Sorry, could not convert to xml.")
