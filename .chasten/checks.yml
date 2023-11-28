@@ -35,8 +35,9 @@ checks:
       min: 1
       max: 15
   - name: "count-method-lines"
-    pattern: "//FunctionDef//Expr | //FunctionDef//Return)"
-    id: "CML"
+    pattern: "//FunctionDef[@type='str']/body/* | //FunctionDef[@type='str']/body/Return"
+    code: "CML"
+    id: "CML001"
     count: 
       min: null
       max: null
