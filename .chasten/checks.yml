@@ -36,6 +36,7 @@ checks:
       max: 15
   - name: "count-method-lines"
     pattern: "//FunctionDef//Expr | //FunctionDef//Return)"
+    id: "CML"
     count: 
       min: null
       max: null
@@ -71,6 +72,13 @@ checks:
     code: "IST"
     id: "IS001"
     pattern: "//method[(@static) or @static='true']"
+    count: 
+      min: null
+      max: null
+  - name : "number-of-assertions"
+    code: "NOA"
+    id: "NOA001"
+    pattern : "//FunctionDef[@type='str']/body/Assert"
     count: 
       min: null
       max: null
