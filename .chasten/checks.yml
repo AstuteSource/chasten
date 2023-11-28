@@ -82,3 +82,10 @@ checks:
     count: 
       min: null
       max: null
+  - name : "count-test-method-lines"
+    code: "CTML"
+    id: "CTML001"
+    pattern : "//FunctionDef[@type='str' and starts-with(@name, 'test_')]/body/*"
+    count: 
+      min: null
+      max: null
