@@ -114,7 +114,9 @@ def create_configuration_file(
     # create the final path to the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     # create a path to the configuration file
-    chasten_user_config_main_file = chasten_user_config_dir_path / config_file_name
+    chasten_user_config_main_file = chasten_user_config_dir_path / Path(
+        config_file_name
+    )
     # create the file (if it does not exist)
     chasten_user_config_main_file.touch()
     # write the default contents of the file
@@ -195,7 +197,11 @@ def write_chasten_results(
         results_path_with_file = results_path / complete_results_file_name
         results_json = results_content.model_dump_json(indent=2)
         # use the built-in method with pathlib Path to write the JSON contents
-        results_path_with_file.write_text(results_json)
+        try:
+            results_path_with_file.write_text(results_json)
+        except:  # noqa: E722
+            results_path_with_file.write_text(results_json, "utf-8")
+
         # return the name of the created file for diagnostic purposes
         return complete_results_file_name
     # saving was not enabled and thus this function cannot
@@ -225,7 +231,7 @@ def write_dict_results(
     # using indentation to ensure that JSON file is readable
     results_path_with_file = results_path / complete_results_file_name
     # use the built-in method from pathlib Path to write the JSON contents
-    results_path_with_file.write_text(results_json)
+    results_path_with_file.write_text(results_json, "utf-8")
     # return the name of the file that contains the JSON dictionary contents
     return complete_results_file_name
 
@@ -289,7 +295,7 @@ def get_json_results(json_paths: List[Path]) -> List[Dict[Any, Any]]:
     # iterate through each of the provided paths to a JSON file
     for json_path in json_paths:
         # turn the contents of the current JSON file into a dictionary
-        json_dict = json.loads(json_path.read_text())
+        json_dict = json.loads(json_path.read_text("utf-8"))
         # add the current dictionary to the list of dictionaries
         json_dicts_list.append(json_dict)
     # return the list of JSON dictionaries

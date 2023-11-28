@@ -6,7 +6,7 @@ from pathlib import Path
 
 from sqlite_utils import Database
 
-from chasten import constants, enumerations, filesystem, output
+from chasten import constants, enumerations, filesystem, output, util
 
 CHASTEN_SQL_SELECT_QUERY = """
 SELECT
@@ -66,7 +66,6 @@ def enable_full_text_search(chasten_database_name: str) -> None:
     database["sources"].enable_fts(
         [
             "filename",
-            "filelines",
             "check_id",
             "check_name",
             "check_description",
@@ -129,16 +128,16 @@ def display_datasette_details(
     output.console.print()
 
 
-def start_datasette_server(  # noqa: PLR0912
+def start_datasette_server(  # noqa: PLR0912, PLR0913
     database_path: Path,
     datasette_metadata: Path,
     datasette_platform: str = enumerations.DatasettePublicationPlatform.FLY.value,
     datasette_port: int = 8001,
     publish: bool = False,
+    OpSystem: str = "Linux",
 ) -> None:
     """Start a local datasette server."""
     # define the name of the executable needed to run the server
-    executable_name = constants.datasette.Datasette_Executable
     # define the name of the file that contains datasette metadata;
     # note that by default the metadata could be None and thus it
     # will not be passed as a -m argument to the datasette program
@@ -148,8 +147,9 @@ def start_datasette_server(  # noqa: PLR0912
     # chasten will exist in a bin directory. For instance, the "datasette"
     # executable that is a dependency of chasten can be found by starting
     # the search from this location for the virtual environment.
-    virtual_env_location = sys.prefix
-    full_executable_name = virtual_env_location + "/bin/" + executable_name
+    full_executable_name = util.executable_name(
+        constants.datasette.Datasette_Executable, OpSystem
+    )
     (found_executable, executable_path) = filesystem.can_find_executable(
         full_executable_name
     )
@@ -163,7 +163,7 @@ def start_datasette_server(  # noqa: PLR0912
         label = ":sparkles: Details for datasette startup:"
     display_datasette_details(
         label,
-        virtual_env_location,
+        sys.prefix,
         str(executable_path),
         full_executable_name,
     )
@@ -171,7 +171,7 @@ def start_datasette_server(  # noqa: PLR0912
     # error message and then exit this function since no further steps are possible
     if not found_executable:
         output.console.print(
-            ":person_shrugging: Was not able to find '{executable_name}'"
+            f":person_shrugging: Was not able to find {constants.datasette.Datasette_Executable}"
         )
         return None
     # run the localhost server because the
@@ -207,13 +207,13 @@ def start_datasette_server(  # noqa: PLR0912
         (
             found_publish_platform_executable,
             publish_platform_executable,
-        ) = filesystem.can_find_executable(datasette_platform)
+        ) = filesystem.can_find_executable(util.executable_name(datasette_platform))
         # was not able to find the fly or vercel executable (the person using this
         # program has to install separately, following the instructions for the
         # datasette-publish-fly plugin) and thus need to exit and not proceed
         if not found_publish_platform_executable:
             output.console.print(
-                ":person_shrugging: Was not able to find '{datasette_platform}'"
+                f":person_shrugging: Was not able to find '{datasette_platform}'"
             )
             return None
         # was able to find the fly or vercel executable that will support the
@@ -265,3 +265,25 @@ def start_datasette_server(  # noqa: PLR0912
         # there is debugging output in the console to indicate this option.
         proc = subprocess.Popen(cmd)
         proc.wait()
+
+
+def display_results_frog_mouth(result_file, OpSystem) -> None:
+    """Run frogmouth as a subprocess of chasten"""
+    cmd = [
+        "frogmouth",
+        result_file,
+    ]
+    executable = util.executable_name("frogmouth", OpSystem)
+    exec_found, executable_path = filesystem.can_find_executable(executable)
+    if exec_found:
+        # run frogmouth with specified path
+        output.console.print("\n🐸 Frogmouth Information\n")
+        output.console.print(f" {small_bullet_unicode} Venv: {sys.prefix}")
+        output.console.print(f" {small_bullet_unicode} Program: {executable_path}")
+        proc = subprocess.Popen(cmd)
+        proc.wait()
+    else:
+        output.console.print(
+            ":person_shrugging: Was not able to find frogmouth executable try installing it separately"
+        )
+        return None

@@ -1,6 +1,7 @@
 """Define constants with dataclasses for use in chasten."""
 
 from dataclasses import dataclass
+from pathlib import Path
 
 
 # chasten constant
@@ -8,6 +9,7 @@ from dataclasses import dataclass
 class Chasten:
     """Define the Chasten dataclass for constant(s)."""
 
+    Analyze_Storage: Path
     Application_Name: str
     Application_Author: str
     Chasten_Database_View: str
@@ -26,6 +28,7 @@ class Chasten:
 
 
 chasten = Chasten(
+    Analyze_Storage=Path("analysis.md"),
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
     Chasten_Database_View="chasten_complete",
@@ -217,6 +220,7 @@ class Markers:
     Xml: str
     Zero: int
     Zero_Exit: int
+    Percent_Multiplier: int
 
 
 markers = Markers(
@@ -243,6 +247,7 @@ markers = Markers(
     Xml="xml",
     Zero=0,
     Zero_Exit=0,
+    Percent_Multiplier=100,
 )
 
 
