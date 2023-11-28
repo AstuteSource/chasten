@@ -647,8 +647,8 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                             "utf-8"
                         )
                     )
-        except:
-            print(f":sweat: Sorry, could not convert to xml.")
+        except FileNotFoundError or FileExistsError:
+            output.console.print(":sweat: Sorry, could not convert to xml.")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
