@@ -32,19 +32,13 @@ checks:
     id: "CL002"
     pattern: './/FunctionDef/body//If[ancestor::If and not(parent::orelse)]'
     count:
-<<<<<<< HEAD
       min: 1
       max: 15
   - name: "count-method-lines"
     pattern: "//FunctionDef//Expr | //FunctionDef//Return)"
     count: 
-    
-=======
       min: null
       max: null
-<<<<<<< HEAD
->>>>>>> c0a777951df2096aa0efa9581aeeefedbbb94276
-=======
   - name: "is-void"
     code: "IVI"
     id: "V001"
@@ -80,4 +74,3 @@ checks:
     count: 
       min: null
       max: null
->>>>>>> 261163d012333b7f8304575889b638e415853b73
