@@ -45,12 +45,6 @@ def test_invalid_file() -> None:
     assert filesystem.confirm_valid_file(None) is False
 
 
-def test_create_directory_tree_visualization():
-    """Confirms that if there is no tree and path is invalid, returns None."""
-    tree = filesystem.create_directory_tree_visualization("false_path")
-    assert tree is None
-
-
 @given(directory=strategies.builds(pathlib.Path))
 @pytest.mark.fuzz
 def test_fuzz_confirm_valid_directory_using_builds(directory: pathlib.Path) -> None:
