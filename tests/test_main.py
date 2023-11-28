@@ -54,7 +54,7 @@ checks:
     pattern: './/ClassDef'
     count:
       min: 1
-      max: 10
+      max: null
   - name: "all-function-definition"
     code: "AFD"
     id: "F001"
@@ -91,7 +91,7 @@ def test_cli_analyze_correct_arguments_nothing_to_analyze_not_looking(tmpdir):
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = test_one + "/.chasten"
+    configuration_directory = test_one / Path(".chasten")
     configuration_directory_path = Path(configuration_directory)
     configuration_directory_path.mkdir()
     configuration_file = configuration_directory_path / "config.yml"
@@ -122,7 +122,7 @@ def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd):
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = str(cwd) + "/.chasten"
+    configuration_directory = cwd / Path(".chasten")
     result = runner.invoke(
         main.cli,
         [
@@ -144,7 +144,7 @@ def test_cli_analyze_incorrect_arguments_no_project(cwd, tmpdir):
     test_one = tmpdir.mkdir("test_one")
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = str(cwd) + "/.chasten"
+    configuration_directory = cwd / Path(".chasten")
     # call the analyze command
     result = runner.invoke(
         main.cli,
@@ -244,6 +244,112 @@ def test_cli_analyze_incorrect_arguments_correct_config(tmpdir):
     assert "Cannot perform analysis due to configuration" in result.output
 
 
+def test_cli_analyze_url_config(cwd):
+    """Confirm that using the command-line interface correctly handles a valid URL configuration."""
+    # use config files found in chasten-configuration remotely
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config_url_checks_file.yml"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_url_config_with_local_checks_file(cwd):
+    """Confirm that using the command-line interface aborts execution when given a URL config that uses a local file path to specify checks files."""
+    # use config files found in chasten-configuration remotely
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
+    assert "Cannot perform analysis due to configuration" in result.output
+
+
+def test_cli_analyze_local_config_with_url_checks_file(cwd):
+    """Confirm that using the command-line interface correctly handles a local config that references URL endpoints for each checks file."""
+    configuration_file = cwd / Path(".chasten") / Path("config_url_checks_file.yml")
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            configuration_file,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_local_config_with_url_and_local_checks_files(cwd):
+    """Confirm that using the command-line interface correctly handles a local config that references a combination of URL endpoints and local files for each checks file."""
+    configuration_file = (
+        cwd / Path(".chasten") / Path("config_url_and_local_checks_files.yml")
+    )
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            configuration_file,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_cli_analyze_url_config_with_url_and_local_checks_files(cwd):
+    """Confirm that using the command-line interface aborts execution when given a URL config that references a combination of URL endpoints and local files for each checks file."""
+    # use config files found in chasten-configuration remotely
+    config_url = "https://raw.githubusercontent.com/AstuteSource/chasten-configuration/master/config.yml"
+    project_name = "test"
+    # call the analyze command
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            project_name,
+            "--search-path",
+            cwd,
+            "--config",
+            config_url,
+            "--verbose",
+        ],
+    )
+    assert result.exit_code == 1
+
+
 @patch("chasten.configuration.user_config_dir")
 def test_cli_configure_create_config_when_does_not_exist(
     mock_user_config_dir, tmp_path
@@ -297,7 +403,7 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
     project_name = "testing"
     # create a reference to the internal
     # .chasten directory that supports testing
-    configuration_directory = str(cwd) + "/.chasten"
+    configuration_directory = cwd / Path(".chasten")
     result = runner.invoke(
         main.cli,
         [
@@ -307,6 +413,122 @@ def test_fuzz_cli_analyze_single_directory(cwd, directory):
             configuration_directory,
             "--search-path",
             str(directory),
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_analyze_store_results_file_does_not_exist(cwd, tmpdir):
+    """Makes sure analyze doesn't crash when using markdown storage."""
+    tmp_dir = Path(tmpdir)
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            tmp_dir,
+        ],
+    )
+    assert result.exit_code == 0
+    assert "✨ Results saved in:" in result.output
+
+
+def test_analyze_store_results_file_exists_no_force(cwd, tmpdir):
+    """Make sure Analyze acts accordingly when file exists and their is no force"""
+    tmp_dir = Path(tmpdir)
+    # creates a temporary directory to store markdown file
+    file = tmp_dir / "analysis.md"
+    # creates file if does not exist
+    file.touch()
+    # makes sure the file exists
+    assert file.exists()
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    # runs the CLI with the specified commands
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            tmp_dir,
+        ],
+    )
+    # assert that the code crashes and that the proper message is displayed
+    assert result.exit_code == 1
+    assert (
+        "File already exists: use --force to recreate markdown directory."
+        in result.output
+    )
+
+
+def test_analyze_store_results_file_exists_force(cwd, tmpdir):
+    tmp_dir = Path(tmpdir)
+    # creates a temporary directory to store markdown file
+    file = tmp_dir / "analysis.md"
+    # creates file if does not exist
+    file.touch()
+    # makes sure the file exists
+    assert file.exists()
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    # runs the CLI with the specified commands
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            tmp_dir,
+            "--force",
+        ],
+    )
+    # assert that the code crashes and that the proper message is displayed
+    assert result.exit_code == 0
+    assert "✨ Results saved in:" in result.output
+
+
+@given(directory=strategies.builds(Path))
+@settings(deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture])
+@pytest.mark.fuzz
+def test_analyze_store_results_valid_path(directory, cwd):
+    project_name = "testing"
+    # create a reference to the internal
+    # .chasten directory that supports testing
+    configuration_directory = str(cwd) + "/.chasten"
+    result = runner.invoke(
+        main.cli,
+        [
+            "analyze",
+            "--search-path",
+            cwd,
+            project_name,
+            "--config",
+            configuration_directory,
+            "--markdown-storage",
+            directory,
+            "--force",
         ],
     )
     assert result.exit_code == 0

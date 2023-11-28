@@ -132,7 +132,7 @@ first executable line of non-test and test-case functions in a Python project.
 Note that the `pattern` attribute specifies the XPath version 2.0 expression
 that `chasten` will use to detect the specified type of Python function. You can
 type `chasten configure validate --config <path to chasten-configuration/
-directory>` after filling in `<path to chasten-configuration>` with the
+directory | config url>` after filling in `<path to chasten-configuration/directory | config url>` with the
 fully-qualified name of your configuration directory and the tool will confirm
 that your configuration meets the tool's specification. You can also use the
 command `chasten configure create` command to automatically generate a starting
@@ -172,7 +172,7 @@ program:
 
 ```shell
 chasten analyze lazytracker \
-        --config <path to the chasten-configuration/ directory> \
+        --config <path to the chasten-configuration/ directory | config url> \
         --search-path <path to the lazytracker/ directory> \
         --save-directory <path to the subject-data/lazytracker/ directory> \
         --save
@@ -193,7 +193,7 @@ program:
 
 ```shell
 chasten analyze multicounter \
-        --config <path to the chasten-configuration/ directory> \
+        --config <path to the chasten-configuration/ directory | config url> \
         --search-path <path to the multicounter/ directory> \
         --save-directory <path to the subject-data/lazytracker/ directory> \
         --save
@@ -237,6 +237,21 @@ CSV files that correspond to each of the tables inside of the database.
 
 You can learn more about the `integrate` sub-command by typing `chasten
 integrate --help`.
+
+## 💠 Verbose Output
+
+When utilizing the `chasten` command, appending this `--verbose` flag can significantly enhance your troubleshooting experience and provide a detailed understanding of the tool's functionality. Here is an example with `chasten analyze lazytracker`:
+
+```shell
+chasten analyze lazytracker \
+        --config <path to the chasten-configuration/ directory> \
+        --search-path <path to the lazytracker/ directory> \
+        --save-directory <path to the subject-data/lazytracker/ directory> \
+        --save
+        --verbose
+ ```
+
+Upon executing this command, you can expect the output to contain informative messages such as `✨ Matching source code:` indicating that the tool is actively comparing the source code against the specified patterns. Additionally, you will receive detailed match results, providing insights into the identified checks.
 
 ## 🌄 Results
 
@@ -293,6 +308,45 @@ Even though `chasten` is a command-line application, you create interactively
 create the tool's command-line arguments and options through a terminal user
 interface (TUI). To use TUI-based way to create a complete command-line for
 `chasten` you can type the command `chasten interact`.
+
+## 📊Log
+`Chasten` has a built-in system log. While using chasten you can use the command
+`chasten log` in your terminal. The system log feature allows the user to see
+events and messages that are produced by `chasten`. In addition, the `chasten log`
+feature will assist in finding bugs and the events that led to the bug happening.
+For the `chasten` program to display to the system log you will have to open a
+separate terminal and use the command `chasten log`. In addition for each command
+that is run the `--debug-level <choice of level>` and `--debug-dest SYSLOG` will
+need to be added.
+
+For example, `chasten datasette-serve --debug-level DEBUG --debug-dest SYSLOG 
+< database path to file>` will produce the following output in the system log.
+
+```
+💫 chasten: Analyze the AST of Python Source Code
+🔗 GitHub: https://github.com/gkapfham/chasten
+✨ Syslog server for receiving debugging information
+
+Display verbose output? False
+Debug level? DEBUG
+Debug destination? SYSLOG
+```
+
+In each command in `chasten`, there is an option to add a `--debug-level`. The debug level has 5 options debug, info, warning, error, and critical. Each level will show different issues in the system log where debug is the lowest level of issue from the input where critical is the highest level of error. To leverage more info on this you can reference `debug.py` file:
+
+``` python
+class DebugLevel(str, Enum):
+    """The predefined levels for debugging."""
+
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+```
+
+
+
 
 ## 🤗 Learning
 

@@ -1,14 +1,13 @@
 """💫 Chasten checks the AST of a Python program."""
 
+import os
 import sys
+import time
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 import typer
-import yaml
 from pyastgrep import search as pyastgrepsearch  # type: ignore
-from trogon import Trogon  # type: ignore
-from typer.main import get_group
 
 from chasten import (
     checks,
@@ -23,7 +22,6 @@ from chasten import (
     results,
     server,
     util,
-    validate,
 )
 
 # create a Typer object to support the command-line interface
@@ -31,6 +29,7 @@ cli = typer.Typer(no_args_is_help=True)
 
 # create a small bullet for display in the output
 small_bullet_unicode = constants.markers.Small_Bullet_Unicode
+ANALYSIS_FILE = constants.chasten.Analyze_Storage
 
 
 # ---
@@ -63,188 +62,6 @@ def output_preamble(
         debug_destination=debug_destination.value,
         **kwargs,
     )
-
-
-def display_configuration_directory(
-    chasten_user_config_dir_str: str, verbose: bool = False
-) -> None:
-    """Display information about the configuration in the console."""
-    # create a visualization of the configuration directory
-    chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
-    rich_path_tree = filesystem.create_directory_tree_visualization(
-        chasten_user_config_dir_path
-    )
-    # display the visualization of the configuration directory
-    output.opt_print_log(verbose, tree=rich_path_tree)
-    output.opt_print_log(verbose, empty="")
-
-
-def extract_configuration_details(
-    chasten_user_config_dir_str: str,
-    configuration_file: str = constants.filesystem.Main_Configuration_File,
-) -> Tuple[bool, str, str, Dict[str, Dict[str, Any]]]:
-    """Display details about the configuration."""
-    # create the name of the main configuration file
-    configuration_file_str = f"{chasten_user_config_dir_str}/{configuration_file}"
-    # load the text of the main configuration file
-    configuration_file_path = Path(configuration_file_str)
-    # the configuration file does not exist and thus
-    # the extraction process cannot continue, the use of
-    # these return values indicates that the extraction
-    # failed and any future steps cannot continue
-    if not configuration_file_path.exists():
-        return (False, None, None, None)  # type: ignore
-    configuration_file_yml = configuration_file_path.read_text()
-    # load the contents of the main configuration file
-    yaml_data = None
-    with open(configuration_file_str) as user_configuration_file:
-        yaml_data = yaml.safe_load(user_configuration_file)
-    # return the file name, the textual contents of the configuration file, and
-    # a dict-based representation of the configuration file
-    return (True, configuration_file_str, configuration_file_yml, yaml_data)
-
-
-def validate_file(
-    configuration_file_str: str,
-    configuration_file_yml: str,
-    yml_data_dict: Dict[str, Dict[str, Any]],
-    json_schema: Dict[str, Any] = validate.JSON_SCHEMA_CONFIG,
-    verbose: bool = False,
-) -> bool:
-    """Validate the provided file according to the provided JSON schema."""
-    # perform the validation of the configuration file
-    (validated, errors) = validate.validate_configuration(yml_data_dict, json_schema)
-    output.console.print(
-        f":sparkles: Validated {configuration_file_str}? {util.get_human_readable_boolean(validated)}"
-    )
-    # there was a validation error, so display the error report
-    if not validated:
-        output.console.print(f":person_shrugging: Validation errors:\n\n{errors}")
-    # validation worked correctly, so display the configuration file
-    else:
-        output.opt_print_log(verbose, newline="")
-        output.opt_print_log(
-            verbose, label=f":sparkles: Contents of {configuration_file_str}:\n"
-        )
-        output.opt_print_log(verbose, config_file=configuration_file_yml)
-    return validated
-
-
-def validate_configuration_files(
-    config: Path,
-    verbose: bool = False,
-) -> Tuple[
-    bool, Union[Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]]
-]:
-    """Validate the configuration."""
-    # there is a specified configuration directory path;
-    # this overrides the use of the configuration files that
-    # may exist inside of the platform-specific directory
-    if config:
-        # the configuration file exists and thus it should
-        # be used instead of the platform-specific directory
-        if config.exists():
-            chasten_user_config_dir_str = str(config)
-        # the configuration file does not exist and thus,
-        # since config was explicit, it is not possible
-        # to validate the configuration file
-        else:
-            return (False, {})
-    # there is no configuration file specified and thus
-    # this function should access the platform-specific
-    # configuration directory detected by platformdirs
-    else:
-        # detect and store the platform-specific user
-        # configuration directory
-        chasten_user_config_dir_str = configuration.user_config_dir(
-            application_name=constants.chasten.Application_Name,
-            application_author=constants.chasten.Application_Author,
-        )
-    output.console.print(
-        ":sparkles: Configuration directory:"
-        + constants.markers.Space
-        + chasten_user_config_dir_str
-        + constants.markers.Newline
-    )
-    # extract the configuration details
-    (
-        configuration_valid,
-        configuration_file_str,
-        configuration_file_yml,
-        yml_data_dict,
-    ) = extract_configuration_details(chasten_user_config_dir_str)
-    # it was not possible to extract the configuration details and
-    # thus this function should return immediately with False
-    # to indicate the failure and an empty configuration dictionary
-    if not configuration_valid:
-        return (False, {})
-    # create a visualization of the user's configuration directory;
-    # display details about the configuration directory in console
-    display_configuration_directory(chasten_user_config_dir_str, verbose)
-    # Summary of the remaining steps:
-    # --> Step 1: Validate the main configuration file
-    # --> Step 2: Validate the one or more checks files
-    # --> Step 3: If all files are valid, return overall validity
-    # --> Step 3: Otherwise, return an invalid configuration
-    # validate the user's configuration and display the results
-    config_file_validated = validate_file(
-        configuration_file_str,
-        configuration_file_yml,
-        yml_data_dict,
-        validate.JSON_SCHEMA_CONFIG,
-        verbose,
-    )
-    # if one or more exist, retrieve the name of the checks files
-    (_, checks_file_name_list) = validate.extract_checks_file_name(yml_data_dict)
-    # iteratively extract the contents of each checks file
-    # and then validate the contents of that checks file
-    checks_files_validated_list = []
-    check_files_validated = False
-    # create an empty dictionary that will store the list of checks
-    overall_checks_dict: Union[
-        Dict[str, List[Dict[str, Union[str, Dict[str, int]]]]], Dict[Any, Any]
-    ] = {}
-    # create abn empty list that will store the dicts of checks
-    overall_checks_list: List[Dict[str, Union[str, Dict[str, int]]]] = []
-    # initialize the dictionary to contain the empty list
-    overall_checks_dict[constants.checks.Checks_Label] = overall_checks_list
-    for checks_file_name in checks_file_name_list:
-        (
-            checks_file_extracted_valid,
-            configuration_file_str,
-            configuration_file_yml,
-            yml_data_dict,
-        ) = extract_configuration_details(chasten_user_config_dir_str, checks_file_name)
-        # the checks file could not be extracted in a valid
-        # fashion and thus there is no need to continue the
-        # validation of this file or any of the other check file
-        if not checks_file_extracted_valid:
-            check_file_validated = False
-        # the checks file could be extract and thus the
-        # function should proceed to validate a checks configuration file
-        else:
-            check_file_validated = validate_file(
-                configuration_file_str,
-                configuration_file_yml,
-                yml_data_dict,
-                validate.JSON_SCHEMA_CHECKS,
-                verbose,
-            )
-        # keep track of the validation of all of validation
-        # records for each of the check files
-        checks_files_validated_list.append(check_file_validated)
-        # add the listing of checks from the current yml_data_dict to
-        # the overall listing of checks in the main dictionary
-        overall_checks_dict[constants.checks.Checks_Label].extend(yml_data_dict[constants.checks.Checks_Label])  # type: ignore
-    # the check files are only validated if all of them are valid
-    check_files_validated = all(checks_files_validated_list)
-    # the files validated correctly; return an indicator to
-    # show that validation worked and then return the overall
-    # dictionary that contains the listing of valid checks
-    if config_file_validated and check_files_validated:
-        return (True, overall_checks_dict)
-    # there was at least one validation error
-    return (False, {})
 
 
 def display_serve_or_publish_details(
@@ -282,27 +99,15 @@ def display_serve_or_publish_details(
 
 
 @cli.command()
-def interact(ctx: typer.Context) -> None:
-    """🚀 Interactively configure and run."""
-    # construct a Trogon object; this will create a
-    # terminal-user interface that will allow the
-    # person using chasten to pick a mode and then
-    # fill-in command-line arguments and then
-    # run the tool; note that this line of code
-    # cannot be easily tested in an automated fashion
-    Trogon(get_group(cli), click_context=ctx).run()
-
-
-@cli.command()
 def configure(  # noqa: PLR0913
     task: enumerations.ConfigureTask = typer.Argument(
         enumerations.ConfigureTask.VALIDATE.value
     ),
-    config: Path = typer.Option(
+    config: str = typer.Option(
         None,
         "--config",
         "-c",
-        help="A directory with configuration file(s).",
+        help="A directory with configuration file(s), path to configuration file, or URL to configuration file.",
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
@@ -332,12 +137,17 @@ def configure(  # noqa: PLR0913
         config=config,
         force=force,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     # display the configuration directory and its contents
     if task == enumerations.ConfigureTask.VALIDATE:
         # validate the configuration files:
-        # --> config.yml
-        # --> checks.yml (or whatever file is reference in config.yml)
-        (validated, _) = validate_configuration_files(config, verbose)
+        # --> config.yml (or url pointing to one)
+        # --> checks.yml (or whatever file/url is reference in config.yml)
+        (validated, _) = configuration.validate_configuration_files(config, verbose)
         # some aspect of the configuration was not
         # valid, so exit early and signal an error
         if not validated:
@@ -352,12 +162,17 @@ def configure(  # noqa: PLR0913
             # create the configuration directory, which will either be the one
             # specified by the config parameter (if it exists) or it will be
             # the one in the platform-specific directory given by platformdirs
+            if config is None:
+                configuration_directory = None
+            else:
+                configuration_directory = Path(config)
             created_directory_path = filesystem.create_configuration_directory(
-                config, force
+                configuration_directory, force
             )
             # write the configuration file for the chasten tool in the created directory
             filesystem.create_configuration_file(
-                created_directory_path, constants.filesystem.Main_Configuration_File
+                created_directory_path,
+                constants.filesystem.Main_Configuration_File,
             )
             # write the check file for the chasten tool in the created directory
             filesystem.create_configuration_file(
@@ -382,8 +197,14 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0913, PLR0915
+def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
+    xpath: Path = typer.Option(
+        str,
+        "--xpath-version",
+        "-xp",
+        help="Accepts different xpath version, runs xpath version two by default.",
+    ),
     check_include: Tuple[enumerations.FilterableAttribute, str, int] = typer.Option(
         (None, None, 0),
         "--check-include",
@@ -419,11 +240,23 @@ def analyze(  # noqa: PLR0913, PLR0915
         writable=True,
         resolve_path=True,
     ),
-    config: Path = typer.Option(
+    store_result: Path = typer.Option(
+        None,
+        "--markdown-storage",
+        "-r",
+        help="A directory for storing results in a markdown file",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    config: str = typer.Option(
         None,
         "--config",
         "-c",
-        help="A directory with configuration file(s).",
+        help="A directory with configuration file(s) or URL to configuration file.",
     ),
     debug_level: debug.DebugLevel = typer.Option(
         debug.DebugLevel.ERROR.value,
@@ -437,10 +270,19 @@ def analyze(  # noqa: PLR0913, PLR0915
         "-t",
         help="Specify the destination for debugging output.",
     ),
+    display: bool = typer.Option(False, help="Display results using frogmouth"),
     verbose: bool = typer.Option(False, help="Enable verbose mode output."),
     save: bool = typer.Option(False, help="Enable saving of output file(s)."),
+    force: bool = typer.Option(False, help="Force creation of new markdown file"),
 ) -> None:
     """💫 Analyze the AST of Python source code."""
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
+    start_time = time.time()
+    output.logger.debug("Analysis Started.")
     # output the preamble, including extra parameters specific to this function
     output_preamble(
         verbose,
@@ -451,6 +293,8 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     # extract the current version of the program
     chasten_version = util.get_chasten_version()
+    # display current chasten version
+    output.logger.debug(f"Current version of chasten: {chasten_version}")
     # create the include and exclude criteria
     include = results.CheckCriterion(
         attribute=str(checks.fix_check_criterion(check_include[0])),
@@ -466,7 +310,7 @@ def analyze(  # noqa: PLR0913, PLR0915
     chasten_configuration = results.Configuration(
         chastenversion=chasten_version,
         projectname=project,
-        configdirectory=config,
+        configdirectory=Path(config),
         searchpath=input_path,
         debuglevel=debug_level,
         debugdestination=debug_destination,
@@ -479,13 +323,16 @@ def analyze(  # noqa: PLR0913, PLR0915
     # add extra space after the command to run the program
     output.console.print()
     # validate the configuration
-    (validated, checks_dict) = validate_configuration_files(config, verbose)
+    (validated, checks_dict) = configuration.validate_configuration_files(
+        config, verbose
+    )
     # some aspect of the configuration was not
     # valid, so exit early and signal an error
     if not validated:
         output.console.print(
             "\n:person_shrugging: Cannot perform analysis due to configuration error(s).\n"
         )
+        output.logger.debug("Cannot perform analysis due to configuration error(s)")
         sys.exit(constants.markers.Non_Zero_Exit)
     # extract the list of the specific patterns (i.e., the XPATH expressions)
     # that will be used to analyze all of the XML-based representations of
@@ -514,6 +361,27 @@ def analyze(  # noqa: PLR0913, PLR0915
             "\n:person_shrugging: Cannot perform analysis due to invalid search directory.\n"
         )
         sys.exit(constants.markers.Non_Zero_Exit)
+    if store_result:
+        # creates an empty string for storing results temporarily
+        analysis_result = ""
+        analysis_file_dir = store_result / ANALYSIS_FILE
+        # clears markdown file of results if it exists and new results are to be store
+        if filesystem.confirm_valid_file(analysis_file_dir):
+            if not force:
+                if display:
+                    database.display_results_frog_mouth(
+                        analysis_file_dir, util.get_OS()
+                    )
+                    sys.exit(0)
+                else:
+                    output.console.print(
+                        "File already exists: use --force to recreate markdown directory."
+                    )
+                    sys.exit(constants.markers.Non_Zero_Exit)
+            else:
+                analysis_file_dir.write_text("")
+        # creates file if doesn't exist already
+        analysis_file_dir.touch()
     # create the list of directories
     valid_directories = [input_path]
     # output the list of directories subject to checking
@@ -525,10 +393,17 @@ def analyze(  # noqa: PLR0913, PLR0915
     output.console.print()
     # create a check_status list for all of the checks
     check_status_list: List[bool] = []
+    # check XPATH version
+    if xpath == "1.0":
+        output.logger.debug("Using XPath version 1.0")
+    else:
+        output.logger.debug("Using XPath version 2.0")
     # iterate through and perform each of the checks
     for current_check in check_list:
         # extract the pattern for the current check
-        current_xpath_pattern = str(current_check[constants.checks.Check_Pattern])  # type: ignore
+        current_xpath_pattern = str(
+            current_check[constants.checks.Check_Pattern]
+        )  # type: ignore
         # extract the minimum and maximum values for the checks, if they exist
         # note that this function will return None for a min or a max if
         # that attribute does not exist inside of the current_check; importantly,
@@ -537,15 +412,24 @@ def analyze(  # noqa: PLR0913, PLR0915
         # extract details about the check to display in the header
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
+        output.logger.debug(f"check id: {check_id}")
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
         # XPATH query using the search_python_file in search module of pyastgrep;
         # this looks for matches across all path(s) in the specified source path
-        match_generator = pyastgrepsearch.search_python_files(
-            paths=valid_directories, expression=current_xpath_pattern, xpath2=True
-        )
-        # materialize a list from the generator of (potential) matches;
+        # match_generator = pyastgrepsearch.search_python_files(
+        #         paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+        # )
+        if xpath == "1.0":
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=False
+            )
+        else:
+            match_generator = pyastgrepsearch.search_python_files(
+                paths=valid_directories, expression=current_xpath_pattern, xpath2=True
+            )
+        # materia>>> mastlize a list from the generator of (potential) matches;
         # note that this list will also contain an object that will
         # indicate that the analysis completed for each located file
         match_generator_list = list(match_generator)
@@ -580,6 +464,19 @@ def analyze(  # noqa: PLR0913, PLR0915
             f"  {check_status_symbol} id: '{check_id}', name: '{check_name}'"
             + f", pattern: '{current_xpath_pattern_escape}', min={min_count}, max={max_count}"
         )
+        if store_result:
+            # makes the check marks or x's appear as words instead for markdown
+            check_pass = (
+                "PASSED:"
+                if check_status_symbol == "[green]\u2713[/green]"
+                else "FAILED:"
+            )
+            # stores check type in a string to stored in file later
+            analysis_result += (
+                f"\n# {check_pass} **ID:** '{check_id}', **Name:** '{check_name}'"
+                + f", **Pattern:** '{current_xpath_pattern_escape}', min={min_count}, max={max_count}\n\n"
+            )
+
         # for each potential match, log and, if verbose model is enabled,
         # display details about each of the matches
         current_result_source = results.Source(
@@ -616,6 +513,9 @@ def analyze(  # noqa: PLR0913, PLR0915
             output.console.print(
                 f"    {small_bullet_unicode} {file_name} - {len(matches_list)} matches"
             )
+            if store_result:
+                # stores details of checks in string to be stored later
+                analysis_result += f"    - {file_name} - {len(matches_list)} matches\n"
             # extract the lines of source code for this file; note that all of
             # these matches are organized for the same file and thus it is
             # acceptable to extract the lines of the file from the first match
@@ -645,7 +545,10 @@ def analyze(  # noqa: PLR0913, PLR0915
                         ),
                         linematch_context=util.join_and_preserve(
                             current_match.file_lines,
-                            max(0, position_end - constants.markers.Code_Context),
+                            max(
+                                0,
+                                position_end - constants.markers.Code_Context,
+                            ),
                             position_end + constants.markers.Code_Context,
                         ),
                     )
@@ -653,9 +556,19 @@ def analyze(  # noqa: PLR0913, PLR0915
                     # pyastgrepsearch.Match for verbose debugging output as needed
                     current_check_save._matches.append(current_match)
                     # add the match to the listing of matches for the current check
-                    current_check_save.matches.append(current_match_for_current_check_save)  # type: ignore
+                    current_check_save.matches.append(
+                        current_match_for_current_check_save
+                    )  # type: ignore
             # add the current source to main object that contains a list of source
             chasten_results_save.sources.append(current_result_source)
+        # add the amount of total matches in each check to the end of each checks output
+        output.console.print(f"   = {len(match_generator_list)} total matches\n")
+    # calculate the final count of matches found
+    total_result = util.total_amount_passed(check_status_list)
+    # display checks passed, total amount of checks, and percentage of checks passed
+    output.console.print(
+        f":computer: {total_result[0]} / {total_result[1]} checks passed ({total_result[2]}%)\n"
+    )
     # display all of the analysis results if verbose output is requested
     output.print_analysis_details(chasten_results_save, verbose=verbose)
     # save all of the results from this analysis
@@ -664,14 +577,33 @@ def analyze(  # noqa: PLR0913, PLR0915
     )
     # output the name of the saved file if saving successfully took place
     if saved_file_name:
-        output.console.print(f"\n:sparkles: Saved the file '{saved_file_name}'")
+        output.console.print(f":sparkles: Saved the file '{saved_file_name}'")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
     all_checks_passed = all(check_status_list)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
     if not all_checks_passed:
-        output.console.print("\n:sweat: At least one check did not pass.")
+        output.console.print(":sweat: At least one check did not pass.")
+        if store_result:
+            # writes results of analyze into a markdown file
+            analysis_file_dir.write_text(analysis_result, encoding="utf-8")
+            output.console.print(
+                f"\n:sparkles: Results saved in: {os.path.abspath(analysis_file_dir)}\n"
+            )
         sys.exit(constants.markers.Non_Zero_Exit)
-    output.console.print("\n:joy: All checks passed.")
+    output.console.print(
+        f"\n:joy: All checks passed. Elapsed Time: {elapsed_time} seconds"
+    )
+    output.logger.debug("Analysis complete.")
+    if store_result:
+        # writes results of analyze into a markdown file
+        result_path = os.path.abspath(analysis_file_dir)
+        analysis_file_dir.write_text(analysis_result, encoding="utf-8")
+        output.console.print(f"\n:sparkles: Results saved in: {result_path}\n")
+        if display:
+            database.display_results_frog_mouth(result_path, util.get_OS())
 
 
 @cli.command()
@@ -721,13 +653,17 @@ def integrate(  # noqa: PLR0913
         json_path=json_path,
         force=force,
     )
+    output.logger.debug("Integrate function started.")
     # output the list of directories subject to checking
     output.console.print()
     output.console.print(":sparkles: Combining data file(s) in:")
+    output.logger.debug(":sparkles: Combining data file(s) in:")
     output.console.print()
     output.print_list_contents(json_path)
     # extract all of the JSON dictionaries from the specified files
     json_dicts = filesystem.get_json_results(json_path)
+    count = len(json_path)
+    output.console.print(f"\n:sparkles: Total of {count} files in all directories.")
     # combine all of the dictionaries into a single string
     combined_json_dict = process.combine_dicts(json_dicts)
     # write the combined JSON file string to the filesystem
@@ -737,13 +673,15 @@ def integrate(  # noqa: PLR0913
     # output the name of the saved file if saving successfully took place
     if combined_json_file_name:
         output.console.print(f"\n:sparkles: Saved the file '{combined_json_file_name}'")
+        output.logger.debug(f"Saved the file '{combined_json_file_name}'.")
     # "flatten" (i.e., "un-nest") the now-saved combined JSON file using flatterer
-    # create the SQLite3 database and then configure the database for use in datasett
+    # create the SQLite3 database and then configure the database for use in datasette
     combined_flattened_directory = filesystem.write_flattened_csv_and_database(
         combined_json_file_name,
         output_directory,
         project,
     )
+    output.logger.debug("Flattened JSON and created SQLite database.")
     # output the name of the saved file if saving successfully took place
     if combined_flattened_directory:
         output.console.print(
@@ -754,6 +692,7 @@ def integrate(  # noqa: PLR0913
         )
         output.console.print()
         output.console.print(combined_directory_tree)
+        output.logger.debug("Integrate function completed successfully.")
 
 
 @cli.command()
@@ -809,6 +748,11 @@ def datasette_serve(  # noqa: PLR0913
         datasette_port=port,
         metadata=metadata,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     # display diagnostic information about the datasette instance
     label = ":sparkles: Starting a local datasette instance:"
     display_serve_or_publish_details(
@@ -878,6 +822,11 @@ def datasette_publish(  # noqa: PLR0913
         database=database_path,
         metadata=metadata,
     )
+    # setup the console and the logger through the output module
+    output.setup(debug_level, debug_destination)
+    output.logger.debug(f"Display verbose output? {verbose}")
+    output.logger.debug(f"Debug level? {debug_level.value}")
+    output.logger.debug(f"Debug destination? {debug_destination.value}")
     output.console.print()
     output.console.print(
         f":wave: Make sure that you have previously logged into the '{datasette_platform.value}' platform"
@@ -893,6 +842,7 @@ def datasette_publish(  # noqa: PLR0913
         datasette_metadata=metadata,
         datasette_platform=datasette_platform.value,
         publish=True,
+        OpSystem=util.get_OS(),
     )
 
 
