@@ -1,8 +1,0 @@
-checks:
-  - name: "Hello, World"
-    code: "HW"
-    id: "G001"
-    pattern: "print('Hello, World')"
-    count:
-      min: 1
-      max: 1
