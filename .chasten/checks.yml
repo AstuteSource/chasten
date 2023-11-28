@@ -34,3 +34,8 @@ checks:
     count:
       min: 1
       max: 15
+  - name: "count-method-lines"
+    pattern: "//FunctionDef//Expr | //FunctionDef//Return)"
+    count: 
+      min: 1
+      max: 1000
