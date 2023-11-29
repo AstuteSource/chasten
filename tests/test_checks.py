@@ -126,8 +126,8 @@ def test_integers(check):
         (1, None, None, True),
         (5, 6, 4, False),
         (1, 4, 6, False),
-        (5, 1, None, True),
-        (5, None, 10, True)
+        (1, 2, None, False),
+        (3, None, 2, False),
     ],
 )
 def test_check_match_count_expected(count, min_value, max_value, expected):
