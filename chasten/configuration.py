@@ -5,22 +5,25 @@ import logging.config
 import logging.handlers
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import platformdirs
 import requests
 import yaml
 from rich.logging import RichHandler
 from rich.traceback import install
-from urllib3.util import Url, parse_url
+from urllib3.util import Url
+from urllib3.util import parse_url
 
-from chasten import (
-    constants,
-    filesystem,
-    output,
-    util,
-    validate,
-)
+from chasten import constants
+from chasten import filesystem
+from chasten import output
+from chasten import util
+from chasten import validate
 
 
 def configure_tracebacks() -> None:

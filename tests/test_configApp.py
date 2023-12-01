@@ -1,10 +1,13 @@
 import pathlib
 
 import pytest
-from hypothesis import HealthCheck, given, settings
+from hypothesis import HealthCheck
+from hypothesis import given
+from hypothesis import settings
 from hypothesis import strategies as st
 
-from chasten import configApp, constants
+from chasten import configApp
+from chasten import constants
 
 # Define an alphabet of characters for generating random test data
 ALPHABET = "0123456789!@#$%^&*()_+-=[]|:;'<>.?/~`AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"

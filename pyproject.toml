@@ -53,6 +53,7 @@ types-pyyaml = "^6.0.12.10"
 types-jsonschema = "^4.17.0.9"
 types-requests = "^2.31.0.10"
 hypothesis-jsonschema = "^0.22.1"
+pre-commit = "^3.5.0"
 pytest-clarity = "^1.0.1"
 pytest-randomly = "^3.13.0"
 pytest-pretty = "^1.2.0"
@@ -119,6 +120,7 @@ test-api = { cmd = "{openai-test}", help = "Run openai powered test cases", use_
 not-openai-test = { cmd = "{not-openai-test}", help = "Run openai powered test cases", use_vars = true }
 test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
 test-coverage-silent = { cmd = "{coverage-test-command-silent}", help = "Run coverage monitoring for tests without output", use_vars = true }
+pre-commit-install = { cmd = "pre-commit install", help = "Install or update pre-commit hooks" }
 
 [build-system]
 requires = ["poetry-core"]
