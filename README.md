@@ -89,24 +89,6 @@ Follow these steps to install the `chasten` program:
 - Type `pipx list` and confirm that Chasten is installed
 - Type `chasten --help` to learn how to use the tool
 
-## 🐋 Docker
-
-There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
-
-Follow these steps to utilize Docker:
-
-- Install [Docker Desktop](https://docs.docker.com/get-docker/) for your operating system
-- Ensure Docker Desktop is running
-- `cd` into the chasten directory where the `Dockerfile` is located
-- Type `docker build -t chasten .` to build the container
-- Type one of the following commands to run the container:
-    - Windows (Command Prompt) -> `docker run --rm -v "%cd%":/root/src -it chasten`
-    - Windows (Powershell) -> `docker run --rm -v ${pwd}:/root/src -it chasten`
-    - Mac/Ubuntu -> `docker run --rm -v $(pwd):/root/src -it chasten`
-- Inside the container type `poetry install`
-- Outside of the container type `docker ps` to view running container information
-- Outside of the container type `docker commit <your-container-id> <your-image-name>` to save the dependecy installation
-- Now you can use Docker for all of your `chasten` needs!
 
 ## 🪂 Configuration
 
@@ -345,7 +327,24 @@ class DebugLevel(str, Enum):
     CRITICAL = "CRITICAL"
 ```
 
+## 🐋 Docker
 
+There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
+
+Follow these steps to utilize Docker:
+
+- Install [Docker Desktop](https://docs.docker.com/get-docker/) for your operating system
+- Ensure Docker Desktop is running
+- `cd` into the chasten directory where the `Dockerfile` is located
+- Type `docker build -t chasten .` to build the container
+- Type one of the following commands to run the container:
+    - Windows (Command Prompt) -> `docker run --rm -v "%cd%":/root/src -it chasten`
+    - Windows (Powershell) -> `docker run --rm -v ${pwd}:/root/src -it chasten`
+    - Mac/Ubuntu -> `docker run --rm -v $(pwd):/root/src -it chasten`
+- Inside the container type `poetry install`
+- Outside of the container type `docker ps` to view running container information
+- Outside of the container type `docker commit <your-container-id> <your-image-name>` to save the dependecy installation
+- Now you can use Docker for all of your `chasten` needs!
 
 
 ## 🤗 Learning
@@ -373,6 +372,43 @@ class DebugLevel(str, Enum):
     general-purpose approach to modelling and querying source code
     - [Python Treesitter](https://github.com/tree-sitter/py-tree-sitter) offers
     a Python language bindings for to parsing and querying with Treesitter
+
+## 🤓Comparisons
+
+Chasten is very similar to a tool called symbex which was created by a top software
+engineer by the name of Simon Willison. Its original use was to be able to search for
+names of functions and classes that appear in a file. The biggest difference is when
+looking at the cli interface. Symbex uses many abbreviations, looking at this command
+the -s is looking for signatures and the -f is looking for functions. So in all it
+is checking for function signatures in the file test_debug.py and this is what the
+output would look like.
+```python
+command :symbex -s -f symbex/test_debug.py
+    def test_debug_level_values():
+    def test_debug_level_isinstance():
+    def test_debug_level_iteration():
+    def test_debug_destination_values():
+    def test_debug_destination_isinstance():
+    def test_debug_destination_iteration():
+    def test_level_destination_invalid():
+    def test_debug_destination_invalid():
+```
+
+Compared to Chasten, which uses and leverages many different python packages to make
+the cli interface as efficient as possible for a broad range of users. By using packages
+like typer and rich, these allow for chasten to be very easily understood within the
+cli. Commands available to use for the cli interface for Chasten are as follows…
+
+- analyze               💫 Analyze the AST of Python source code
+- configure             🪂 Manage chasten's configuration
+- datasette-publish     🌎 Publish a datasette to Fly or Vercel
+- datasette-serve       🏃 Start a local datasette server
+- integrate             🚧 Integrate files and make a database
+- interact              🚀 Interactively configure and run
+- log                  🦚 Start the logging server.
+
+A command like chasten analyze, will create a similar output as the symbex tool, but
+the command is much simpler due to the use of different tools
 
 ## 🧗Improvement
 
