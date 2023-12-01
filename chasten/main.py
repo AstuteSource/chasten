@@ -198,7 +198,7 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0912, PLR0913, PLR0915, PLW2901
+def analyze(  # noqa: PLR0912, PLR0913, PLR0915
     project: str = typer.Argument(help="Name of the project."),
     xpath: Path = typer.Option(
         str,
@@ -597,7 +597,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915, PLW2901
         try:
             if os.path.isdir(input_path):
                 for each_file in os.listdir(input_path):
-                    each_file = Path(input_path) / Path(each_file)  # type: ignore
+                    each_file = Path(input_path) / Path(each_file)  # type: ignore # noqa: PLW2901
                     if (
                         not os.path.isdir(each_file)
                         and os.path.isfile(each_file)
@@ -620,7 +620,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915, PLW2901
                             )
                     elif os.path.isdir(each_file):
                         for sub_file in os.listdir(each_file):
-                            sub_file = Path(each_file) / Path(sub_file)  # type: ignore
+                            sub_file = Path(each_file) / Path(sub_file)  # type: ignore # noqa: PLW2901
                             if str(sub_file).endswith(".py"):
                                 contents = Path(sub_file).read_bytes()
                                 _, ast = pyastgrep.files.parse_python_file(
