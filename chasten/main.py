@@ -198,7 +198,7 @@ def configure(  # noqa: PLR0913
 
 
 @cli.command()
-def analyze(  # noqa: PLR0912, PLR0913, PLR0915
+def analyze(  # noqa: PLR0912, PLR0913, PLR0915, PLW2901
     project: str = typer.Argument(help="Name of the project."),
     xpath: Path = typer.Option(
         str,
@@ -647,7 +647,7 @@ def analyze(  # noqa: PLR0912, PLR0913, PLR0915
                             "utf-8"
                         )
                     )
-        except FileNotFoundError or FileExistsError:
+        except FileNotFoundError:
             output.console.print(":sweat: Sorry, could not convert to xml.")
     # confirm whether or not all of the checks passed
     # and then display the appropriate diagnostic message
