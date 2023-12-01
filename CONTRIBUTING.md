@@ -28,6 +28,21 @@ If the issue already exists, share any helpful information that you have gained 
 
 Any changes being made to our program must first be done in a branch or fork. Once you (and your fellow contributors) are done making changes, you may create a pull request (PR) to the [main repository](https://github.com/AstuteSource/chasten).
 
+### Pre-Commit Hooks
+
+Enabling pre-commit hooks on your system will save you from accidentally making
+unwanted changes, such as incorrect formatting, committing merge conflicts, etc.
+
+You can enable pre-commit hooks after installing `poetry`:
+
+```sh
+poetry install
+poetry run task pre-commit-install # this sets up pre-commit hooks
+```
+
+Now, when you make commits, our specific checks will run. This will give you
+greater confidence that your contributions align with our standards!
+
 ### Branches
 
 Branches are one of the possible features of GitHub that you could use to make changes to our project. Learn about branches [here](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches).
