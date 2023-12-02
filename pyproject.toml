@@ -13,6 +13,10 @@ python = "^3.11"
 rich = "^13.4.2"
 typer = {extras = ["all"], version = "^0.9.0"}
 pyastgrep = "^1.2.2"
+trogon = "^0.5.0"
+textual = "^0.41.0"
+openai = "^0.28.1"
+cryptography = "^41.0.5"
 frogmouth = "^0.9.0"
 pydantic = "^2.0.3"
 platformdirs = "^3.8.1"
@@ -90,6 +94,8 @@ developer-test-command = "pytest -x -s -m 'not fuzz'"
 developer-test-silent-command = "pytest -x -m 'not fuzz' --show-capture=no"
 hypothesis-test-command = "pytest -x -s -m 'fuzz'"
 hypothesis-test-silent-command = "pytest -x -m 'fuzz' --show-capture=no"
+not-openai-test = "pytest -x -s -m 'not api'"
+openai-test = "pytest -x -s -m 'api'"
 
 [tool.taskipy.tasks]
 all = "task black && task mypy && task ruff && task test"
@@ -109,6 +115,8 @@ test-not-xdist = { cmd = "pytest -x -s -vv -p no:xdist", help = "Run the pytest 
 test-silent = { cmd = "pytest -x --show-capture=no -n auto", help = "Run the pytest test suite without showing output" }
 test-silent-not-randomly = { cmd = "pytest -x --show-capture=no -p no:randomly", help = "Run the pytest test suite without showing output and order randomization" }
 test-silent-not-xdist = { cmd = "pytest -x --show-capture=no -p no:xdist", help = "Run the pytest test suite without showing output and test distribution" }
+test-api = { cmd = "{openai-test}", help = "Run openai powered test cases", use_vars = true }
+not-openai-test = { cmd = "{not-openai-test}", help = "Run openai powered test cases", use_vars = true }
 test-coverage = { cmd = "{coverage-test-command}", help = "Run coverage monitoring for the test suite", use_vars = true }
 test-coverage-silent = { cmd = "{coverage-test-command-silent}", help = "Run coverage monitoring for tests without output", use_vars = true }
 
