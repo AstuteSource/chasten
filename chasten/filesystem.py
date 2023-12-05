@@ -114,7 +114,9 @@ def create_configuration_file(
     # create the final path to the configuration directory
     chasten_user_config_dir_path = Path(chasten_user_config_dir_str)
     # create a path to the configuration file
-    chasten_user_config_main_file = chasten_user_config_dir_path / config_file_name
+    chasten_user_config_main_file = chasten_user_config_dir_path / Path(
+        config_file_name
+    )
     # create the file (if it does not exist)
     chasten_user_config_main_file.touch()
     # write the default contents of the file

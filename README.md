@@ -132,7 +132,7 @@ first executable line of non-test and test-case functions in a Python project.
 Note that the `pattern` attribute specifies the XPath version 2.0 expression
 that `chasten` will use to detect the specified type of Python function. You can
 type `chasten configure validate --config <path to chasten-configuration/
-directory>` after filling in `<path to chasten-configuration>` with the
+directory | config url>` after filling in `<path to chasten-configuration/directory | config url>` with the
 fully-qualified name of your configuration directory and the tool will confirm
 that your configuration meets the tool's specification. You can also use the
 command `chasten configure create` command to automatically generate a starting
@@ -172,7 +172,7 @@ program:
 
 ```shell
 chasten analyze lazytracker \
-        --config <path to the chasten-configuration/ directory> \
+        --config <path to the chasten-configuration/ directory | config url> \
         --search-path <path to the lazytracker/ directory> \
         --save-directory <path to the subject-data/lazytracker/ directory> \
         --save
@@ -193,7 +193,7 @@ program:
 
 ```shell
 chasten analyze multicounter \
-        --config <path to the chasten-configuration/ directory> \
+        --config <path to the chasten-configuration/ directory | config url> \
         --search-path <path to the multicounter/ directory> \
         --save-directory <path to the subject-data/lazytracker/ directory> \
         --save
@@ -237,6 +237,21 @@ CSV files that correspond to each of the tables inside of the database.
 
 You can learn more about the `integrate` sub-command by typing `chasten
 integrate --help`.
+
+## 💠 Verbose Output
+
+When utilizing the `chasten` command, appending this `--verbose` flag can significantly enhance your troubleshooting experience and provide a detailed understanding of the tool's functionality. Here is an example with `chasten analyze lazytracker`:
+
+```shell
+chasten analyze lazytracker \
+        --config <path to the chasten-configuration/ directory> \
+        --search-path <path to the lazytracker/ directory> \
+        --save-directory <path to the subject-data/lazytracker/ directory> \
+        --save
+        --verbose
+ ```
+
+Upon executing this command, you can expect the output to contain informative messages such as `✨ Matching source code:` indicating that the tool is actively comparing the source code against the specified patterns. Additionally, you will receive detailed match results, providing insights into the identified checks.
 
 ## 🌄 Results
 

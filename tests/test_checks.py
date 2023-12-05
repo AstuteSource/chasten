@@ -10,16 +10,13 @@ from chasten.checks import (
     extract_min_max,
     is_in_closed_interval,
 )
+from chasten.validate import JSON_SCHEMA_CHECKS
 
 JSON_SCHEMA_COUNT = {
     "type": "object",
     "properties": {
         "count": {
-            "type": "object",
-            "properties": {
-                "min": {"type": "integer", "minimum": 1, "maximum": 10},
-                "max": {"type": "integer", "minimum": 1, "maximum": 10},
-            },
+            **JSON_SCHEMA_CHECKS["properties"]["checks"]["items"]["properties"]["count"]
         }
     },
 }
@@ -75,7 +72,7 @@ def test_extract_min_max_hypothesis(check):
 @pytest.mark.fuzz
 @settings(suppress_health_check=[HealthCheck.too_slow])
 def test_integers(check):
-    """Use Hypothesis and the JSON schema plugin to confirm validation works for all possible check configuratios."""
+    """Use Hypothesis and the JSON schema plugin to confirm validation works for all possible check configurations."""
     min_count, max_count = extract_min_max(check)
     assert isinstance(min_count, int) or min_count is None
     assert isinstance(max_count, int) or max_count is None
