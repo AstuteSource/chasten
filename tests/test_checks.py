@@ -10,7 +10,7 @@ from chasten.checks import (
     extract_min_max,
     is_in_closed_interval,
     extract_description,
-    make_checks_status_message
+    make_checks_status_message,
 )
 from chasten.validate import JSON_SCHEMA_CHECKS
 
@@ -85,11 +85,11 @@ def test_extract_desription_none():
 
 
 @pytest.mark.parametrize(
-        "bool_status,expected",
-        [
-            (True, ":smiley: Did the check pass? Yes"),
-            (False, ":worried: Did the check pass? No")
-        ]
+    "bool_status,expected",
+    [
+        (True, ":smiley: Did the check pass? Yes"),
+        (False, ":worried: Did the check pass? No"),
+    ],
 )
 def test_make_checks_status_message(bool_status: bool, expected: str):
     """Confirms the output matches the expected message."""
