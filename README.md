@@ -327,6 +327,29 @@ class DebugLevel(str, Enum):
     CRITICAL = "CRITICAL"
 ```
 
+## chasten --help
+
+```shell
+ Usage: chasten [OPTIONS] COMMAND [ARGS]...                                                    
+                                                                                               
+╭─ Options ───────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                     │
+│ --show-completion             Show completion for the current shell, to copy it or          │
+│                               customize the installation.                                   │
+│ --help                        Show this message and exit.                                   │
+╰─────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ──────────────────────────────────────────────────────────────────────────────────╮
+│ analyze                      💫 Analyze the AST of Python source code.                      │
+│ configure                    🪂 Manage chasten's configuration.                             │
+│ datasette-publish            🌎 Publish a datasette to Fly or Vercel.                       │
+│ datasette-serve              🏃 Start a local datasette server.                             │
+│ integrate                    🚧 Integrate files and make a database.                        │
+│ interact                     🚀 Interactively configure and run.                            │
+│ log                          🦚 Start the logging server.                                   │
+╰─────────────────────────────────────────────────────────────────────────────────────────────╯
+
+```
+
 ## 🐋 Docker
 
 There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
