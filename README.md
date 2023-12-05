@@ -401,6 +401,9 @@ Chasten, on the other hand, leverages Python packages such as Typer and Rich to 
 - interact              🚀 Interactively configure and run
 - log                  🦚 Start the logging server.
 
+In terms of functionality, Symbex is designed to search Python code for functions and classes by name or wildcard. It provides the ability to filter results based on various criteria, including function type (async or non-async), documentation presence, visibility, and type annotations.
+
+On the other hand, Chasten's `analyze` command performs AST analysis on Python source code. It allows users to specify a project name, XPATH version, search path, and various filtering criteria. Chasten supports checks for inclusion and exclusion based on attributes, values, and match confidence levels. The tool also provides extensive configuration options and the ability to save results in different formats, including markdown.
 
 
 
