@@ -405,9 +405,14 @@ In terms of functionality, Symbex is designed to search Python code for function
 
 On the other hand, Chasten's `analyze` command performs AST analysis on Python source code. It allows users to specify a project name, XPATH version, search path, and various filtering criteria. Chasten supports checks for inclusion and exclusion based on attributes, values, and match confidence levels. The tool also provides extensive configuration options and the ability to save results in different formats, including markdown.
 
-In summary, while both Chasten and Symbex serve the common purpose of analyzing Python source code, Chasten offers a more versatile and user-friendly CLI with additional features of configuration and result management. Symbex, on the other hand, adopts a concise CLI with a focus on searching and filtering functionalities. The choice between the two tools depends on the user's preferences and specific requirements for Python code analysis. 
+In summary, while both Chasten and Symbex serve the common purpose of analyzing Python source code, Chasten offers a more versatile and user-friendly CLI with additional features of configuration and result management. Symbex, on the other hand, adopts a concise CLI with a focus on searching and filtering functionalities. The choice between the two tools depends on the user's preferences and specific requirements for Python code analysis.
 
-## 🤓 Similar Tools
+## 📦 Similar Tools
+
+In addition to Chasten and Symbex, several other tools offer unique capabilities for analyzing and searching through Python source code, each catering to specific use cases.
+
+- [pyastgrep](https://github.com/spookylukey/pyastgrep) is a tool developed by Luke Plant that provides advanced capabilities for viewing and searching AST using XPath expressions. It allows users to define complex patterns and queries to navigate and extract information from Python code, making it a powerful tool for in-depth code analysis.
+- [treesitter](https://tree-sitter.github.io/tree-sitter/) offers a generic and efficient approach to parsing source code and building AST. It supports multiple languages, providing a consistent API for interacting with parsed code across different language ecosystems.
 
 ## 🧗Improvement
 
