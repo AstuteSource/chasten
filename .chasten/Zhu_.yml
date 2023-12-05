@@ -1,0 +1,52 @@
+checks:
+  - name: "Void Function"
+    code: "VF"
+    id: "C001"
+    pattern: 'count(//Function//For|If|Return|Assign)'
+    count:
+      min: 1
+      max: 100
+  - name: "Nested Depth (Set value)"
+    code: "ND"
+    id: "F001"
+    pattern: '//FunctionDef//FunctionDef/ancestor::*'
+    count:
+      min: 1
+      max: 100
+  - name: " number of conditions (if, if-else and switch) a Function"
+    code: "#Cond"
+    id: "F002"
+    pattern: '//FunctionDef//If/following-sibling::If | //FunctionDef//If/following-sibling::Elif | //FunctionDef//If/following-sibling::Else'
+    count:
+      min: 1
+      max: 100
+  - name: "The number of nested conditions (e.g.,if{if{}}) a Function"
+    code: "IFIF"
+    id: "CL001"
+    pattern: '//FunctionDef//If/descendant::If'
+    count:
+      min: 1
+      max: 100
+  - name: " The number of nested condition-loops (e.g.,if{for{}}) in a Function"
+    code: "IFOR"
+    id: "CL002"
+    pattern: '//FunctionDef//For//if'
+    count:
+      min: 1
+      max: 100
+    checks:
+  - name: "The number of nested loop-conditions (e.g.,for{if{}}) in a Function"
+    code: "VF"
+    id: "C001"
+    pattern: '//FunctionDef[//(If/following-sibling::For | For/following-sibling::If)'
+    count:
+      min: 1
+      max: 100
+  - name: "The number of nested loop-conditions (e.g.,for{for{}}) in a Function"
+    code: "FF"
+    id: "F001"
+    pattern: '//FunctionDef//For[.//For]'
+    count:
+      min: 1
+      max: 100
+ 
