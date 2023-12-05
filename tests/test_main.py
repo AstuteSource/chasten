@@ -535,7 +535,7 @@ def test_analyze_store_results_valid_path(directory, cwd):
 
 
 @given(
-    label=strategies.characters(),
+    label=strategies.text(),
     database_path=strategies.builds(Path),
     metadata=strategies.builds(Path),
     publish=strategies.booleans()
@@ -546,7 +546,7 @@ def test_display_detail_publish_true(
     database_path: Path,
     metadata: Path,
     publish: bool,
-) -> None:
+):
     """Confirm that the function does not crash."""
     main.display_serve_or_publish_details(
         label=label, database_path=database_path, metadata=metadata, publish=publish
