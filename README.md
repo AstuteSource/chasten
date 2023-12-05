@@ -373,7 +373,9 @@ Follow these steps to utilize Docker:
     - [Python Treesitter](https://github.com/tree-sitter/py-tree-sitter) offers
     a Python language bindings for to parsing and querying with Treesitter
 
-## 🤓Comparisons
+## 🤓 Chasten vs. Symbex
+
+Chasten and Symbex are both tools designed for analyzing Python source code, particularly focusing on searching for functions and classes within files. While they share a common goal, there are notable differences between the two, especially in terms of their command-line interfaces and functionality. 
 
 Chasten is very similar to a tool called symbex which was created by a top software
 engineer by the name of Simon Willison. Its original use was to be able to search for
