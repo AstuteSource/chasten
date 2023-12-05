@@ -12,6 +12,8 @@ class Chasten:
     Analyze_Storage: Path
     Application_Name: str
     Application_Author: str
+    App_Storage: Path
+    API_Key_Storage: Path
     Chasten_Database_View: str
     Emoji: str
     Executable_Fly: str
@@ -31,6 +33,8 @@ chasten = Chasten(
     Analyze_Storage=Path("analysis.md"),
     Application_Name="chasten",
     Application_Author="ChastenedTeam",
+    App_Storage=Path("check.txt"),
+    API_Key_Storage=Path("userapikey.txt"),
     Chasten_Database_View="chasten_complete",
     Emoji=":dizzy:",
     Executable_Fly="fly",
