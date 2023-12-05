@@ -93,7 +93,7 @@ checks:
   - name : "test-methods-invoking-method"
     code: "TMIM"
     id: "TMIM001"
-    pattern : "//FunctionDef[@type='str' and starts-with(@name, 'test_')]/body//Call/Name[@id='test_function']"
+    pattern : "//Assert[count(.//Call[func/Name/@id='test_function']) > 0]"
     count: 
       min: null
       max: null
