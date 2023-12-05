@@ -97,3 +97,10 @@ checks:
     count: 
       min: null
       max: null
+  - name : "nested-class-methods"
+    code: "NSM"
+    id: "NCM0001"
+    pattern : "//ClassDef[count(ancestor::ClassDef) > 1]//FunctionDef"
+    count: 
+      min: null
+      max: null
