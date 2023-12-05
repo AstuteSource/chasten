@@ -327,7 +327,7 @@ class DebugLevel(str, Enum):
     CRITICAL = "CRITICAL"
 ```
 
-## chasten --help
+## ✨ chasten --help
 
 ```shell
  Usage: chasten [OPTIONS] COMMAND [ARGS]...                                                    
