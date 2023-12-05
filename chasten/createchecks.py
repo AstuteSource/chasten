@@ -1,7 +1,6 @@
 from pathlib import Path
 
-import openai
-from cryptography.fernet import Fernet
+
 
 genscript = """
 checks:
