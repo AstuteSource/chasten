@@ -90,3 +90,10 @@ checks:
     count: 
       min: null
       max: null
+  - name : "test-methods-invoking-method"
+    code: "TMIM"
+    id: "TMIM001"
+    pattern : "//FunctionDef[@type='str' and starts-with(@name, 'test_')]/body//Call/Name[@id='test_function']"
+    count: 
+      min: null
+      max: null
