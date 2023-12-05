@@ -369,7 +369,6 @@ Follow these steps to utilize Docker:
 - Outside of the container type `docker commit <your-container-id> <your-image-name>` to save the dependecy installation
 - Now you can use Docker for all of your `chasten` needs!
 
-
 ## 🤗 Learning
 
 - **Curious about the nodes that are available in a Python program's AST?**
@@ -398,7 +397,7 @@ Follow these steps to utilize Docker:
 
 ## 🤓 Chasten vs. Symbex
 
-Chasten and Symbex are both tools designed for analyzing Python source code, particularly focusing on searching for functions and classes within files. While they share a common goal, there are notable differences between the two, especially in terms of their command-line interfaces and functionality.
+Chasten and Symbex, which was created by Simon Willison, are both tools designed for analyzing Python source code, particularly focusing on searching for functions and classes within files. While they share a common goal, there are notable differences between the two, especially in terms of their command-line interfaces and functionality.
 
 In terms of Command-Line Interface, Symbex employs a concise CLI, utilizing abbreviations for various options. For instance, the command to search for function signatures in a file named `test_debug.py` is as follows:
 
@@ -414,7 +413,7 @@ command :symbex -s -f symbex/test_debug.py
     def test_debug_destination_invalid():
 ```
 
-Chasten, on the other hand, leverages Python packages such as Typer and Rich to provide user-friendly and feature-rich command-line interface. The available commands for Chasten include:
+Chasten, on the other hand, leverages Python packages such as Typer and Rich to provide a user-friendly and feature-rich command-line interface. The available commands for Chasten include:
 
 - analyze               💫 Analyze the AST of Python source code
 - configure             🪂 Manage chasten's configuration
