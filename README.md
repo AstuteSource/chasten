@@ -375,15 +375,10 @@ Follow these steps to utilize Docker:
 
 ## 🤓 Chasten vs. Symbex
 
-Chasten and Symbex are both tools designed for analyzing Python source code, particularly focusing on searching for functions and classes within files. While they share a common goal, there are notable differences between the two, especially in terms of their command-line interfaces and functionality. 
+Chasten and Symbex are both tools designed for analyzing Python source code, particularly focusing on searching for functions and classes within files. While they share a common goal, there are notable differences between the two, especially in terms of their command-line interfaces and functionality.
 
-Chasten is very similar to a tool called symbex which was created by a top software
-engineer by the name of Simon Willison. Its original use was to be able to search for
-names of functions and classes that appear in a file. The biggest difference is when
-looking at the cli interface. Symbex uses many abbreviations, looking at this command
-the -s is looking for signatures and the -f is looking for functions. So in all it
-is checking for function signatures in the file test_debug.py and this is what the
-output would look like.
+In terms of Command-Line Interface, Symbex employs a concise CLI, utilizing abbreviations for various options. For instance, the command to search for function signatures in a file named `test_debug.py` is as follows:
+
 ```python
 command :symbex -s -f symbex/test_debug.py
     def test_debug_level_values():
@@ -396,10 +391,7 @@ command :symbex -s -f symbex/test_debug.py
     def test_debug_destination_invalid():
 ```
 
-Compared to Chasten, which uses and leverages many different python packages to make
-the cli interface as efficient as possible for a broad range of users. By using packages
-like typer and rich, these allow for chasten to be very easily understood within the
-cli. Commands available to use for the cli interface for Chasten are as follows…
+Chasten, on the other hand, leverages Python packages such as Typer and Rich to provide user-friendly and feature-rich command-line interface. The available commands for Chasten include:
 
 - analyze               💫 Analyze the AST of Python source code
 - configure             🪂 Manage chasten's configuration
@@ -409,8 +401,8 @@ cli. Commands available to use for the cli interface for Chasten are as follows�
 - interact              🚀 Interactively configure and run
 - log                  🦚 Start the logging server.
 
-A command like chasten analyze, will create a similar output as the symbex tool, but
-the command is much simpler due to the use of different tools
+
+
 
 ## 🧗Improvement
 
