@@ -407,6 +407,8 @@ On the other hand, Chasten's `analyze` command performs AST analysis on Python s
 
 In summary, while both Chasten and Symbex serve the common purpose of analyzing Python source code, Chasten offers a more versatile and user-friendly CLI with additional features of configuration and result management. Symbex, on the other hand, adopts a concise CLI with a focus on searching and filtering functionalities. The choice between the two tools depends on the user's preferences and specific requirements for Python code analysis. 
 
+## 🤓 Similar Tools
+
 ## 🧗Improvement
 
 - Found a bug or have a feature that the development team should implement?
