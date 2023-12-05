@@ -575,7 +575,6 @@ def analyze(  # noqa:  PLR0912, PLR0913, PLR0915
         # of the syntax box for this specific check
         check_id = current_check[constants.checks.Check_Id]  # type: ignore
         output.logger.debug(f"check id: {check_id}")
-        
         check_name = current_check[constants.checks.Check_Name]  # type: ignore
         check_description = checks.extract_description(current_check)
         # search for the XML contents of an AST that match the provided
