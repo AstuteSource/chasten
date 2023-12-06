@@ -111,7 +111,7 @@ class config_App(App):
         color: black;
     }
     """
-    Check: ClassVar = ["", "1", False]
+    Check: ClassVar = ["", "1", False]  # noqa: RUF012
     Valid: bool = False
 
     def on_input_changed(self, event: Input.Changed) -> None:
