@@ -350,7 +350,18 @@ class DebugLevel(str, Enum):
 
 ```
 
-## 🐋 Docker
+## 🧑‍💻 Development Enviroment
+
+### 🏠 Local
+
+Follow these steps to install the `chasten` tool for future development:
+
+- The developement and use of Chasten requires [Python 3.11](https://www.python.org/downloads/release/python-3115/), must be greater or equal to version 3.11.5.
+- The developers of Chasten use [Poetry](https://github.com/python-poetry/poetry) for packaging and dependency management.
+
+Once Python and Poetry is installed, please go to the [Chasten](https://github.com/AstuteSource/chasten) repository on github and install the tool using the `git clone` command in your terminal. Then navigate to the Chasten directory and run the command `poetry install` to install all the dependencies.
+
+### 🐋 Docker
 
 There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
 
@@ -368,6 +379,15 @@ Follow these steps to utilize Docker:
 - Outside of the container type `docker ps` to view running container information
 - Outside of the container type `docker commit <your-container-id> <your-image-name>` to save the dependecy installation
 - Now you can use Docker for all of your `chasten` needs!
+
+## 📋 Development Tasks
+
+- **Linting and Formatting**
+    - We use the linting tools `Black` and `Ruff` on Chasten to ensure code consistency, readability, and adherence to predefined formatting standards across the entire project, ultimately enhancing maintainability and collaboration among developers. 
+    - Please ensure all content in the project follow the appropriate format by running the following commands: `poetry run task fiximports` and/or `poetry run task fixformat` before shipping new features. If features are shipped with linting issues, the build will break on github due to the failure of the test suite.
+- **Testing and Coverage**
+    - Chasten uses the testing tools `Pytest` and `Hypothesis` which enables us to fortify code consistency, readability, and alignment with established formatting standards throughout the project. When writing test cases for features, create a new file in the tests directory with the naming convention `test_(name of file)`. 
+    - Please ensure all content in the project passes the tests by running the following commands: `poetry run task test` for most cases or if you would like to test the OpenAI API based features `poetry run task test-api` before shipping. If features are shipped without a test suite, the coverage will be lowered on github due to the addition of untested code and may potenitally lead to larger issues in the future.
 
 ## 🤗 Learning
 
