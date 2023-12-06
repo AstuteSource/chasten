@@ -1,11 +1,8 @@
 """Pytest test suite for the database module."""
 
-import pytest
 import os
 
 from chasten import database
-from hypothesis import strategies as st
-from hypothesis import given
 
 
 def test_create_chasten_view():

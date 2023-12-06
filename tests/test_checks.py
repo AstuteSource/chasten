@@ -7,9 +7,9 @@ from hypothesis_jsonschema import from_schema
 
 from chasten.checks import (
     check_match_count,
+    extract_description,
     extract_min_max,
     is_in_closed_interval,
-    extract_description,
     make_checks_status_message,
 )
 from chasten.validate import JSON_SCHEMA_CHECKS
