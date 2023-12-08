@@ -356,7 +356,7 @@ class DebugLevel(str, Enum):
 
 Follow these steps to install the `chasten` tool for future development:
 
-- The developement and use of Chasten requires [Python 3.11](https://www.python.org/downloads/release/python-3115/), must be greater or equal to version 3.11.5.
+- The development and use of Chasten requires [Python 3.11](https://www.python.org/downloads/release/python-3115/), must be greater or equal to version 3.11.5.
 - The developers of Chasten use [Poetry](https://github.com/python-poetry/poetry) for packaging and dependency management.
 
 Once Python and Poetry is installed, please go to the [Chasten](https://github.com/AstuteSource/chasten) repository on github and install the tool using the `git clone` command in your terminal. Then navigate to the Chasten directory and run the command `poetry install` to install all the dependencies.
