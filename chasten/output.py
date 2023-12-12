@@ -39,7 +39,7 @@ def setup(
 
 def print_diagnostics(verbose: bool, **configurations: Any) -> None:
     """Display all variables input to the function."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     # display diagnostic information for each configuration keyword argument
     if verbose:
         console.print(":sparkles: Configured with these parameters:")
@@ -53,7 +53,7 @@ def print_diagnostics(verbose: bool, **configurations: Any) -> None:
 
 def opt_print_log(verbose: bool, **contents: Any) -> None:
     """Produce logging information and only print when not verbose."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     # iterate through each of the configuration keyword arguments
     for current in contents:
         # print the name and the value of the keyword argument
@@ -66,7 +66,7 @@ def opt_print_log(verbose: bool, **contents: Any) -> None:
 
 def print_header() -> None:
     """Display tool details in the header."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     console.print()
     console.print(
         constants.chasten.Emoji + constants.markers.Space + constants.chasten.Tagline
@@ -76,21 +76,21 @@ def print_header() -> None:
 
 def print_server() -> None:
     """Display server details in the header."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     console.print(constants.output.Syslog)
     console.print()
 
 
 def print_test_start() -> None:
     """Display details about the test run."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     console.print(constants.output.Test_Start)
     console.print()
 
 
 def print_test_finish() -> None:
     """Display details about the test run."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     console.print()
     console.print(":sparkles: Finished running test suite for the specified program")
     console.print()
@@ -98,7 +98,7 @@ def print_test_finish() -> None:
 
 def print_footer() -> None:
     """Display concluding details in the footer."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     console.print()
 
 
@@ -136,7 +136,7 @@ def shorten_file_name(file_name: str, max_length: int) -> str:
 
 def print_list_contents(container: List[Path]) -> None:
     """Display the contents of the list in an easy-to-read fashion."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     # group all of the files by the directory that contains them;
     # note that this is important because the contain can contain
     # paths that specify files in different directories
@@ -159,7 +159,7 @@ def print_list_contents(container: List[Path]) -> None:
 
 def print_analysis_details(chasten: results.Chasten, verbose: bool = False) -> None:
     """Print all of the verbose debugging details for the results of an analysis."""
-    global console  # noqa: disable=PLW0603
+    global console  # noqa: PLW0602
     # 1) Note: see the BaseModel definitions in results.py for more details
     # about the objects and their relationships
     # 2) Note: the _match object that is inside of a Match BaseModel subclass
