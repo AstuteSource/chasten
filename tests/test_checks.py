@@ -8,8 +8,10 @@ from hypothesis import settings
 from hypothesis_jsonschema import from_schema
 
 from chasten.checks import check_match_count
+from chasten.checks import extract_description
 from chasten.checks import extract_min_max
 from chasten.checks import is_in_closed_interval
+from chasten.checks import make_checks_status_message
 from chasten.validate import JSON_SCHEMA_CHECKS
 
 JSON_SCHEMA_COUNT = {
@@ -59,6 +61,41 @@ def test_extract_min_max_missing():
     assert max_count is None
 
 
+def test_extract_description():
+    """Confirm that if a description exists, it is properly retrieved."""
+    check = {
+        "name": "test",
+        "description": "described test",
+        "count": {
+            "min": 1,
+        },
+    }
+    assert "described test" == extract_description(check)
+
+
+def test_extract_desription_none():
+    """Confirm that if a description does not exist, an empty string is returned."""
+    check = {
+        "name": "test",
+        "count": {
+            "min": 1,
+        },
+    }
+    assert "" == extract_description(check)
+
+
+@pytest.mark.parametrize(
+    "bool_status,expected",
+    [
+        (True, ":smiley: Did the check pass? Yes"),
+        (False, ":worried: Did the check pass? No"),
+    ],
+)
+def test_make_checks_status_message(bool_status: bool, expected: str):
+    """Confirms the output matches the expected message."""
+    assert make_checks_status_message(bool_status) == expected
+
+
 @given(st.dictionaries(st.text(), st.integers()))
 @pytest.mark.fuzz
 def test_extract_min_max_hypothesis(check):
@@ -89,6 +126,8 @@ def test_integers(check):
         (1, None, None, True),
         (5, 6, 4, False),
         (1, 4, 6, False),
+        (1, 2, None, False),
+        (3, None, 2, False),
     ],
 )
 def test_check_match_count_expected(count, min_value, max_value, expected):
