@@ -1,5 +1,6 @@
 from pathlib import Path
-
+import openai
+from cryptography.fernet import Fernet
 
 
 genscript = """
@@ -95,7 +96,7 @@ def generate_yaml_config(file: Path, user_api_key, user_input: str) -> str:
             + user_input
         ]
 
-        response = openai.ChatCompletion.create(
+        response = openai.ChatCompletion.create(  # type: ignore
             model="gpt-3.5-turbo",
             messages=[
                 {
@@ -113,5 +114,5 @@ def generate_yaml_config(file: Path, user_api_key, user_input: str) -> str:
 
         return generated_yaml
 
-    except openai.error.OpenAIError:
+    except openai.error.OpenAIError:  # type: ignore
         return "[red][Error][/red] There was an issue with the API key. Make sure you input your API key correctly."
