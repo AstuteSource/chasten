@@ -5,6 +5,7 @@ repos:
   rev: v4.5.0
   hooks:
   - id: check-ast
+    files: '\.py$'
   - id: check-case-conflict
   - id: check-merge-conflict
   - id: forbid-submodules
@@ -13,7 +14,7 @@ repos:
 - repo: local
   hooks:
     - id: fix-linting
-      name: Fix Linting
-      types: [python]
       entry: poetry run task lint --fix
+      files: '\.py$'
       language: system
+      name: Fix Linting
