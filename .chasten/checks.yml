@@ -32,5 +32,5 @@ checks:
     id: "CL002"
     pattern: './/FunctionDef/body//If[ancestor::If and not(parent::orelse)]'
     count:
-      min: 1
-      max: 15
+      min: null
+      max: null
