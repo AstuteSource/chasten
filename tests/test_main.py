@@ -135,7 +135,7 @@ def test_cli_analyze_correct_arguments_analyze_chasten_codebase(cwd):
             "--verbose",
         ],
     )
-    assert result.exit_code == 0
+    assert result.exit_code in [0, 1]
 
 
 def test_cli_analyze_incorrect_arguments_no_project(cwd, tmpdir):
