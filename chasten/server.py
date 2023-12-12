@@ -4,8 +4,7 @@ import logging
 import logging.handlers
 import socketserver
 
-from chasten import constants
-from chasten import output
+from chasten import constants, output
 
 LOG_FILE = constants.server.Log_File
 HOST = constants.server.Localhost
@@ -19,7 +18,7 @@ class SyslogUDPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         """Receive a message and then display it in output and log it to a file."""
-        global logger  # noqa: disable=PLW0603
+        global logger  # noqa: PLW0602
         # receive the message from the syslog logging client
         message = bytes.decode(
             self.request[0].strip(), encoding=constants.server.Utf8_Encoding
@@ -39,7 +38,7 @@ class SyslogUDPHandler(socketserver.BaseRequestHandler):
 
 def start_syslog_server():
     """Start a syslog server."""
-    global logger  # noqa: disable=PLW0603
+    global logger  # noqa: PLW0602
     # always log all of the messages to a file
     logger.setLevel(logging.DEBUG)
     # create a RotatingFileHandler such that:

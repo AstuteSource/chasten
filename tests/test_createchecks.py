@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from chasten.createchecks import generate_yaml_config
-from chasten.createchecks import is_valid_api_key
+from chasten.createchecks import generate_yaml_config, is_valid_api_key
 
 
 def get_valid_api_key():

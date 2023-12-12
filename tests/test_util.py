@@ -3,12 +3,10 @@
 import shutil
 
 import pytest
-from hypothesis import given
-from hypothesis import provisional
+from hypothesis import given, provisional
 from hypothesis import strategies as st
 
-from chasten import constants
-from chasten import util
+from chasten import constants, util
 
 
 def test_human_readable_boolean() -> None:

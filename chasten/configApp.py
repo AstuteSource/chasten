@@ -1,16 +1,11 @@
 # Import necessary modules and components from the Textual library,
 # as well as other Python modules like os and validation tools.
 from pathlib import Path
-from typing import ClassVar
-from typing import List
+from typing import ClassVar, List
 
-from textual.app import App
-from textual.app import ComposeResult
+from textual.app import App, ComposeResult
 from textual.validation import Number
-from textual.widgets import Button
-from textual.widgets import Input
-from textual.widgets import Pretty
-from textual.widgets import Static
+from textual.widgets import Button, Input, Pretty, Static
 
 from chasten import constants
 
@@ -116,7 +111,7 @@ class config_App(App):
         color: black;
     }
     """
-    Check: ClassVar = ["", "1", False]  # noqa: RUF012
+    Check: ClassVar = ["", "1", False]
     Valid: bool = False
 
     def on_input_changed(self, event: Input.Changed) -> None:
