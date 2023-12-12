@@ -1,0 +1,20 @@
+# configuring pre-commit hooks for chasten.
+# this ensures users do not commit problematic code
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-ast
+    files: '\.py$'
+  - id: check-case-conflict
+  - id: check-merge-conflict
+  - id: forbid-submodules
+  - id: trailing-whitespace
+
+- repo: local
+  hooks:
+    - id: fix-linting
+      files: '\.py$'
+      entry: poetry run task lint --fix
+      language: system
+      name: Fix Linting

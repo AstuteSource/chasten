@@ -14,13 +14,7 @@ from rich.logging import RichHandler
 from rich.traceback import install
 from urllib3.util import Url, parse_url
 
-from chasten import (
-    constants,
-    filesystem,
-    output,
-    util,
-    validate,
-)
+from chasten import constants, filesystem, output, util, validate
 
 
 def configure_tracebacks() -> None:

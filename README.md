@@ -89,24 +89,6 @@ Follow these steps to install the `chasten` program:
 - Type `pipx list` and confirm that Chasten is installed
 - Type `chasten --help` to learn how to use the tool
 
-## 🐋 Docker
-
-There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
-
-Follow these steps to utilize Docker:
-
-- Install [Docker Desktop](https://docs.docker.com/get-docker/) for your operating system
-- Ensure Docker Desktop is running
-- `cd` into the chasten directory where the `Dockerfile` is located
-- Type `docker build -t chasten .` to build the container
-- Type one of the following commands to run the container:
-    - Windows (Command Prompt) -> `docker run --rm -v "%cd%":/root/src -it chasten`
-    - Windows (Powershell) -> `docker run --rm -v ${pwd}:/root/src -it chasten`
-    - Mac/Ubuntu -> `docker run --rm -v $(pwd):/root/src -it chasten`
-- Inside the container type `poetry install`
-- Outside of the container type `docker ps` to view running container information
-- Outside of the container type `docker commit <your-container-id> <your-image-name>` to save the dependecy installation
-- Now you can use Docker for all of your `chasten` needs!
 
 ## 🪂 Configuration
 
@@ -345,8 +327,67 @@ class DebugLevel(str, Enum):
     CRITICAL = "CRITICAL"
 ```
 
+## ✨ chasten --help
 
+```shell
+ Usage: chasten [OPTIONS] COMMAND [ARGS]...                                                    
+                                                                                               
+╭─ Options ───────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                     │
+│ --show-completion             Show completion for the current shell, to copy it or          │
+│                               customize the installation.                                   │
+│ --help                        Show this message and exit.                                   │
+╰─────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ──────────────────────────────────────────────────────────────────────────────────╮
+│ analyze                      💫 Analyze the AST of Python source code.                      │
+│ configure                    🪂 Manage chasten's configuration.                             │
+│ datasette-publish            🌎 Publish a datasette to Fly or Vercel.                       │
+│ datasette-serve              🏃 Start a local datasette server.                             │
+│ integrate                    🚧 Integrate files and make a database.                        │
+│ interact                     🚀 Interactively configure and run.                            │
+│ log                          🦚 Start the logging server.                                   │
+╰─────────────────────────────────────────────────────────────────────────────────────────────╯
 
+```
+
+## 🧑‍💻 Development Enviroment
+
+### 🏠 Local
+
+Follow these steps to install the `chasten` tool for future development:
+
+- The development and use of Chasten requires [Python 3.11](https://www.python.org/downloads/release/python-3115/), must be greater or equal to version 3.11.5.
+- The developers of Chasten use [Poetry](https://github.com/python-poetry/poetry) for packaging and dependency management.
+
+Once Python and Poetry is installed, please go to the [Chasten](https://github.com/AstuteSource/chasten) repository on github and install the tool using the `git clone` command in your terminal. Then navigate to the Chasten directory and run the command `poetry install` to install all the dependencies.
+
+### 🐋 Docker
+
+There is also the option to use [Docker](https://www.docker.com/) to use `chasten`
+
+Follow these steps to utilize Docker:
+
+- Install [Docker Desktop](https://docs.docker.com/get-docker/) for your operating system
+- Ensure Docker Desktop is running
+- `cd` into the chasten directory where the `Dockerfile` is located
+- Type `docker build -t chasten .` to build the container
+- Type one of the following commands to run the container:
+    - Windows (Command Prompt) -> `docker run --rm -v "%cd%":/root/src -it chasten`
+    - Windows (Powershell) -> `docker run --rm -v ${pwd}:/root/src -it chasten`
+    - Mac/Ubuntu -> `docker run --rm -v $(pwd):/root/src -it chasten`
+- Inside the container type `poetry install`
+- Outside of the container type `docker ps` to view running container information
+- Outside of the container type `docker commit <your-container-id> <your-image-name>` to save the dependecy installation
+- Now you can use Docker for all of your `chasten` needs!
+
+## 📋 Development Tasks
+
+- **Linting and Formatting**
+    - We use the linting tools `Black` and `Ruff` on Chasten to ensure code consistency, readability, and adherence to predefined formatting standards across the entire project, ultimately enhancing maintainability and collaboration among developers. 
+    - Please ensure all content in the project follow the appropriate format by running the following commands: `poetry run task fiximports` and/or `poetry run task fixformat` before shipping new features. If features are shipped with linting issues, the build will break on github due to the failure of the test suite.
+- **Testing and Coverage**
+    - Chasten uses the testing tools `Pytest` and `Hypothesis` which enables us to fortify code consistency, readability, and alignment with established formatting standards throughout the project. When writing test cases for features, create a new file in the tests directory with the naming convention `test_(name of file)`. 
+    - Please ensure all content in the project passes the tests by running the following commands: `poetry run task test` for most cases or if you would like to test the OpenAI API based features `poetry run task test-api` before shipping. If features are shipped without a test suite, the coverage will be lowered on github due to the addition of untested code and may potenitally lead to larger issues in the future.
 
 ## 🤗 Learning
 
@@ -373,6 +414,47 @@ class DebugLevel(str, Enum):
     general-purpose approach to modelling and querying source code
     - [Python Treesitter](https://github.com/tree-sitter/py-tree-sitter) offers
     a Python language bindings for to parsing and querying with Treesitter
+
+## 🤓 Chasten vs. Symbex
+
+Chasten and Symbex, which was created by Simon Willison, are both tools designed for analyzing Python source code, particularly focusing on searching for functions and classes within files. While they share a common goal, there are notable differences between the two, especially in terms of their command-line interfaces and functionality.
+
+In terms of Command-Line Interface, Symbex employs a concise CLI, utilizing abbreviations for various options. For instance, the command to search for function signatures in a file named `test_debug.py` is as follows:
+
+```python
+command :symbex -s -f symbex/test_debug.py
+    def test_debug_level_values():
+    def test_debug_level_isinstance():
+    def test_debug_level_iteration():
+    def test_debug_destination_values():
+    def test_debug_destination_isinstance():
+    def test_debug_destination_iteration():
+    def test_level_destination_invalid():
+    def test_debug_destination_invalid():
+```
+
+Chasten, on the other hand, leverages Python packages such as Typer and Rich to provide a user-friendly and feature-rich command-line interface. The available commands for Chasten include:
+
+- analyze               💫 Analyze the AST of Python source code
+- configure             🪂 Manage chasten's configuration
+- datasette-publish     🌎 Publish a datasette to Fly or Vercel
+- datasette-serve       🏃 Start a local datasette server
+- integrate             🚧 Integrate files and make a database
+- interact              🚀 Interactively configure and run
+- log                  🦚 Start the logging server.
+
+In terms of functionality, Symbex is designed to search Python code for functions and classes by name or wildcard. It provides the ability to filter results based on various criteria, including function type (async or non-async), documentation presence, visibility, and type annotations.
+
+On the other hand, Chasten's `analyze` command performs AST analysis on Python source code. It allows users to specify a project name, XPATH version, search path, and various filtering criteria. Chasten supports checks for inclusion and exclusion based on attributes, values, and match confidence levels. The tool also provides extensive configuration options and the ability to save results in different formats, including markdown.
+
+In summary, while both Chasten and Symbex serve the common purpose of analyzing Python source code, Chasten offers a more versatile and user-friendly CLI with additional features of configuration and result management. Symbex, on the other hand, adopts a concise CLI with a focus on searching and filtering functionalities. The choice between the two tools depends on the user's preferences and specific requirements for Python code analysis.
+
+## 📦 Similar Tools
+
+In addition to Chasten and Symbex, several other tools offer unique capabilities for analyzing and searching through Python source code, each catering to specific use cases.
+
+- [pyastgrep](https://github.com/spookylukey/pyastgrep) is a tool developed by Luke Plant that provides advanced capabilities for viewing and searching AST using XPath expressions. It allows users to define complex patterns and queries to navigate and extract information from Python code, making it a powerful tool for in-depth code analysis.
+- [treesitter](https://tree-sitter.github.io/tree-sitter/) offers a generic and efficient approach to parsing source code and building AST. It supports multiple languages, providing a consistent API for interacting with parsed code across different language ecosystems.
 
 ## 🧗Improvement
 
