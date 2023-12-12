@@ -76,4 +76,38 @@ checks:
     count: 
       min: null
       max: null
- 
+  - name: "is-void"
+    code: "IVI"
+    id: "V001"
+    pattern: "//method[@returnType='void']"
+    count: 
+      min: null
+      max: null
+  - name: "non-void-percent"
+    code: "NVP"
+    id: "V002"
+    pattern: "count(/class/method[@returnType != 'void'])"
+    count: 
+      min: null
+      max: null
+  - name: "getter-percent"
+    code: "GPT"
+    id: "GP001"
+    pattern: "concat(count(//method[starts-with(@name, 'get') or starts-with(@name, 'is')]), '/', count(//method[starts-with(@name, 'get') or starts-with(@name, 'is')]))"
+    count: 
+      min: null
+      max: null
+  - name: "is-public"
+    code: "IPP"
+    id: "IP001"
+    pattern: "//method[@access='public']"
+    count: 
+      min: null
+      max: null
+  - name: "is-static"
+    code: "IST"
+    id: "IS001"
+    pattern: "//method[(@static) or @static='true']"
+    count: 
+      min: null
+      max: null
