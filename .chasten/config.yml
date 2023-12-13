@@ -4,3 +4,4 @@ chasten:
   # point to a checks file
   checks-file:
     - checks.yml
+    - Zhu_.yml
